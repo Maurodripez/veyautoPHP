@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Inicion sesion</title>
+</head>
+<body>
+    <body>
+        <div class="loginCardUsuario">
+            <div class="card-body">
+                <form action="./php/login.php" method="post">
+                    <div class="loginCardHijo form-group text-center">
+                        <div class="form-group">
+                            <label >Usuario</label>
+                            <input type="text" name="txtUsuario" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label id="password">Password</label>
+                            <input type="password" name="txtPassword" class="form-control">
+                        </div>
+                        <div class="d-grid gap-3 p-2">
+                            <input style="color:#ffffff" class="btnLogin btn" name="btnIngresar" type="submit" value="Ingreso">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script src="../../bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

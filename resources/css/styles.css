@@ -1,0 +1,26 @@
+.body{
+    padding: auto;
+    border: none;
+}
+.loginCard {
+    border: 0px;
+    display: grid;
+    padding-top: 100px;
+    place-content: center;
+  }
+  .form-group {
+    text-align: left;
+  }
+  .btnLogin {
+    background-color: #542b6d;
+  }
+  .btnLogin:hover {
+    background-color: #542b6d;
+  }
+  .loginCardUsuario {
+    padding-top: 30vh;
+    border: 0px;
+    display: grid;
+    place-content: center;
+  }
+  
