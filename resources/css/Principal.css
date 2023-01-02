@@ -1,0 +1,15 @@
+.html{
+    padding: none;
+    border: none;
+}
+.body{
+    padding: none;
+    border: none;
+}
+.navbar.navbar-expand-lg{
+    background-color: #e3f2fd;
+}
+/* estilos de las citas*/
+#citas{
+padding: 2em;
+}
