@@ -1,15 +1,74 @@
-.html{
-    padding: none;
-    border: none;
+.html {
+  padding: none;
+  border: none;
 }
-.body{
-    padding: none;
-    border: none;
+.body {
+  padding: 1em;
+  border: none;
 }
-.navbar.navbar-expand-lg{
-    background-color: #e3f2fd;
+.navbar.navbar-expand-lg {
+  background-color: #6fb3e7;
 }
 /* estilos de las citas*/
-#citas{
-padding: 2em;
+#citas {
+  padding: 2em;
+}
+.btn {
+  border-radius: 0%;
+}
+.form-control {
+  border-radius: 0%;
+}
+.modal-content {
+  border-radius: 0%;
+}
+.form-select {
+  border-radius: 0%;
+}
+/*cambios al modal*/
+.modal-content {
+  border-color: #6fb3e7;
+  border-width: 4px 4px 4px 4px;
+}
+/*boton guardar cita*/
+#btnGuardarCita {
+  background-color: #6fb3e7;
+}
+#btnSalir {
+  justify-content: end;
+}
+#btnOffCanvas {
+  background-color: #6fb3e7;
+}
+.nav-link {
+  color: aliceblue;
+}
+.navbar-brand {
+  color: aliceblue;
+}
+/*botonoes del full calendar*/
+.fc-month-button.fc-button.fc-state-default.fc-corner-left.fc-state-active {
+  background-color: #6fb3e7;
+  color: aliceblue;
+}
+.fc-basicWeek-button.fc-button.fc-state-default.fc-state-active {
+  background-color: #6fb3e7;
+  color: aliceblue;
+}
+.fc-basicDay-button.fc-button.fc-state-default.fc-corner-right.fc-state-active {
+  background-color: #6fb3e7;
+  color: aliceblue;
+}
+.fc-today-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right.fc-state-disabled {
+  background-color: #6fb3e7;
+  color: aliceblue;
+}
+.fc-prev-button.fc-button.fc-state-default.fc-corner-left {
+  background-color: #6fb3e7;
+  color: aliceblue;
+  border-color: mediumvioletred;
+}
+.fc-icon.fc-icon-left-single-arrow {
+  background-color: #6fb3e7;
+  color: aliceblue;
 }
