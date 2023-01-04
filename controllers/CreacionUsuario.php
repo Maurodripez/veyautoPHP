@@ -8,7 +8,7 @@ $turno = $_POST['turno'];
 $equipo = $_POST['equipo'];
 $passCifrada = password_hash($password, PASSWORD_DEFAULT, array("cost" => 10));
 $sql = $DBcon->prepare("INSERT INTO usuarios (usuario,password, nombre, perfil, turno, equipo)"
-    . " VALUES (:nombre, :password, :nombre, :perfil, :turno, :equipo)");
+    . " VALUES (:usuario, :password, :nombre, :perfil, :turno, :equipo)");
 
 //asocio los campos del insert a los campos del formulario
 $sql->bindParam(':usuario', $usuario);

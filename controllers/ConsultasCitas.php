@@ -12,14 +12,13 @@ switch ($accion) {
     case "InfoAdicional":
         $id = $_POST['id'];
         $fk = ObtenerId($id);
-        $sql = "select asegurado,telefonoPrincipal,contacto,telContacto,marca,tipo,modelo,numSerie from infosiniestro, infoauto,infocliente"
-            . " where idRegistro=infoauto.fkIdRegistro and idRegistro = infocliente.fkIdRegistro and idRegistro=$fk";
-        //ConsultasSelectCualquiera($sql, "../Conexion.php", "InfoAdicional");
+        $sql = "select * from folios where id=$fk";
+        ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "InfoAdicional");
         break;
     case "ValidarCita":
         $folio = $_POST["folio"];
         $sql = "select count(folio) as conteo from citas where folio='$folio'";
-        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Respuesta");
+        ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "Respuesta");
         break;
     case "MostrarOperadores":
         $sql = "select nombre from usuarios where perfil='operador'";
@@ -62,7 +61,7 @@ switch ($accion) {
             $operador = obtenerValorCualquiera($sql, "../models/Conexion.php");
             $sql = "INSERT INTO citas (title,start,end,infoAdicional,verificador,fkCitas,folio,operador)"
                 . " VALUES ('$title','$start','$end','$infoAdicional','$veri','$id','$folio','$operador')";
-            ActualizarCualquierSiniestro($sql, "../models/Conexion.php");
+            ActualizarCualquierSiniestro($sql, $modelos . "Conexion.php");
             echo "Cita generada";
         } else {
             echo "Error, el folio no existe";
@@ -72,8 +71,8 @@ switch ($accion) {
 function ObtenerId($id)
 {
     $sql = "select fkCitas from citas where id=$id";
-    //$fk = ObtenerValorCualquiera($sql, "../Conexion.php", "Adicional");
-    //return $fk;
+    $fk = ObtenerValorCualquiera($sql, "../models/Conexion.php", "Adicional");
+    return $fk;
 }
 function obtenerNombreReal()
 {

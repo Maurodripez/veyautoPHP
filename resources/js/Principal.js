@@ -1,12 +1,39 @@
 let controlador = "../controllers/";
 window.addEventListener("load", function (event) {
+  actualizarCitas();
   operadores();
   $('[data-toggle="tooltip"]').tooltip();
   desplegarCitas();
   document.getElementById("btnGuardarCita").addEventListener("click", () => {
     guardarCita();
   });
+  document.getElementById("btnOffCanvas").addEventListener("click", () => {
+    infoAdicional();
+  });
+  document.getElementById("btnCrearUsuario").addEventListener("click", () => {
+    crearUsuario();
+  });
+  //se muestran los div dependiendo la seccion que se elija
+  document.getElementById("btnCitas").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "";
+    document.getElementById("divDatos").style.display = "none";
+    document.getElementById("divHerramientas").style.display = "none";
+  });
+  document.getElementById("btnDatos").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "none";
+    document.getElementById("divDatos").style.display = "";
+    document.getElementById("divHerramientas").style.display = "none";
+  });
+  document.getElementById("btnHerramientas").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "none";
+    document.getElementById("divDatos").style.display = "none";
+    document.getElementById("divHerramientas").style.display = "";
+  });
 });
+//se ejecuta la funcion cada minuto para refrescar las citas
+function actualizarCitas() {
+  setInterval(desplegarCitas, 60000);
+}
 
 //funciones para Citas
 //muestra las citas del operador
@@ -209,13 +236,12 @@ function mostrarInfoCita() {
       result.Cita[0].infoAdicional;
     document.getElementById("txtInfVeri").value = result.Cita[0].verificador;
     //se oculta el collapse para que no muestre informacion erronea
-    $("#listaInfoAdicional").collapse("hide");
   });
 }
 function infoAdicional() {
   let id = document.getElementById("idCitaActual").textContent;
   $.ajax({
-    url: rutaInicial + "ConsultasCitas.php",
+    url: controlador + "ConsultasCitas.php",
     type: "POST",
     dataType: "JSON",
     data: {
@@ -224,35 +250,55 @@ function infoAdicional() {
     },
   }).done(function (response) {
     console.log(response);
-    let asegurado = `<li style='font-size: 13px' class="list-group-item">Asegurado: ${response.InfoAdicional[0].asegurado}</li>`;
-    let telefonoPrincipal = `<li style='font-size: 13px' class="list-group-item">Telefono: ${response.InfoAdicional[0].telefonoPrincipal}</li>`;
-    let marca = `<li style='font-size: 13px' class="list-group-item">Marca: ${response.InfoAdicional[0].marca}</li>`;
-    let tipo = `<li style='font-size: 13px' class="list-group-item">Tipo: ${response.InfoAdicional[0].tipo}</li>`;
-    let modelo = `<li style='font-size: 13px' class="list-group-item">Modelo: ${response.InfoAdicional[0].modelo}</li>`;
+    let asegurado = `<li style='font-size: 13px' class="list-group-item"><strong>Asegurado:</strong> ${response.InfoAdicional[0].asegurado}</li>`;
+    let folio = `<li style='font-size: 13px' class="list-group-item">Folio: ${response.InfoAdicional[0].folio}</li>`;
+    let poliza = `<li style='font-size: 13px' class="list-group-item">Poliza: ${response.InfoAdicional[0].poliza}</li>`;
+    let celular = `<li style='font-size: 13px' class="list-group-item">Celular: ${response.InfoAdicional[0].celular}</li>`;
+    let correo = `<li style='font-size: 13px' class="list-group-item">Correo: ${response.InfoAdicional[0].correo}</li>`;
+    let telCasa = `<li style='font-size: 13px' class="list-group-item">Telefono casa: ${response.InfoAdicional[0].telCasa}</li>`;
+    let domicilio = `<li style='font-size: 13px' class="list-group-item">Domicilio: ${response.InfoAdicional[0].domicilio}</li>`;
+    let alcaldia = `<li style='font-size: 13px' class="list-group-item">Alcaldia: ${response.InfoAdicional[0].alcaldia}</li>`;
+    let colonia = `<li style='font-size: 13px' class="list-group-item">Colonia: ${response.InfoAdicional[0].colonia}</li>`;
+    let estado = `<li style='font-size: 13px' class="list-group-item">Estado: ${response.InfoAdicional[0].estado}</li>`;
+    let cp = `<li style='font-size: 13px' class="list-group-item">C.P: ${response.InfoAdicional[0].cp}</li>`;
+    let marcaTipo = `<li style='font-size: 13px' class="list-group-item">Marca: ${response.InfoAdicional[0].marcaTipo}</li>`;
     let numSerie = `<li style='font-size: 13px' class="list-group-item">Serie: ${response.InfoAdicional[0].numSerie}</li>`;
-    let contacto = `<li style='font-size: 13px' class="list-group-item">Contacto: ${response.InfoAdicional[0].contacto}</li>`;
-    let telContacto = `<li style='font-size: 13px' class="list-group-item">Telefono: ${response.InfoAdicional[0].telContacto}</li>`;
+    let placas = `<li style='font-size: 13px' class="list-group-item">Placas: ${response.InfoAdicional[0].placas}</li>`;
+    let fechacarga = `<li style='font-size: 13px' class="list-group-item">Fecha carga: ${response.InfoAdicional[0].fechacarga}</li>`;
+    let fechaAsignacion = `<li style='font-size: 13px' class="list-group-item">Fecha asignacion: ${response.InfoAdicional[0].fechaAsignacion}</li>`;
+    let fechaEntrega = `<li style='font-size: 13px' class="list-group-item">Fecha entrega: ${response.InfoAdicional[0].fechaEntrega}</li>`;
+    let fechaVigencia = `<li style='font-size: 13px' class="list-group-item">Fecha vigencia: ${response.InfoAdicional[0].fechaVigencia}</li>`;
     let ul = document.getElementById("ulListaInfo");
     ul.innerHTML =
       asegurado +
-      telefonoPrincipal +
-      marca +
-      tipo +
-      modelo +
+      folio +
+      poliza +
+      celular +
+      correo +
+      telCasa +
+      domicilio +
+      alcaldia +
+      colonia +
+      estado +
+      cp +
+      marcaTipo +
       numSerie +
-      contacto +
-      telContacto;
+      placas +
+      fechacarga +
+      fechaAsignacion +
+      fechaEntrega +
+      fechaVigencia;
   });
 }
 
 //se manda por medio de fetch los datos necesarios para la creacion de usuarios
 async function crearUsuario() {
-  let usuario = document.getElementById("usuario").value;
-  let nombre = document.getElementById("nombre").value;
-  let password = document.getElementById("password").value;
-  let perfil = document.getElementById("perfil").value;
-  let turno = document.getElementById("turno").value;
-  let equipo = document.getElementById("equipo").value;
+  let usuario = document.getElementById("txtUsuario").value;
+  let nombre = document.getElementById("txtNombre").value;
+  let password = document.getElementById("txtPassword").value;
+  let perfil = document.getElementById("txtPerfil").value;
+  let turno = document.getElementById("txtTurno").value;
+  let equipo = document.getElementById("txtEquipo").value;
   if (
     usuario.length > 0 &&
     nombre.length > 0 &&
@@ -268,10 +314,30 @@ async function crearUsuario() {
     data.append("perfil", perfil);
     data.append("turno", turno);
     data.append("equipo", equipo);
-    const response = await fetch("../controllers/CreacionUsuario.php", {
+    const response = await fetch(controlador + "CreacionUsuario.php", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       body: data, // body data type must match "Content-Type" header
     });
     console.log(response.text());
+    mostrarMensaje();
   }
+}
+
+//funciones generales
+function mostrarMensaje() {
+  console.log("Hi");
+  const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
+
+  const alerta = (message, type) => {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = [
+      `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+      `   <div>${message}</div>`,
+      '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+      "</div>",
+    ].join("");
+
+    alertPlaceholder.append(wrapper);
+  };
+  alerta("Nice, you triggered this alert message!", "success");
 }

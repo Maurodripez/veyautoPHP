@@ -3,15 +3,16 @@
   border: none;
 }
 .body {
-  padding: 1em;
+  padding: 3em;
   border: none;
 }
 .navbar.navbar-expand-lg {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
 }
 /* estilos de las citas*/
 #citas {
-  padding: 2em;
+  padding: 2em 2em 0em 0em;
+  height: 100vh;
 }
 .btn {
   border-radius: 0%;
@@ -27,18 +28,22 @@
 }
 /*cambios al modal*/
 .modal-content {
-  border-color: #6fb3e7;
+  border-color: #138ce9;
   border-width: 4px 4px 4px 4px;
 }
 /*boton guardar cita*/
 #btnGuardarCita {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
 }
 #btnSalir {
   justify-content: end;
 }
 #btnOffCanvas {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.card.card-body {
+  border-radius: 0%;
 }
 .nav-link {
   color: aliceblue;
@@ -46,29 +51,129 @@
 .navbar-brand {
   color: aliceblue;
 }
+.btn.btnCerrarModal {
+  background-color: #0b4b7c;
+  color: aliceblue;
+}
+.btn.btnCerrarModal:active {
+  background: #072c49;
+  color: white;
+}
+#infoPorDias {
+  padding: 2em 0em 0em 1em;
+}
 /*botonoes del full calendar*/
 .fc-month-button.fc-button.fc-state-default.fc-corner-left.fc-state-active {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
   color: aliceblue;
+  border-radius: 0%;
 }
 .fc-basicWeek-button.fc-button.fc-state-default.fc-state-active {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
   color: aliceblue;
+  border-radius: 0%;
 }
 .fc-basicDay-button.fc-button.fc-state-default.fc-corner-right.fc-state-active {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
   color: aliceblue;
+  border-radius: 0%;
 }
 .fc-today-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right.fc-state-disabled {
-  background-color: #6fb3e7;
+  background-color: #138ce9;
   color: aliceblue;
+  border-radius: 0%;
+}
+.fc-next-button.fc-button.fc-state-default.fc-corner-right.fc-state-hover.fc-state-down {
+  background-color: #138ce9;
+  color: aliceblue;
+  border-radius: 0%;
+}
+.fc-prev-button.fc-button.fc-state-default.fc-corner-left.fc-state-hover.fc-state-down {
+  background-color: #138ce9;
+  color: aliceblue;
+  border-radius: 0%;
+}
+.fc-basicDay-button.fc-button.fc-state-default.fc-corner-right {
+  border-radius: 0%;
+}
+.fc-month-button.fc-button.fc-state-default.fc-corner-left {
+  border-radius: 0%;
+}
+.fc-today-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right {
+  border-radius: 0%;
+}
+.fc-next-button.fc-button.fc-state-default.fc-corner-right {
+  border-radius: 0%;
 }
 .fc-prev-button.fc-button.fc-state-default.fc-corner-left {
-  background-color: #6fb3e7;
-  color: aliceblue;
-  border-color: mediumvioletred;
+  border-radius: 0%;
 }
-.fc-icon.fc-icon-left-single-arrow {
-  background-color: #6fb3e7;
+.fc-day-header.fc-widget-header.fc-mon {
+  background-color: #138ce9;
   color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-tue {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-wed {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-thu {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-fri {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-sat {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.fc-day-header.fc-widget-header.fc-sun {
+  background-color: #ff2f2f;
+  color: aliceblue;
+}
+.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end {
+  border-radius: 0%;
+}
+/*dependiendo el dia activo, se cambia el color del fondo*/
+.fc-day.fc-widget-content.fc-wed.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-mon.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-tue.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-thu.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-fri.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-sat.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+.fc-day.fc-widget-content.fc-sun.fc-today {
+  background-color: rgba(0, 255, 55, 0.726);
+}
+/*inicio de la seccion herramientas*/
+#listHerramientas {
+  padding: 1em 1em 0em 1em;
+  border-radius: 0%;
+  position: relative;
+}
+.list-group-item.list-group-item-action.herramientas {
+  padding-bottom: 0em;
+}
+#btnCrearUsuario{
+  color: aliceblue;
+  background-color: #138ce9;
+}
+.col-12.btnCrearUsuario{
+padding-top: 0em;
 }

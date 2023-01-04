@@ -35,13 +35,13 @@ if (!isset($_SESSION['usuario'])) {
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Citas</a>
+                        <a class="nav-link" id="btnCitas" aria-current="page" href="#">Citas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
+                        <a class="nav-link" id="btnDatos" href="#">Datos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link" id="btnHerramientas" href="#">Herramientas</a>
                     </li>
                 </ul>
                 <a id="btnSalir" class="nav-link" href="../models/Cerrarsesion.php"><svg
@@ -61,8 +61,145 @@ if (!isset($_SESSION['usuario'])) {
         data-bs-title="This top tooltip is themed via CSS variables.">
         Custom tooltip
     </button>
-    <div id="citas" style="display:''">
-
+    <div id="divCitas" class="row" style="display: none;">
+        <div class="col">
+            <div id="infoPorDias" class="list-group">
+                <h4 class="mb-1">Folios</h4>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">0 a 2 días</h5>
+                        <small id="0a2Dias"></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">3 a 5 días</h5>
+                        <small id="3a5Dias"></small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Más de 6 días</h5>
+                        <small id="mas6Dias"></small>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-10" id="citas" style="display:''">
+        </div>
+    </div>
+    <div id="divDatos" style="display: none;">
+        Hi
+    </div>
+    <div id="divHerramientas">
+        <div class="row">
+            <div id="listHerramientas" class="list-group list-group-horizontal">
+                <a style="text-align:center" class="list-group-item list-group-item-action herramientas"
+                    data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#creacionUsuarios"
+                    aria-controls="collapseExample">Usuarios</a>
+                <a style="text-align:center" class="list-group-item list-group-item-action herramientas"
+                    data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseExample2"
+                    aria-controls="collapseExample2">Item 2</a>
+                <a style="text-align:center" class="list-group-item list-group-item-action herramientas"
+                    href="#list-item-3">Item 3</a>
+                <a style="text-align:center" class="list-group-item list-group-item-action herramientas"
+                    href="#list-item-4">Item 4</a>
+            </div>
+        </div>
+        <div class="collapse" id="creacionUsuarios">
+            <div class="card card-body">
+                <div class="accordion" id="acordeonUsuarios">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelCreacion-headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#panelCreacion-collapseOne" aria-expanded="true"
+                                aria-controls="panelCreacion-collapseOne">
+                                Crear usuario
+                            </button>
+                        </h2>
+                        <div id="panelCreacion-collapseOne" class="accordion-collapse collapse show"
+                            aria-labelledby="panelCreacion-headingOne">
+                            <div class="accordion-body">
+                                <form action="#" class="was-validated row g-3">
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtUsuario" class="form-label">Usuario</label>
+                                        <input type="text" class="form-control" id="txtUsuario" value="Mark" required>
+                                    </div>
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtPassword" class="form-label">Contraseña</label>
+                                        <input type="text" class="form-control" id="txtPassword" value="Otto" required>
+                                    </div>
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtNombre" class="form-label">Nombre</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" class="form-control" id="txtNombre"
+                                                aria-describedby="validationTooltipUsernamePrepend" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtPerfil" class="form-label">Perfil</label>
+                                        <select class="form-select" id="txtPerfil" required>
+                                            <option selected disabled value="">Selecciona...</option>
+                                            <option>Supervisor</option>
+                                            <option>Mensajero</option>
+                                            <option>Consulta</option>
+                                            <option>Team leader</option>
+                                            <option>Operador</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtTurno" class="form-label">Turno</label>
+                                        <select class="form-select" id="txtTurno" required>
+                                            <option selected disabled value="">Selecciona...</option>
+                                            <option>Completo</option>
+                                            <option>Matutino</option>
+                                            <option>Vespertino</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 position-relative">
+                                        <label for="txtEquipo" class="form-label">Equipo</label>
+                                        <select class="form-select" id="txtEquipo" required>
+                                            <option selected disabled value="">Selecciona...</option>
+                                            <option>Prueba1</option>
+                                            <option>Prueba2</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 btnCrearUsuario">
+                                        <button id="btnCrearUsuario" class="btn" type="submit">Crear usuario</button>
+                                    </div>
+                                    <div id="liveAlertPlaceholder"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                aria-controls="panelsStayOpen-collapseTwo">
+                                Accordion Item #2
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                            aria-labelledby="panelsStayOpen-headingTwo">
+                            <div class="accordion-body">
+                                <strong>This is the second item's accordion body.</strong> It is hidden by default,
+                                until the collapse plugin adds the appropriate classes that we use to style each
+                                element. These classes control the overall appearance, as well as the showing and hiding
+                                via CSS transitions. You can modify any of this with custom CSS or overriding our
+                                default variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="collapseExample2">
+            <div class="card card-body">
+                Sel segundo
+            </div>
+        </div>
     </div>
     <!--Modal creacion eventos-->
     <div class="modal fade" id="ModalEventos">
@@ -137,7 +274,7 @@ if (!isset($_SESSION['usuario'])) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
                     <button id="btnGuardarCita" type="button" class="btn">Guardar Cita</button>
                 </div>
             </div>
@@ -209,17 +346,15 @@ if (!isset($_SESSION['usuario'])) {
                                 aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
-                            <div class="collapse" id="listaInfoAdicional">
-                                <div class="card card-body">
-                                    <ul id="ulListaInfo" class="list-group list-group-flush">
-                                    </ul>
-                                </div>
+                            <div class="card card-body">
+                                <ul id="ulListaInfo" class="list-group list-group-flush">
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
