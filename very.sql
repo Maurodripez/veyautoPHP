@@ -74,26 +74,23 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `usuario` varchar(450) DEFAULT NULL,
   `password` varchar(500) DEFAULT NULL,
   `nombre` varchar(450) DEFAULT NULL,
-  `perfil` varchar(45) DEFAULT NULL,
   `turno` varchar(45) DEFAULT NULL,
   `equipo` varchar(45) DEFAULT NULL,
+  `Supervisor` varchar(2) DEFAULT 'No',
+  `Mensajero` varchar(2) DEFAULT 'No',
+  `Consulta` varchar(2) DEFAULT 'No',
+  `Teamleader` varchar(2) DEFAULT 'No',
+  `Operador` varchar(2) DEFAULT 'No',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla veryauto.usuarios: ~11 rows (aproximadamente)
+-- Volcando datos para la tabla veryauto.usuarios: ~4 rows (aproximadamente)
 DELETE FROM `usuarios`;
-INSERT INTO `usuarios` (`id`, `usuario`, `password`, `nombre`, `perfil`, `turno`, `equipo`) VALUES
-	(3, 'admin', '$2y$10$UicEpJiSnveNdr4RaGkv4e8/tKogHGERq6sf1dxpHK4.wJRfTLapW', 'Mauricio Rodriguez', 'root', 'medio', 'Prueba1'),
-	(5, 'juan', '$2y$10$UicEpJiSnveNdr4RaGkv4e8/tKogHGERq6sf1dxpHK4.wJRfTLapW', 'Juanito', 'operador', 'completo', 'Prueba1'),
-	(9, 'Mark1', '$2y$10$DcqjYVx.U9ISoo8LlHQraeBWqLJgjUOv.Mi/HuCYjMaczVQblxIbK', 'Mark', 'Supervisor', 'Completo', 'Prueba1'),
-	(10, 'Mark11', '$2y$10$wVAqH/X2Svti2EupQkR4P.icDQyhMHCtbwuDEE0RX2MJ2A6Vz50JW', 'maa', 'Supervisor', 'Matutino', 'Prueba1'),
-	(11, 'Mark', '$2y$10$iT/NmpbIelegqmJTQxRGKehKAAn6eDX7EZ31LU4IftODkSPoFXiKy', 'qqq', 'Mensajero', 'Matutino', 'Prueba2'),
-	(12, 'Mark', '$2y$10$RZBWHXch82AorPrmCGqaNeMMgHwKGNO2mq55cngNtOWYZaSPUdBgy', '11', 'Supervisor', 'Matutino', 'Prueba2'),
-	(13, 'Mark', '$2y$10$kKKsUNlJrWxHhAGn0fAlZe8IwAhBHqP5Cg1nzDr5147jg9vQcAfyS', 'q', 'Mensajero', 'Matutino', 'Prueba1'),
-	(14, 'Mark', '$2y$10$EP4ZCb.j9w3i1FonOeX3Ou1ElasNdm8/SLQ5je4QDevnpsywG6SNa', '11', 'Consulta', 'Matutino', 'Prueba2'),
-	(15, 'Mark', '$2y$10$nGjC0dld/4LDWdI3d8kvMewQMHvuFSIBJfwrMG647MoSHiEV5mlNu', 'undefined', 'Supervisor', 'Vespertino', 'Prueba1'),
-	(16, 'Mark', '$2y$10$QwlxrqT/dfopgctSaRJKwO2TxXXn4gaayG62slnk1DAg5VYUUtaCy', '11', 'Mensajero', 'Completo', 'Prueba2'),
-	(17, 'Mark', '$2y$10$eXrnSyN1Falp.vC4uUxTlOekQ5sm3quUZTsk07enJ3fOm71F0spga', 'a', 'Consulta', 'Matutino', 'Prueba1');
+INSERT INTO `usuarios` (`id`, `usuario`, `password`, `nombre`, `turno`, `equipo`, `Supervisor`, `Mensajero`, `Consulta`, `Teamleader`, `Operador`) VALUES
+	(3, 'admin', '$2y$10$UicEpJiSnveNdr4RaGkv4e8/tKogHGERq6sf1dxpHK4.wJRfTLapW', 'Mauricio Rodriguez', 'Matutino', 'Prueba1', 'Si', 'Si', 'Si', 'Si', 'Si'),
+	(5, 'juan', '$2y$10$dqCG3uRSA259k.DqgKh22.NgiPdqj1kjzkKuSJ02CTbOnca.L0aji', 'Juanito2', 'Completo', 'Prueba1', 'No', 'Si', 'Si', 'No', 'No'),
+	(34, 'qwe', '$2y$10$0bN/Y9WceGunPbfmDLL.Jebo6XVnHKyMMIKJcQbomvT1o8hUuP2Dq', 'qwe', 'Completo', 'Prueba1', 'No', 'No', 'Si', 'No', 'No'),
+	(37, 'admin2', '$2y$10$IIACdzPy6hkBefrj2wECw.jYuUrKSui9OmDBd0iYXGHu/WXXM9mGG', 'undefined', 'Completo', 'Prueba1', 'Si', 'Si', 'Si', 'Si', 'Si');
 
 -- Volcando estructura para tabla veryauto.usuariostemporales
 CREATE TABLE IF NOT EXISTS `usuariostemporales` (

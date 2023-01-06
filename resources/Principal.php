@@ -15,6 +15,8 @@ if (!isset($_SESSION['usuario'])) {
     <link rel="stylesheet" href="../fullcalendar/fullcalendar.min.css">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Principal.css">
+    <link rel="stylesheet" href="../DataTables/datatables.min.css">
+    <script src="../DataTables/datatables.min.js"></script>
     <script src="../bootstrap/js/jquery-3.6.3.min.js"></script>
     <script src="../fullcalendar/lib/moment.min.js"></script>
     <script src="../fullcalendar/fullcalendar.min.js"></script>
@@ -112,57 +114,86 @@ if (!isset($_SESSION['usuario'])) {
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="panelCreacion-headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#panelCreacion-collapseOne" aria-expanded="true"
-                                aria-controls="panelCreacion-collapseOne">
+                                data-bs-target="#acordionCrearUsuarios" aria-expanded="true"
+                                aria-controls="acordionCrearUsuarios">
                                 Crear usuario
                             </button>
                         </h2>
-                        <div id="panelCreacion-collapseOne" class="accordion-collapse collapse show"
+                        <div id="acordionCrearUsuarios" class="accordion-collapse collapse show"
                             aria-labelledby="panelCreacion-headingOne">
                             <div class="accordion-body">
                                 <form action="#" class="was-validated row g-3">
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtUsuario" class="form-label">Usuario</label>
-                                        <input type="text" class="form-control" id="txtUsuario" value="Mark" required>
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtPassword" class="form-label">Contraseña</label>
-                                        <input type="text" class="form-control" id="txtPassword" value="Otto" required>
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtNombre" class="form-label">Nombre</label>
-                                        <div class="input-group has-validation">
-                                            <input type="text" class="form-control" id="txtNombre"
-                                                aria-describedby="validationTooltipUsernamePrepend" required>
+                                    <div class="row">
+                                        <div class="col-md-4 position-relative pt-2">
+                                            <label for="txtPerfil" class="form-label">Perfil</label>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value=""
+                                                        id="checkSupervisor">
+                                                    <label class="form-check-label" for="checkSupervisor">Supervisor</label>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value=""
+                                                        id="checkMensajero">
+                                                    <label class="form-check-label" for="checkMensajero">Mensajero</label>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value=""
+                                                        id="checkConsulta">
+                                                    <label class="form-check-label" for="checkConsulta">Consulta</label>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value=""
+                                                        id="checkTeamleader">
+                                                    <label class="form-check-label" for="checkTeamleader">Teamleader</label>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <input class="form-check-input me-1" type="checkbox" value=""
+                                                        id="checkOperador">
+                                                    <label class="form-check-label" for="checkOperador">Operador</label>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtPerfil" class="form-label">Perfil</label>
-                                        <select class="form-select" id="txtPerfil" required>
-                                            <option selected disabled value="">Selecciona...</option>
-                                            <option>Supervisor</option>
-                                            <option>Mensajero</option>
-                                            <option>Consulta</option>
-                                            <option>Team leader</option>
-                                            <option>Operador</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtTurno" class="form-label">Turno</label>
-                                        <select class="form-select" id="txtTurno" required>
-                                            <option selected disabled value="">Selecciona...</option>
-                                            <option>Completo</option>
-                                            <option>Matutino</option>
-                                            <option>Vespertino</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="txtEquipo" class="form-label">Equipo</label>
-                                        <select class="form-select" id="txtEquipo" required>
-                                            <option selected disabled value="">Selecciona...</option>
-                                            <option>Prueba1</option>
-                                            <option>Prueba2</option>
-                                        </select>
+                                        <div class="col pt-2">
+                                            <div class="row">
+                                                <div class="col-md-4 position-relative">
+                                                    <label for="txtUsuario" class="form-label">Usuario</label>
+                                                    <input type="text" class="form-control" id="txtUsuario" required>
+                                                </div>
+                                                <div class="col-md-4 position-relative">
+                                                    <label for="txtPassword" class="form-label">Contraseña</label>
+                                                    <input type="text" class="form-control" id="txtPassword" required>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-2">
+                                                <div class="col-md-4 position-relative">
+                                                    <label for="txtTurno" class="form-label">Turno</label>
+                                                    <select class="form-select" id="txtTurno" required>
+                                                        <option selected disabled value="">Selecciona...</option>
+                                                        <option>Completo</option>
+                                                        <option>Matutino</option>
+                                                        <option>Vespertino</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4 position-relative">
+                                                    <label for="txtEquipo" class="form-label">Equipo</label>
+                                                    <select class="form-select" id="txtEquipo" required>
+                                                        <option selected disabled value="">Selecciona...</option>
+                                                        <option>Prueba1</option>
+                                                        <option>Prueba2</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 position-relative">
+                                                    <label for="txtNombre" class="form-label">Nombre</label>
+                                                    <div class="input-group has-validation">
+                                                        <input type="text" class="form-control" id="txtNombre"
+                                                            aria-describedby="validationTooltipUsernamePrepend" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-12 btnCrearUsuario">
                                         <button id="btnCrearUsuario" class="btn" type="submit">Crear usuario</button>
@@ -173,22 +204,120 @@ if (!isset($_SESSION['usuario'])) {
                         </div>
                     </div>
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
-                                aria-controls="panelsStayOpen-collapseTwo">
-                                Accordion Item #2
+                        <h2 class="accordion-header" id="btnMostrarUsuarios">
+                            <button id="btnMostrarUsuariosHijo" class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#acordionMostrarUsuarios"
+                                aria-expanded="false" aria-controls="acordionMostrarUsuarios">
+                                Mostrar usuarios
                             </button>
                         </h2>
-                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                        <div id="acordionMostrarUsuarios" class="accordion-collapse collapse"
                             aria-labelledby="panelsStayOpen-headingTwo">
                             <div class="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default,
-                                until the collapse plugin adds the appropriate classes that we use to style each
-                                element. These classes control the overall appearance, as well as the showing and hiding
-                                via CSS transitions. You can modify any of this with custom CSS or overriding our
-                                default variables. It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
+                                <div class="alert alert-danger" role="alert">
+                                    Las contraseñas no se muestran por seguridad y al estar encriptadas
+                                </div>
+                                <table id="tablaUsuarios" class="table table-hover mdl-data-table " style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Usuario</th>
+                                            <th class="text-center">Nombre</th>
+                                            <th class="text-center">Turno</th>
+                                            <th class="text-center">Equipo</th>
+                                            <th class="text-center">Supervisor</th>
+                                            <th class="text-center">Mensajero</th>
+                                            <th class="text-center">Consulta</th>
+                                            <th class="text-center">teamleader</th>
+                                            <th class="text-center">Operador</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center">Usuario</th>
+                                            <th class="text-center">Nombre</th>
+                                            <th class="text-center">Turno</th>
+                                            <th class="text-center">Equipo</th>
+                                            <th class="text-center">Supervisor</th>
+                                            <th class="text-center">Mensajero</th>
+                                            <th class="text-center">Consulta</th>
+                                            <th class="text-center">teamleader</th>
+                                            <th class="text-center">Operador</th>
+                                            <th class="text-center">Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="modal fade" id="modalEditarUsuario" tabindex="-1"
+                                    aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="modalEditarUsuarioLabel">Editar usuario
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="#" class="was-validated row g-3">
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtUsuario" class="form-label">Usuario</label>
+                                                        <input type="text" class="form-control" id="txtEditarUsuario"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtPassword" class="form-label">Contraseña</label>
+                                                        <input type="text" class="form-control" id="txtEditarPassword"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtNombre" class="form-label">Nombre</label>
+                                                        <div class="input-group has-validation">
+                                                            <input type="text" class="form-control" id="txtEditarNombre"
+                                                                aria-describedby="validationTooltipUsernamePrepend"
+                                                                required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtPerfil" class="form-label">Perfil</label>
+                                                        <select class="form-select" id="txtEditarPerfil" required>
+                                                            <option selected disabled value="">Selecciona...</option>
+                                                            <option>Supervisor</option>
+                                                            <option>Mensajero</option>
+                                                            <option>Consulta</option>
+                                                            <option>Team leader</option>
+                                                            <option>Operador</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtTurno" class="form-label">Turno</label>
+                                                        <select class="form-select" id="txtEditarTurno" required>
+                                                            <option selected disabled value="">Selecciona...</option>
+                                                            <option>Completo</option>
+                                                            <option>Matutino</option>
+                                                            <option>Vespertino</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 position-relative">
+                                                        <label for="txtEquipo" class="form-label">Equipo</label>
+                                                        <select class="form-select" id="txtEditarEquipo" required>
+                                                            <option selected disabled value="">Selecciona...</option>
+                                                            <option>Prueba1</option>
+                                                            <option>Prueba2</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="divLetreroEditar"></div>
+                                                    <p id="idEditar" style="display: none">Ninguno</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="button" id="btnEditarUsuario" type="submit"
+                                                    class="btn btnGuardar">Guardar cambios</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

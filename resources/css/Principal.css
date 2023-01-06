@@ -170,10 +170,27 @@
 .list-group-item.list-group-item-action.herramientas {
   padding-bottom: 0em;
 }
-#btnCrearUsuario{
+#btnCrearUsuario {
   color: aliceblue;
   background-color: #138ce9;
 }
-.col-12.btnCrearUsuario{
-padding-top: 0em;
+.col-12.btnCrearUsuario {
+  padding-top: 0em;
+}
+.table.table-hover.mdl-data-table.table-bordered {
+  border-color: #0091ff;
+}
+/*todos los botonoes de guardar, tienen estas clases para que sean iguales*/
+.btn.btnGuardar {
+  background-color: #0091ff;
+  color: aliceblue;
+}
+.btn.eliminarUsuario {
+  background-color: #ff0000;
+}
+.btn.editarUsuario {
+  background-color: #0091ff;
+}
+#tablaUsuarios td {
+  text-align: center;
 }
