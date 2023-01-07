@@ -49,7 +49,7 @@ switch ($accion) {
         $title = isset($_POST['title']) ? $_POST['title'] : "";
         $start = isset($_POST['start']) ? $_POST['start'] : "";
         $infoAdicional = isset($_POST['infoAdicional']) ? $_POST['infoAdicional'] : "";
-        $veri = isset($_POST['veri']) ? $_POST['veri'] : "";
+        $equipo = isset($_POST['equipo']) ? $_POST['equipo'] : "";
         $end = isset($_POST['end']) ? $_POST['end'] : "";
         $folio = isset($_POST['folio']) ? $_POST['folio'] : "";
         $sql = "select count(id) from folios where folio='$folio'";
@@ -59,8 +59,8 @@ switch ($accion) {
             $id = ObtenerValorCualquiera($sql, "../models/Conexion.php");
             $sql = "select nombre from usuarios where usuario='$usuario'";
             $operador = obtenerValorCualquiera($sql, "../models/Conexion.php");
-            $sql = "INSERT INTO citas (title,start,end,infoAdicional,verificador,fkCitas,folio,operador)"
-                . " VALUES ('$title','$start','$end','$infoAdicional','$veri','$id','$folio','$operador')";
+            $sql = "INSERT INTO citas (title,start,end,infoAdicional,equipo,fkCitas,folio,operador)"
+                . " VALUES ('$title','$start','$end','$infoAdicional','$equipo','$id','$folio','$operador')";
             ActualizarCualquierSiniestro($sql, $modelos . "Conexion.php");
             echo "Cita generada";
         } else {

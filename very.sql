@@ -22,21 +22,23 @@ USE `veryauto`;
 -- Volcando estructura para tabla veryauto.citas
 CREATE TABLE IF NOT EXISTS `citas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fkCitas` int(11) DEFAULT NULL,
   `title` varchar(450) DEFAULT NULL,
   `start` varchar(45) DEFAULT NULL,
   `end` varchar(45) DEFAULT NULL,
   `infoAdicional` varchar(45) DEFAULT NULL,
-  `verificador` varchar(45) DEFAULT NULL,
-  `fkCitas` int(11) DEFAULT NULL,
+  `operador` varchar(45) DEFAULT NULL,
   `folio` varchar(450) DEFAULT NULL,
-  `operador` varchar(450) DEFAULT NULL,
+  `equipo` varchar(450) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
 
--- Volcando datos para la tabla veryauto.citas: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla veryauto.citas: ~3 rows (aproximadamente)
 DELETE FROM `citas`;
-INSERT INTO `citas` (`id`, `title`, `start`, `end`, `infoAdicional`, `verificador`, `fkCitas`, `folio`, `operador`) VALUES
-	(27, 'qweqw', '2023-01-04 09:00:00', '2023-01-04 10:00:00', 'qwe', 'Juanito', 1, '1234', 'Juanito');
+INSERT INTO `citas` (`id`, `fkCitas`, `title`, `start`, `end`, `infoAdicional`, `operador`, `folio`, `equipo`) VALUES
+	(27, 1, 'qweqw', '2023-01-04 09:00:00', '2023-01-04 10:00:00', 'qwe', 'Juanito', '1234', 'Mauricio Rodriguez'),
+	(29, 3, 'qqqq', '2023-01-11 10:00:00', '2023-01-11 11:00:00', 'qwwe', 'Mauricio Rodriguez', '12345', 'Mauricio Rodriguez'),
+	(32, 2, 'qwee', '2023-01-12 09:00:00', '2023-01-12 10:00:00', 'qsawd', 'Mauricio Rodriguez', '12344', 'Mauricio Rodriguez');
 
 -- Volcando estructura para tabla veryauto.folios
 CREATE TABLE IF NOT EXISTS `folios` (
@@ -60,13 +62,14 @@ CREATE TABLE IF NOT EXISTS `folios` (
   `alcaldia` varchar(450) COLLATE utf8_spanish_ci DEFAULT NULL,
   `estado` varchar(450) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla veryauto.folios: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla veryauto.folios: ~3 rows (aproximadamente)
 DELETE FROM `folios`;
 INSERT INTO `folios` (`id`, `folio`, `fechacarga`, `fechaAsignacion`, `fechaVigencia`, `poliza`, `fechaEntrega`, `asegurado`, `celular`, `telCasa`, `correo`, `marcaTipo`, `placas`, `numSerie`, `domicilio`, `colonia`, `cp`, `alcaldia`, `estado`) VALUES
 	(1, '1234', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01', '12345', '2023-01-01', 'prueba', '12345', '12345', 'q@gmail.com', 'suzuki', '1221', '13234234', 'che', 'we', '12442', 'tlalpan', 'cdmx'),
-	(2, '12344', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01', '12345', '2023-01-01', 'prueba', '12345', '12345', 'q@gmail.com', 'suzuki', '1221', '13234234', 'che', 'we', '12442', 'tlalpan', 'cdmx');
+	(2, '12344', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01', '12345', '2023-01-01', 'prueba', '12345', '12345', 'q@gmail.com', 'suzuki', '1221', '13234234', 'che', 'we', '12442', 'tlalpan', 'cdmx'),
+	(3, '12345', '2023-01-01 00:00:00', '2023-01-01 00:00:00', '2023-01-01', '12345', '2023-01-01', 'prueba', '12345', '12345', 'q@gmail.com', 'suzuki', '1221', '13234234', 'che', 'we', '12442', 'tlalpan', 'cdmx');
 
 -- Volcando estructura para tabla veryauto.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
@@ -82,14 +85,14 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `Teamleader` varchar(2) DEFAULT 'No',
   `Operador` varchar(2) DEFAULT 'No',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla veryauto.usuarios: ~4 rows (aproximadamente)
 DELETE FROM `usuarios`;
 INSERT INTO `usuarios` (`id`, `usuario`, `password`, `nombre`, `turno`, `equipo`, `Supervisor`, `Mensajero`, `Consulta`, `Teamleader`, `Operador`) VALUES
-	(3, 'admin', '$2y$10$UicEpJiSnveNdr4RaGkv4e8/tKogHGERq6sf1dxpHK4.wJRfTLapW', 'Mauricio Rodriguez', 'Matutino', 'Prueba1', 'Si', 'Si', 'Si', 'Si', 'Si'),
-	(5, 'juan', '$2y$10$dqCG3uRSA259k.DqgKh22.NgiPdqj1kjzkKuSJ02CTbOnca.L0aji', 'Juanito2', 'Completo', 'Prueba1', 'No', 'Si', 'Si', 'No', 'No'),
-	(34, 'qwe', '$2y$10$0bN/Y9WceGunPbfmDLL.Jebo6XVnHKyMMIKJcQbomvT1o8hUuP2Dq', 'qwe', 'Completo', 'Prueba1', 'No', 'No', 'Si', 'No', 'No'),
+	(3, 'admin', '$2y$10$sQF.SCHYhcFH.MSW5GTYTOK8.HtGja..XsemT./blq0SDJvIBEYuy', 'Mauricio Rodriguez', 'Matutino', 'Mauricio Rodriguez', 'Si', 'Si', 'Si', 'Si', 'Si'),
+	(5, 'juan', '$2y$10$B6.LafnvJMynyqqnFfLh3OrPUo/RyZUaIkp5/J3YQ8Mspr8nS2UXC', 'Juanito2', 'Completo', 'Mauricio Rodriguez', 'No', 'Si', 'Si', 'No', 'No'),
+	(34, 'qwe', '$2y$10$.y0tONvNCdaEFv0BzprfMOFVwIu3FRSnLLXky.FH4y8x7r17Xoq4O', 'qwe', 'Completo', 'General', 'Si', 'Si', 'Si', 'Si', 'Si'),
 	(37, 'admin2', '$2y$10$IIACdzPy6hkBefrj2wECw.jYuUrKSui9OmDBd0iYXGHu/WXXM9mGG', 'undefined', 'Completo', 'Prueba1', 'Si', 'Si', 'Si', 'Si', 'Si');
 
 -- Volcando estructura para tabla veryauto.usuariostemporales

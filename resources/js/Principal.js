@@ -18,6 +18,7 @@ window.addEventListener("load", function (event) {
     document.getElementById("divCitas").style.display = "none";
     document.getElementById("divDatos").style.display = "none";
     document.getElementById("divHerramientas").style.display = "";
+    obtenerEquipos("txtEquipo");
   });
 
   ///////////////////////inicializaciones de usuario//////////////////////////////
@@ -38,17 +39,22 @@ window.addEventListener("load", function (event) {
   document.getElementById("btnCrearUsuario").addEventListener("click", (e) => {
     crearEditarUsuario("CrearUsuario", "liveAlertPlaceholder");
   });
+
   ////////////////////////inicializaciones de citas//////////////////////////////
   actualizarCitas();
   //se escucha el click y muestra crea la tabla de usuarios
-  operadores();
+  //operadores();
   $('[data-toggle="tooltip"]').tooltip();
   desplegarCitas();
   document.getElementById("btnGuardarCita").addEventListener("click", () => {
-    guardarCita();
+    crearCita();
   });
   document.getElementById("btnOffCanvas").addEventListener("click", () => {
     infoAdicional();
+  });
+  ///////////////////////////////////inicializaciones de carga//////////////////////////////
+  document.getElementById("btnCargarExcel").addEventListener("click", () => {
+    cargarExcel();
   });
 });
 //se ejecuta la funcion cada minuto para refrescar las citas
@@ -65,6 +71,7 @@ function desplegarCitas() {
       center: "title",
       right: "month,basicWeek,basicDay",
     },
+    defaultView: "basicDay",
     editable: true,
     events: "../controllers/MostrarEventos.php",
     displayEventTime: true,
@@ -119,6 +126,7 @@ function desplegarCitas() {
     dayClick: function (date) {
       $("#txtFecha").val(date.format());
       $("#ModalEventos").modal("show");
+      obtenerEquipos("txtCitaEquipo");
       // change the day's background color just for fun
       //$(this).css("background-color", "red");
     },
@@ -143,29 +151,48 @@ function obtenerFechaConvertida(n) {
   return `${yyyy}-${mm}-${dd}`;
 }
 //se genera la cita, primero validando si existe ya una cita y despues generandolaF
-function guardarCita() {
+function crearCita() {
   let fechaValidar = obtenerFechaConvertida(0) + "";
   if (document.getElementById("txtFecha").value <= fechaValidar) {
-    alert("Por favor, selecciona una fecha valida");
+    mostrarMensaje(
+      "Por favor, selecciona una fecha valida",
+      "danger",
+      "divLetreroCrearCita"
+    );
+    //alert("Por favor, selecciona una fecha valida");
     return;
   }
-  if (document.getElementById("txtVeri").value == "Verificador") {
-    alert("Por favor, selecciona un asesor");
+  if (document.getElementById("txtCitaEquipo").value == "Equipo") {
+    mostrarMensaje(
+      "Por favor, selecciona un equipo",
+      "danger",
+      "divLetreroCrearCita"
+    );
+    //alert("Por favor, selecciona un equipo");
     return;
   }
   if (document.getElementById("txtTitulo").value == "") {
-    alert("Por favor, proporciona un titulo");
+    mostrarMensaje(
+      "Por favor, proporciona un titulo",
+      "danger",
+      "divLetreroCrearCita"
+    );
+    //alert("Por favor, proporciona un titulo");
     return;
   }
   if (
     document.getElementById("txtHoraInicio").value >=
     document.getElementById("txtHoraFinal").value
   ) {
-    alert("Por favor, selecciona un horario valido");
+    mostrarMensaje(
+      "Por favor, selecciona un horario valido",
+      "danger",
+      "divLetreroCrearCita"
+    );
+    //alert("Por favor, selecciona un horario valido");
     return;
   }
   let folio = document.getElementById("txtFolio").value;
-  console.log(folio);
   $.ajax({
     url: "../controllers/ConsultasCitas.php",
     type: "POST",
@@ -178,14 +205,19 @@ function guardarCita() {
     console.log(result);
     //se valida si ya se tiene una cita
     if (result.Respuesta[0].conteo > 0) {
-      alert("Ya existe una cita, validar por favor");
+      mostrarMensaje(
+        "Ya existe una cita, validar por favor",
+        "danger",
+        "divLetreroCrearCita"
+      );
+      //alert("Ya existe una cita, validar por favor");
       return;
     } else {
       let fecha = document.getElementById("txtFecha").value;
       let horaInicio = document.getElementById("txtHoraInicio").value;
       let horaFin = document.getElementById("txtHoraFinal").value;
       let infoAdicional = document.getElementById("txtInfoAdicional").value;
-      let veri = document.getElementById("txtVeri").value;
+      let equipo = document.getElementById("txtCitaEquipo").value;
       let start = `${fecha} ${horaInicio}:00`;
       let end = `${fecha} ${horaFin}:00`;
       let title = document.getElementById("txtTitulo").value;
@@ -196,41 +228,27 @@ function guardarCita() {
           start,
           end,
           infoAdicional,
-          veri,
+          equipo,
           folio,
           accion: "CrearCita",
         },
         type: "POST",
         success: function (result) {
           if (result === "Error, el folio no existe") {
-            alert(result);
+            mostrarMensaje(
+              "Error, el folio no existe",
+              "danger",
+              "divLetreroCrearCita"
+            );
             return;
           } else {
-            location.reload();
-            alert(result);
+            mostrarMensaje("Cita creada", "success", "divLetreroCrearCita");
+            setTimeout(() => {
+              location.reload();
+            }, 2000);
           }
         },
       });
-    }
-  });
-}
-//muestran todos los operadores para poder asignar una cita
-function operadores() {
-  $.ajax({
-    url: "../controllers/ConsultasCitas.php",
-    type: "POST",
-    dataType: "JSON",
-    data: {
-      accion: "MostrarOperadores",
-    },
-  }).done(function (result) {
-    $(".operadores").remove();
-    let selectIntegradores = document.getElementById("txtVeri");
-    for (let i in result.Operadores) {
-      let option = document.createElement("option");
-      option.setAttribute("class", "operadores");
-      option.text = result.Operadores[i].nombre;
-      selectIntegradores.add(option);
     }
   });
 }
@@ -255,7 +273,7 @@ function mostrarInfoCita() {
     document.getElementById("txtInfoHoraFinal").value = fechaFinal[1];
     document.getElementById("txtInfoInfoAdicional").value =
       result.Cita[0].infoAdicional;
-    document.getElementById("txtInfVeri").value = result.Cita[0].verificador;
+    document.getElementById("txtInfEquipo").value = result.Cita[0].equipo;
     //se oculta el collapse para que no muestre informacion erronea
   });
 }
@@ -312,63 +330,74 @@ function infoAdicional() {
   });
 }
 
+//////////////////////funciones para creacion de usuarios////////////////
 //se manda por medio de fetch los datos necesarios para la creacion de usuarios
-async function crearEditarUsuario(accion, idLetrero) {
+function crearEditarUsuario(accion, idLetrero) {
   let checkSupevisor;
   let checkMensajero;
   let checkConsulta;
   let checkTeamleader;
   let checkOperador;
-  if (document.getElementById("checkSupervisor").checked === true) {
-    checkSupevisor = "Si";
-  } else {
-    checkSupevisor = "No";
-  }
-  if (document.getElementById("checkMensajero").checked === true) {
-    checkMensajero = "Si";
-  } else {
-    checkMensajero = "No";
-  }
-  if (document.getElementById("checkConsulta").checked === true) {
-    checkConsulta = "Si";
-  } else {
-    checkConsulta = "No";
-  }
-  if (document.getElementById("checkTeamleader").checked === true) {
-    checkTeamleader = "Si";
-  } else {
-    checkTeamleader = "No";
-  }
-  if (document.getElementById("checkOperador").checked === true) {
-    checkOperador = "Si";
-  } else {
-    checkOperador = "No";
-  }
+  let idSupevisor;
+  let idMensajero;
+  let idConsulta;
+  let idTeamleader;
+  let idOperador;
   let usuario;
   let nombre;
   let password;
   let turno;
   let equipo;
   if (accion === "EditarUsuario") {
+    idSupevisor = "checkEditarSupervisor";
+    idMensajero = "checkEditarMensajero";
+    idConsulta = "checkEditarConsulta";
+    idTeamleader = "checkEditarTeamleader";
+    idOperador = "checkEditarOperador";
     usuario = document.getElementById("txtEditarUsuario").value;
     nombre = document.getElementById("txtEditarNombre").value;
     password = document.getElementById("txtEditarPassword").value;
     turno = document.getElementById("txtEditarTurno").value;
     equipo = document.getElementById("txtEditarEquipo").value;
   } else {
+    idSupevisor = "checkSupervisor";
+    idMensajero = "checkMensajero";
+    idConsulta = "checkConsulta";
+    idTeamleader = "checkTeamleader";
+    idOperador = "checkOperador";
     usuario = document.getElementById("txtUsuario").value;
     nombre = document.getElementById("txtNombre").value;
     password = document.getElementById("txtPassword").value;
     turno = document.getElementById("txtTurno").value;
     equipo = document.getElementById("txtEquipo").value;
   }
+  //se valida si esta seleccionada y se cambia por no y si
+  if (document.getElementById(idSupevisor).checked === true) {
+    checkSupevisor = "Si";
+  } else {
+    checkSupevisor = "No";
+  }
+  if (document.getElementById(idMensajero).checked === true) {
+    checkMensajero = "Si";
+  } else {
+    checkMensajero = "No";
+  }
+  if (document.getElementById(idConsulta).checked === true) {
+    checkConsulta = "Si";
+  } else {
+    checkConsulta = "No";
+  }
+  if (document.getElementById(idTeamleader).checked === true) {
+    checkTeamleader = "Si";
+  } else {
+    checkTeamleader = "No";
+  }
+  if (document.getElementById(idOperador).checked === true) {
+    checkOperador = "Si";
+  } else {
+    checkOperador = "No";
+  }
   let id = document.getElementById("idEditar").textContent;
-  console.log(id);
-  console.log(usuario);
-  console.log(nombre);
-  console.log(password);
-  console.log(turno);
-  console.log(equipo);
   if (
     usuario.length > 0 &&
     nombre.length > 0 &&
@@ -379,51 +408,57 @@ async function crearEditarUsuario(accion, idLetrero) {
     let dataValidar = new FormData();
     dataValidar.append("accion", "ValidarExistencia");
     dataValidar.append("usuario", usuario);
-    let request = await fetch(controlador + "AccionesUsuario.php", {
+    fetch(controlador + "AccionesUsuario.php", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       body: dataValidar, // body data type must match "Content-Type" header
-    });
-    const respuesta = await request.json();
-    console.log(respuesta);
-    if (respuesta === 1 && accion != "EditarUsuario") {
-      mostrarMensaje(
-        "Usuario existente, ingresa uno distinto",
-        "danger",
-        idLetrero
-      );
-      return;
-    }
-    let data = new FormData();
-    data.append("usuario", usuario);
-    data.append("nombre", nombre);
-    data.append("password", password);
-    data.append("turno", turno);
-    data.append("equipo", equipo);
-    data.append("accion", accion);
-    data.append("supervisor", checkSupevisor);
-    data.append("mensajero", checkMensajero);
-    data.append("consulta", checkConsulta);
-    data.append("teamleader", checkTeamleader);
-    data.append("operador", checkOperador);
+    })
+      .then((response) => response.json())
+      .then((respuesta) => {
+        console.log(respuesta);
+        if (respuesta >= 1 && accion != "EditarUsuario") {
+          mostrarMensaje(
+            "Usuario existente, ingresa uno distinto",
+            "danger",
+            idLetrero
+          );
+          return;
+        }
+        let data = new FormData();
+        data.append("usuario", usuario);
+        data.append("nombre", nombre);
+        data.append("password", password);
+        data.append("turno", turno);
+        data.append("equipo", equipo);
+        data.append("accion", accion);
+        data.append("supervisor", checkSupevisor);
+        data.append("mensajero", checkMensajero);
+        data.append("consulta", checkConsulta);
+        data.append("teamleader", checkTeamleader);
+        data.append("operador", checkOperador);
 
-    data.append("id", id);
-    request = await fetch(controlador + "AccionesUsuario.php", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      body: data, // body data type must match "Content-Type" header
-    });
-    const datos = await request.text();
-    console.log(datos);
-    if (datos === "exito") {
-      mostrarMensaje("Usuario creado", "success", idLetrero);
-      mostrarUsuarios("destroy");
-      return;
-    }
-    mostrarMensaje("Error al crear usuario", "danger", idLetrero);
-    return;
+        data.append("id", id);
+        fetch(controlador + "AccionesUsuario.php", {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          body: data, // body data type must match "Content-Type" header
+        })
+          .then((response) => response.text())
+          .then((respuesta) => {
+            console.log(respuesta);
+            if (respuesta === "exito") {
+              mostrarMensaje("Usuario creado", "success", idLetrero);
+              mostrarUsuarios("destroy");
+              return;
+            }
+            mostrarMensaje("Error al crear usuario", "danger", idLetrero);
+            return;
+          });
+      });
+  } else {
+    mostrarMensaje("Por favor, ingresa todos los campos", "danger", idLetrero);
   }
-  mostrarMensaje("Por favor, ingresa todos los campos", "danger", idLetrero);
 }
 
+//por medio de datatables obtenemos los resultados y los mostramos
 function mostrarUsuarios(getParameter) {
   //deshabilita el evento del click para que no se sumen
   $("#tablaUsuarios tbody").off("click");
@@ -433,13 +468,37 @@ function mostrarUsuarios(getParameter) {
   //obtiene el id del usuario para editar al mismo
   $("#tablaUsuarios tbody").on("click", "button", function () {
     var data = table.row($(this).parents("tr")).data();
-    console.log(data);
+    obtenerEquipos("txtEditarEquipo");
     document.getElementById("txtEditarUsuario").value = data.usuario;
     document.getElementById("txtEditarNombre").value = data.nombre;
-    document.getElementById("txtEditarPerfil").value = data.perfil;
     document.getElementById("txtEditarTurno").value = data.turno;
     document.getElementById("txtEditarEquipo").value = data.equipo;
     document.getElementById("idEditar").textContent = data.id;
+    if (data.Supervisor === "Si") {
+      document.getElementById("checkEditarSupervisor").checked = true;
+    } else {
+      document.getElementById("checkEditarSupervisor").checked = false;
+    }
+    if (data.Mensajero === "Si") {
+      document.getElementById("checkEditarMensajero").checked = true;
+    } else {
+      document.getElementById("checkEditarMensajero").checked = false;
+    }
+    if (data.Consulta === "Si") {
+      document.getElementById("checkEditarConsulta").checked = true;
+    } else {
+      document.getElementById("checkEditarConsulta").checked = false;
+    }
+    if (data.Teamleader === "Si") {
+      document.getElementById("checkEditarTeamleader").checked = true;
+    } else {
+      document.getElementById("checkEditarTeamleader").checked = false;
+    }
+    if (data.Operador === "Si") {
+      document.getElementById("checkEditarOperador").checked = true;
+    } else {
+      document.getElementById("checkEditarOperador").checked = false;
+    }
   });
 
   let data = new FormData();
@@ -494,17 +553,48 @@ function mostrarUsuarios(getParameter) {
   //se emplea la funcion para retrasar un poco el cabio de colores
   setTimeout(() => {
     cambiarColorCeldas();
-  }, 100);
+  }, 300);
 }
 
-function a() {
-  alert("Hola función a");
+//////////////////////////funciones carga de folios////////////////
+//se carga el archivo excel para asignar a los equipos
+async function cargarExcel() {
+  const excelInput = document.getElementById("LeerExcel");
+  const contenido = await readXlsxFile(excelInput.files[0]);
+  console.log(contenido);
+  if (!contenido) {
+    alert("Por favor, selecciona un archivo Excel");
+    return;
+  }
+  for (let x = 1; x < contenido.length; x++) {
+    let fechaAsignacion = contenido[x][3].toISOString().split("T")[0];
+    console.log(fechaAsignacion);
+    $.ajax({
+      method: "POST",
+      url: controlador + "CargarInformacion.php",
+      data: {
+        accion: "CargarExcel",
+        folio: contenido[x][0],
+        poliza: contenido[x][1],
+        verificador: contenido[x][2],
+        fechaAsignacion,
+        asegurado: contenido[x][4],
+        ciudad: contenido[x][5],
+        colonia: contenido[x][6],
+        calle: contenido[x][7],
+        celular: contenido[x][8],
+        correo: contenido[x][9],
+        placas: contenido[x][10],
+        serie: contenido[x][11],
+      },
+      success: function (result) {
+        console.log(result);
+      },
+    });
+  }
+  alert("Carga con exito");
 }
-
-function b() {
-  alert("Hola función mifunción");
-}
-//funciones generales
+////////////////////////////funciones generales///////////////////////////
 //genera un mensaje , remplaza a las alertas
 function mostrarMensaje(message, type, idLetrero) {
   const alertPlaceholder = document.getElementById(idLetrero);
@@ -519,43 +609,69 @@ function mostrarMensaje(message, type, idLetrero) {
   alertPlaceholder.append(wrapper);
   //se ejecuta esta linea para hcer desaparecer despues de un tiempo la alerta
   $(".alert")
-    .fadeTo(4000, 0)
-    .slideUp(100, function () {
+    .fadeTo(5000, 0)
+    .slideUp(50, function () {
       $(this).remove();
     });
 }
+//se cambian los colores edependiendo como estan los resultados de la tabla
+//se accede a las celdas en especifico para verificar si e; valor es verdadero
 function cambiarColorCeldas() {
   let nFilas = $("#tablaUsuarios tr").length;
   let idTabla = document.getElementById("tablaUsuarios");
   for (let i = 1; i < nFilas - 1; i++) {
     if (idTabla.rows[i].cells[4].textContent === "Si") {
-      cambiosColor(idTabla, i,4);
+      cambiosColor(idTabla, i, 4, "0091ff", "ffffff");
     } else {
-      idTabla.rows[i].cells[4].style.backgroundColor = "rgb(12,34,56)";
+      cambiosColor(idTabla, i, 4, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[5].textContent === "Si") {
-      cambiosColor(idTabla, i,5);
+      cambiosColor(idTabla, i, 5, "0091ff", "ffffff");
     } else {
-      idTabla.rows[i].cells[5].style.backgroundColor = "rgb(12,34,56)";
+      cambiosColor(idTabla, i, 5, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[6].textContent === "Si") {
-      cambiosColor(idTabla, i,6);
+      cambiosColor(idTabla, i, 6, "0091ff", "ffffff");
     } else {
-      idTabla.rows[i].cells[6].style.backgroundColor = "rgb(12,34,56)";
+      cambiosColor(idTabla, i, 6, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[7].textContent === "Si") {
-      cambiosColor(idTabla, i,7);
+      cambiosColor(idTabla, i, 7, "0091ff", "ffffff");
     } else {
-      idTabla.rows[i].cells[7].style.backgroundColor = "rgb(12,34,56)";
+      cambiosColor(idTabla, i, 7, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[8].textContent === "Si") {
-      cambiosColor(idTabla, i,8);
+      cambiosColor(idTabla, i, 8, "0091ff", "ffffff");
     } else {
-      idTabla.rows[i].cells[8].style.backgroundColor = "rgb(12,34,56)";
+      cambiosColor(idTabla, i, 8, "AFAFAF", "000000");
     }
   }
 }
-function cambiosColor(idTabla, i,celda) {
-  idTabla.rows[i].cells[celda].style.backgroundColor = "green";
-  idTabla.rows[i].cells[celda].style.color = "white";
+//manda los parametros para que cambien de color
+function cambiosColor(idTabla, i, celda, colorBack, colorLetra) {
+  idTabla.rows[i].cells[celda].style.backgroundColor = `#${colorBack}`;
+  idTabla.rows[i].cells[celda].style.color = `#${colorLetra}`;
+}
+//obtiene los equipos y los asigna al select que le mandan por parametro
+function obtenerEquipos(idselect) {
+  let data = new FormData();
+  data.append("accion", "ObtenerEquipos");
+  fetch(controlador + "AccionesUsuario.php", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+    },
+    body: data,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      $(".equipos").remove();
+      let selectEquipos = document.getElementById(idselect);
+      for (let i in data.Equipos) {
+        let option = document.createElement("option");
+        option.setAttribute("class", "equipos");
+        option.text = data.Equipos[i].nombre;
+        selectEquipos.add(option);
+      }
+    });
 }

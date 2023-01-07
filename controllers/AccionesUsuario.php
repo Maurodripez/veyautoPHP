@@ -53,25 +53,37 @@ switch ($accion) {
         $usuario = $_POST['usuario'];
         $nombre = $_POST['nombre'];
         $password = $_POST['password'];
-        $perfil = $_POST['perfil'];
         $turno = $_POST['turno'];
+        $supervisor = $_POST['supervisor'];
+        $mensajero = $_POST['mensajero'];
+        $consulta = $_POST['consulta'];
+        $teamleader = $_POST['teamleader'];
+        $operador = $_POST['operador'];
         $equipo = $_POST['equipo'];
         $id = $_POST['id'];
         $passCifrada = password_hash($password, PASSWORD_DEFAULT, array("cost" => 10));
-        $sql = $DBcon->prepare("UPDATE usuarios SET usuario = :usuario, password = :password, nombre = :nombre, perfil = :perfil, turno = :turno, equipo = :equipo"
-            . " WHERE id = :id");
+        $sql = $DBcon->prepare("UPDATE usuarios SET usuario = :usuario, password = :password, nombre = :nombre, turno = :turno, equipo = :equipo,"
+            . " Supervisor= :supervisor,Mensajero= :mensajero,Consulta= :consulta,Teamleader= :teamleader,Operador= :operador  WHERE id = :id");
         //asocio los campos del insert a los campos del formulario
         $sql->bindParam(':usuario', $usuario);
         $sql->bindParam(':password', $passCifrada);
         $sql->bindParam(':nombre', $nombre);
-        $sql->bindParam(':perfil', $perfil);
         $sql->bindParam(':turno', $turno);
         $sql->bindParam(':equipo', $equipo);
         $sql->bindParam(':id', $id);
+        $sql->bindParam(':supervisor', $supervisor);
+        $sql->bindParam(':mensajero', $mensajero);
+        $sql->bindParam(':consulta', $consulta);
+        $sql->bindParam(':teamleader', $teamleader);
+        $sql->bindParam(':operador', $operador);
         //ejecutamos codigo anterior
         $sql->execute();
         //cierramos la conexion
         $DBCon = null;
         echo "exito";
+        break;
+    case "ObtenerEquipos":
+        $sql = "select nombre from usuarios where Teamleader='Si'";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Equipos");
         break;
 }

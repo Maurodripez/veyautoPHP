@@ -141,25 +141,25 @@
 }
 /*dependiendo el dia activo, se cambia el color del fondo*/
 .fc-day.fc-widget-content.fc-wed.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-mon.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-tue.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-thu.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-fri.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-sat.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 .fc-day.fc-widget-content.fc-sun.fc-today {
-  background-color: rgba(0, 255, 55, 0.726);
+  background-color: rgba(0, 255, 55, 0.418);
 }
 /*inicio de la seccion herramientas*/
 #listHerramientas {
