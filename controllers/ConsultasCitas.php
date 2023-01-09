@@ -20,10 +20,6 @@ switch ($accion) {
         $sql = "select count(folio) as conteo from citas where folio='$folio'";
         ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "Respuesta");
         break;
-    case "MostrarOperadores":
-        $sql = "select nombre from usuarios where perfil='operador'";
-        ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "Operadores");
-        break;
     case "SaberPerfil":
         $usuario = $_SESSION['usuario'];
         $sql = "select perfil from usuarios where usuario= '$usuario'";

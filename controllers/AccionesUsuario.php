@@ -86,4 +86,14 @@ switch ($accion) {
         $sql = "select nombre from usuarios where Teamleader='Si'";
         ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Equipos");
         break;
+    case "EliminarUsuario":
+        $id = $_POST["id"];
+        try {
+            $sql = "DELETE FROM usuarios WHERE id=$id";
+            ActualizarCualquierSiniestro($sql, "../models/Conexion.php");
+            echo "Eliminado con exito";
+        } catch (\Throwable $th) {
+            echo "Error al eliminar usuario";
+        }
+        break;
 }

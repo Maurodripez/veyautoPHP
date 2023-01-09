@@ -34,6 +34,7 @@
 /*boton guardar cita*/
 #btnGuardarCita {
   background-color: #138ce9;
+  color: aliceblue;
 }
 #btnSalir {
   justify-content: end;
@@ -193,4 +194,20 @@
 }
 #tablaUsuarios td {
   text-align: center;
+}
+#btnCargarExcel{
+  background-color: #0091ff;
+  color: aliceblue;
+}
+#btnPlantillaCarga{
+  background-color: #5c636a;
+  color: aliceblue;
+}
+#btnEliminarCarga{
+  background-color: #ff0000;
+  color: aliceblue;
+}
+.btnEliminar{
+  padding-top: 1em;
+
 }

@@ -18,9 +18,17 @@ window.addEventListener("load", function (event) {
     document.getElementById("divCitas").style.display = "none";
     document.getElementById("divDatos").style.display = "none";
     document.getElementById("divHerramientas").style.display = "";
-    obtenerEquipos("txtEquipo");
   });
-
+  document
+    .getElementById("btnAcordeonCrearUsuario")
+    .addEventListener("click", () => {
+      obtenerEquipos("txtEquipo");
+    });
+  document
+    .getElementById("btnAcordionAsignarFolios")
+    .addEventListener("click", () => {
+      obtenerEquipos("txtEquipoFolios");
+    });
   ///////////////////////inicializaciones de usuario//////////////////////////////
   //se inicializa la funcion table para no tener conflictos cada vez que se llama
   let table;
@@ -38,7 +46,13 @@ window.addEventListener("load", function (event) {
   });
   document.getElementById("btnCrearUsuario").addEventListener("click", (e) => {
     crearEditarUsuario("CrearUsuario", "liveAlertPlaceholder");
+    e.preventDefault();
   });
+  document
+    .getElementById("btnEliminarUsuario")
+    .addEventListener("click", () => {
+      eliminarUsuario();
+    });
 
   ////////////////////////inicializaciones de citas//////////////////////////////
   actualizarCitas();
@@ -56,6 +70,14 @@ window.addEventListener("load", function (event) {
   document.getElementById("btnCargarExcel").addEventListener("click", () => {
     cargarExcel();
   });
+  document.getElementById("btnEliminarCarga").addEventListener("click", () => {
+    eliminarCarga();
+  });
+  document
+    .getElementById("btnAcordeonEliminarCargas")
+    .addEventListener("click", () => {
+      obtenerCargas();
+    });
 });
 //se ejecuta la funcion cada minuto para refrescar las citas
 function actualizarCitas() {
@@ -154,7 +176,7 @@ function obtenerFechaConvertida(n) {
 function crearCita() {
   let fechaValidar = obtenerFechaConvertida(0) + "";
   if (document.getElementById("txtFecha").value <= fechaValidar) {
-    mostrarMensaje(
+    mostrarMensajeFade(
       "Por favor, selecciona una fecha valida",
       "danger",
       "divLetreroCrearCita"
@@ -163,7 +185,7 @@ function crearCita() {
     return;
   }
   if (document.getElementById("txtCitaEquipo").value == "Equipo") {
-    mostrarMensaje(
+    mostrarMensajeFade(
       "Por favor, selecciona un equipo",
       "danger",
       "divLetreroCrearCita"
@@ -172,7 +194,7 @@ function crearCita() {
     return;
   }
   if (document.getElementById("txtTitulo").value == "") {
-    mostrarMensaje(
+    mostrarMensajeFade(
       "Por favor, proporciona un titulo",
       "danger",
       "divLetreroCrearCita"
@@ -184,7 +206,7 @@ function crearCita() {
     document.getElementById("txtHoraInicio").value >=
     document.getElementById("txtHoraFinal").value
   ) {
-    mostrarMensaje(
+    mostrarMensajeFade(
       "Por favor, selecciona un horario valido",
       "danger",
       "divLetreroCrearCita"
@@ -205,7 +227,7 @@ function crearCita() {
     console.log(result);
     //se valida si ya se tiene una cita
     if (result.Respuesta[0].conteo > 0) {
-      mostrarMensaje(
+      mostrarMensajeFade(
         "Ya existe una cita, validar por favor",
         "danger",
         "divLetreroCrearCita"
@@ -235,14 +257,14 @@ function crearCita() {
         type: "POST",
         success: function (result) {
           if (result === "Error, el folio no existe") {
-            mostrarMensaje(
+            mostrarMensajeFade(
               "Error, el folio no existe",
               "danger",
               "divLetreroCrearCita"
             );
             return;
           } else {
-            mostrarMensaje("Cita creada", "success", "divLetreroCrearCita");
+            mostrarMensajeFade("Cita creada", "success", "divLetreroCrearCita");
             setTimeout(() => {
               location.reload();
             }, 2000);
@@ -416,7 +438,7 @@ function crearEditarUsuario(accion, idLetrero) {
       .then((respuesta) => {
         console.log(respuesta);
         if (respuesta >= 1 && accion != "EditarUsuario") {
-          mostrarMensaje(
+          mostrarMensajeFade(
             "Usuario existente, ingresa uno distinto",
             "danger",
             idLetrero
@@ -445,19 +467,22 @@ function crearEditarUsuario(accion, idLetrero) {
           .then((respuesta) => {
             console.log(respuesta);
             if (respuesta === "exito") {
-              mostrarMensaje("Usuario creado", "success", idLetrero);
+              mostrarMensajeFade("Usuario creado", "success", idLetrero);
               mostrarUsuarios("destroy");
               return;
             }
-            mostrarMensaje("Error al crear usuario", "danger", idLetrero);
+            mostrarMensajeFade("Error al crear usuario", "danger", idLetrero);
             return;
           });
       });
   } else {
-    mostrarMensaje("Por favor, ingresa todos los campos", "danger", idLetrero);
+    mostrarMensajeFade(
+      "Por favor, ingresa todos los campos",
+      "danger",
+      idLetrero
+    );
   }
 }
-
 //por medio de datatables obtenemos los resultados y los mostramos
 function mostrarUsuarios(getParameter) {
   //deshabilita el evento del click para que no se sumen
@@ -468,12 +493,13 @@ function mostrarUsuarios(getParameter) {
   //obtiene el id del usuario para editar al mismo
   $("#tablaUsuarios tbody").on("click", "button", function () {
     var data = table.row($(this).parents("tr")).data();
+    document.getElementById("idEditar").textContent = data.id;
     obtenerEquipos("txtEditarEquipo");
+    console.log(data.id);
     document.getElementById("txtEditarUsuario").value = data.usuario;
     document.getElementById("txtEditarNombre").value = data.nombre;
     document.getElementById("txtEditarTurno").value = data.turno;
     document.getElementById("txtEditarEquipo").value = data.equipo;
-    document.getElementById("idEditar").textContent = data.id;
     if (data.Supervisor === "Si") {
       document.getElementById("checkEditarSupervisor").checked = true;
     } else {
@@ -531,14 +557,7 @@ function mostrarUsuarios(getParameter) {
         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 
         0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 
         0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
-        1.5 0 0 0 1 2.5v11z"/></svg></button>
-        <button type="button" class="btn eliminarUsuario"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
-        class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 
-        0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 
-        16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 
-        0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 
-        5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 
-        0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg></button></div>`,
+        1.5 0 0 0 1 2.5v11z"/></svg></button>`,
       },
     ],
     language: {
@@ -555,52 +574,160 @@ function mostrarUsuarios(getParameter) {
     cambiarColorCeldas();
   }, 300);
 }
-
+function eliminarUsuario() {
+  if (window.confirm("Eliminar usuario?")) {
+    let id = document.getElementById("idEditar").textContent;
+    console.log(id);
+    let data = new FormData();
+    data.append("id", id);
+    data.append("accion", "EliminarUsuario");
+    fetch(controlador + "AccionesUsuario.php", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      body: data, // body data type must match "Content-Type" header
+    })
+      .then((response) => response.text())
+      .then((respuesta) => {
+        if (respuesta === "Eliminado con exito") {
+          mostrarMensajeNoFade(respuesta, "success", "divLetreroEditar");
+          setTimeout(function () {
+            mostrarUsuarios("destroy");
+            $("#modalEditarUsuario").modal("hide");
+          }, 2000);
+        } else {
+          mostrarMensajeNoFade(respuesta, "danger", "divLetreroEditar");
+        }
+      });
+  }
+}
 //////////////////////////funciones carga de folios////////////////
 //se carga el archivo excel para asignar a los equipos
 async function cargarExcel() {
   const excelInput = document.getElementById("LeerExcel");
   const contenido = await readXlsxFile(excelInput.files[0]);
-  console.log(contenido);
-  if (!contenido) {
-    alert("Por favor, selecciona un archivo Excel");
+  let equipo = document.getElementById("txtEquipoFolios").value;
+  if (equipo === "") {
+    mostrarMensajeFade("Selecciona un equipo", "danger", "divLetreroCarga");
     return;
   }
-  for (let x = 1; x < contenido.length; x++) {
-    let fechaAsignacion = contenido[x][3].toISOString().split("T")[0];
-    console.log(fechaAsignacion);
-    $.ajax({
-      method: "POST",
-      url: controlador + "CargarInformacion.php",
-      data: {
-        accion: "CargarExcel",
-        folio: contenido[x][0],
-        poliza: contenido[x][1],
-        verificador: contenido[x][2],
-        fechaAsignacion,
-        asegurado: contenido[x][4],
-        ciudad: contenido[x][5],
-        colonia: contenido[x][6],
-        calle: contenido[x][7],
-        celular: contenido[x][8],
-        correo: contenido[x][9],
-        placas: contenido[x][10],
-        serie: contenido[x][11],
-      },
-      success: function (result) {
-        console.log(result);
-      },
-    });
+  if (!contenido) {
+    mostrarMensajeFade(
+      "Selecciona un archivo XLSX",
+      "danger",
+      "divLetreroCarga"
+    );
+    return;
   }
-  alert("Carga con exito");
+  let dataCrearCarga = new FormData();
+  dataCrearCarga.append("accion", "CrearCarga");
+  let cantidadFolios = contenido.length - 1;
+  dataCrearCarga.append("cantidadFolios", cantidadFolios);
+  fetch(controlador + "CargarInformacion.php", {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    body: dataCrearCarga, // body data type must match "Content-Type" header
+  })
+    .then((response) => response.text())
+    .then((respuesta) => {
+      let fk = respuesta;
+      for (let x = 1; x < contenido.length; x++) {
+        try {
+          let fechaAsignacion = contenido[x][3].toISOString().split("T")[0];
+          let data = new FormData();
+          data.append("accion", "CargarExcel");
+          data.append("cantidadFolios", cantidadFolios);
+          data.append("folio", contenido[x][0]);
+          data.append("poliza", contenido[x][1]);
+          data.append("verificador", contenido[x][2]);
+          data.append("asegurado", contenido[x][4]);
+          data.append("ciudad", contenido[x][5]);
+          data.append("colonia", contenido[x][6]);
+          data.append("calle", contenido[x][7]);
+          data.append("celular", contenido[x][8]);
+          data.append("correo", contenido[x][9]);
+          data.append("placas", contenido[x][10]);
+          data.append("serie", contenido[x][11]);
+          data.append("equipo", equipo);
+          data.append("fk", fk);
+          data.append("fechaAsignacion", fechaAsignacion);
+          fetch(controlador + "CargarInformacion.php", {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            body: data, // body data type must match "Content-Type" header
+          })
+            .then((response) => response.text())
+            .then((respuesta) => {
+              console.log(respuesta);
+              if (respuesta === "0") {
+                mostrarMensajeNoFade(
+                  "error con la fila:" +
+                    x +
+                    " verificar los datos y volver a cargarlo",
+                  "danger",
+                  "divLetreroCarga"
+                );
+              }
+            });
+        } catch (error) {
+          mostrarMensajeNoFade(
+            "error con la fila:" +
+              x +
+              " verificar los datos y volver a cargarlo",
+            "danger",
+            "divLetreroCarga"
+          );
+        }
+      }
+      mostrarMensajeFade("Cargado con exito", "success", "divLetreroCarga");
+    });
+}
+function obtenerCargas() {
+  let data = new FormData();
+  data.append("accion", "ObtenerCargas");
+  fetch(controlador + "CargarInformacion.php", {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    body: data, // body data type must match "Content-Type" header
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((respuesta) => {
+      console.log(respuesta);
+      $(".cargas").remove();
+      let selectCargas = document.getElementById("selectEliminarCarga");
+      for (let i in respuesta.Cargas) {
+        let option = document.createElement("option");
+        option.setAttribute("class", "cargas");
+        option.text =
+          respuesta.Cargas[i].fechasDeCargas +
+          "/Folios: " +
+          respuesta.Cargas[i].cantidadFolios;
+        option.value = respuesta.Cargas[i].id;
+        selectCargas.add(option);
+      }
+    });
+}
+//se obtiene el value para saber el id de la carga y asu elminarla
+function eliminarCarga() {
+  let idCarga = document.getElementById("selectEliminarCarga").value;
+  console.log(idCarga);
+  let data = new FormData();
+  data.append("id", idCarga);
+  data.append("accion", "EliminarCarga");
+  fetch(controlador + "CargarInformacion.php", {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    body: data, // body data type must match "Content-Type" header
+  })
+    .then((response) => response.text())
+    .then((respuesta) => {
+      console.log(respuesta);
+    });
 }
 ////////////////////////////funciones generales///////////////////////////
 //genera un mensaje , remplaza a las alertas
-function mostrarMensaje(message, type, idLetrero) {
+function mostrarMensajeFade(message, type, idLetrero) {
   const alertPlaceholder = document.getElementById(idLetrero);
   const wrapper = document.createElement("div");
   wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `<div class="alert alertFade alert-${type} alert-dismissible" role="alert">`,
     `   <div>${message}</div>`,
     '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
     "</div>",
@@ -608,11 +735,24 @@ function mostrarMensaje(message, type, idLetrero) {
 
   alertPlaceholder.append(wrapper);
   //se ejecuta esta linea para hcer desaparecer despues de un tiempo la alerta
-  $(".alert")
+  $(".alert.alertFade")
     .fadeTo(5000, 0)
     .slideUp(50, function () {
       $(this).remove();
     });
+}
+//madna el menaje pero no desaparece hasta que el usuario lo elimine
+function mostrarMensajeNoFade(message, type, idLetrero) {
+  const alertPlaceholder = document.getElementById(idLetrero);
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div class="alert alertNoFade alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+
+  alertPlaceholder.append(wrapper);
 }
 //se cambian los colores edependiendo como estan los resultados de la tabla
 //se accede a las celdas en especifico para verificar si e; valor es verdadero
@@ -674,4 +814,75 @@ function obtenerEquipos(idselect) {
         selectEquipos.add(option);
       }
     });
+}
+////////////////////Datos////////////////////////////
+function mostrarFolios() {
+  //deshabilita el evento del click para que no se sumen
+  $("#tablaFolios tbody").off("click");
+  if (getParameter === "destroy") {
+    table.destroy();
+  }
+  //obtiene el id del usuario para editar al mismo
+  $("#tablaFolios tbody").on("click", "button", function () {
+    var data = table.row($(this).parents("tr")).data();
+    //document.getElementById("idEditar").textContent = data.id;
+    //obtenerEquipos("txtEditarEquipo");
+    console.log(data);
+    //document.getElementById("txtEditarUsuario").value = data.usuario;
+    //document.getElementById("txtEditarNombre").value = data.nombre;
+    //document.getElementById("txtEditarTurno").value = data.turno;
+    //document.getElementById("txtEditarEquipo").value = data.equipo;
+  });
+
+  let data = new FormData();
+  data.append("accion", "MostrarFolios");
+  table = new DataTable("#tablaFolios", {
+    ajax: function (d, cb) {
+      fetch("../controllers/accionesFolios.php", {
+        method: "POST",
+        body: data,
+      })
+        .then((response) => response.json())
+        .then((data) => cb(data));
+    },
+    columnDefs: [
+      { targets: 0, data: "folio" },
+      { targets: 1, data: "fechacarga" },
+      { targets: 2, data: "ultimoSeguimiento" },
+      { targets: 3, data: "situacion" },
+      { targets: 4, data: "comentSeguimiento" },
+      { targets: 5, data: "diasTranscurridos" },
+      { targets: 6, data: "poliza" },
+      { targets: 7, data: "asegurado" },
+      { targets: 8, data: "celular" },
+      { targets: 9, data: "telCasa" },
+      { targets: 10, data: "marcaTipo" },
+      { targets: 11, data: "numSerie" },
+      { targets: 12, data: "estacion" },
+      { targets: 13, data: "clasificacion" },
+      {
+        targets: -1,
+        data: null,
+        defaultContent: `<div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn editarUsuario" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario">
+          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 
+          0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 
+          0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
+          1.5 0 0 0 1 2.5v11z"/></svg></button>`,
+      },
+    ],
+    language: {
+      search: "Buscar",
+    },
+    ordering: false,
+    info: false,
+    scrollY: "50vh",
+    scrollCollapse: true,
+    paging: false,
+  });
+  //se emplea la funcion para retrasar un poco el cabio de colores
+  setTimeout(() => {
+    cambiarColorCeldas();
+  }, 300);
 }

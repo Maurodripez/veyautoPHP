@@ -1,75 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+  </head>
 
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
-</head>
+  <div class="container">
+    <div class="row">
+      <h2>Bootstrap-select example</h2>
+      <p>This uses <a href="https://silviomoreto.github.io/bootstrap-select/">https://silviomoreto.github.io/bootstrap-select/</a></p>
+      <hr />
+    </div>
 
-<body>
-  <table id="tabProd">
-    <thead>
-      <tr>
-        <th>
-          1
-        </th>
-        <th>
-          2
-        </th>
-        <th>
-          3
-        </th>
-        <th>
-          cuatro
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-        <td>8</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>6</td>
-        <td>3</td>
-        <td>4</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <script>
-    function ejemplo() {
-
-      console.log(td);
-      var nFilas = $("#tabProd tr").length;
-      var nColumnas = $("#tabProd tr:last td").length;
-      for (let i = 1; i < nFilas; i++) {
-        var td = document.getElementById("tabProd").rows[i].cells[3].textContent;
-        console.log(td);
-        if (td === "4") {
-          document.getElementById("tabProd").rows[i].cells[3].style.backgroundColor = 'green';
-
-        }
-      }
-      var msg = "Filas: " + nFilas + " - Columnas: " + nColumnas;
-      console.log(msg);
-    }
-
-    ejemplo();
-  </script>
-</body>
-
+    <div class="row-fluid">
+      <select class="selectpicker" data-show-subtext="true" data-live-search="true">
+        <option data-subtext="Rep California">Tom Foolery</option>
+        <option data-subtext="Sen California">Bill Gordon</option>
+        <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>
+        <option data-subtext="Rep Alabama">Mario Flores</option>
+        <option data-subtext="Rep Alaska">Don Young</option>
+        <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option>
+      </select>
+      <span class="help-inline">With <code>data-show-subtext="true" data-live-search="true"</code>. Try searching for california</span>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 </html>
