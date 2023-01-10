@@ -13,6 +13,7 @@ window.addEventListener("load", function (event) {
     document.getElementById("divCitas").style.display = "none";
     document.getElementById("divDatos").style.display = "";
     document.getElementById("divHerramientas").style.display = "none";
+    mostrarFolios("inicial");
   });
   document.getElementById("btnHerramientas").addEventListener("click", () => {
     document.getElementById("divCitas").style.display = "none";
@@ -32,8 +33,8 @@ window.addEventListener("load", function (event) {
   ///////////////////////inicializaciones de usuario//////////////////////////////
   //se inicializa la funcion table para no tener conflictos cada vez que se llama
   let table;
-  //se evita asi generar varias veces la misma peticion si no es necesaria
   mostrarUsuarios("inicial");
+  //se evita asi generar varias veces la misma peticion si no es necesaria
   $("#btnMostrarUsuarios").on("click", function () {
     //se pregunta si el boton no tiene la clase collapsed para no desplegar varias veces la misma funcion
     if (!$("#btnMostrarUsuariosHijo").hasClass("collapsed")) {
@@ -53,7 +54,18 @@ window.addEventListener("load", function (event) {
     .addEventListener("click", () => {
       eliminarUsuario();
     });
-
+  ////////////////////////inicializaciones Datos//////////////////////////////
+  $(".editarFolios").on("click", function () {
+    console.log("data");
+    var data = tableFolio.row($(this).parents("tr")).data();
+    //document.getElementById("idEditar").textContent = data.id;
+    //obtenerEquipos("txtEditarEquipo");
+    console.log(data);
+    //document.getElementById("txtEditarUsuario").value = data.usuario;
+    //document.getElementById("txtEditarNombre").value = data.nombre;
+    //document.getElementById("txtEditarTurno").value = data.turno;
+    //document.getElementById("txtEditarEquipo").value = data.equipo;
+  });
   ////////////////////////inicializaciones de citas//////////////////////////////
   actualizarCitas();
   //se escucha el click y muestra crea la tabla de usuarios
@@ -87,6 +99,7 @@ function actualizarCitas() {
 //funciones para Citas
 //muestra las citas del operador
 function desplegarCitas() {
+  let colorCita;
   $("#citas").fullCalendar({
     header: {
       left: "prev,next today",
@@ -94,10 +107,25 @@ function desplegarCitas() {
       right: "month,basicWeek,basicDay",
     },
     defaultView: "basicDay",
-    editable: true,
     events: "../controllers/MostrarEventos.php",
     displayEventTime: true,
     eventRender: function (event, element, view) {
+      console.log(event);
+      //cambia de manera dinamica los colores de las citas, dependiendo la cantidad
+      //de dias que esten activas desde su carga
+      if (event.dias < 5) {
+        element.find(".fc-content").css("background-color", "#00AA12");
+        element.find(".fc-content").css("background-color", "#00AA12");
+      } else if (event.dias > 5 && event.dias < 10) {
+        element.find(".fc-content").css("background-color", "#EA7500");
+        element.find(".fc-content").css("background-color", "#EA7500");
+      } else if (event.dias > 9) {
+        element.find(".fc-content").css("background-color", "#D10000");
+        element.find(".fc-content").css("background-color", "#D10000");
+      }
+      console.log(colorCita);
+      //muestra mas informacion
+      element.find(".fc-content").append("<br/>" + event.infoAdicional);
       if (event.allDay === "true") {
         event.allDay = true;
       } else {
@@ -160,18 +188,6 @@ function desplegarCitas() {
     },
   });
 }
-//se crea la funcion para obtener la fecha actual en formato yyyy-mm-dd
-function obtenerFechaConvertida(n) {
-  const date = new Date();
-  date.setDate(date.getDate() - n);
-  const pad = (n) => n.toString().padStart(2, "0");
-
-  const yyyy = date.getFullYear(),
-    mm = pad(date.getMonth() + 1),
-    dd = pad(date.getDate());
-
-  return `${yyyy}-${mm}-${dd}`;
-}
 //se genera la cita, primero validando si existe ya una cita y despues generandolaF
 function crearCita() {
   let fechaValidar = obtenerFechaConvertida(0) + "";
@@ -224,7 +240,6 @@ function crearCita() {
       accion: "ValidarCita",
     },
   }).done(function (result) {
-    console.log(result);
     //se valida si ya se tiene una cita
     if (result.Respuesta[0].conteo > 0) {
       mostrarMensajeFade(
@@ -232,7 +247,6 @@ function crearCita() {
         "danger",
         "divLetreroCrearCita"
       );
-      //alert("Ya existe una cita, validar por favor");
       return;
     } else {
       let fecha = document.getElementById("txtFecha").value;
@@ -246,6 +260,7 @@ function crearCita() {
       $.ajax({
         url: "../controllers/ConsultasCitas.php",
         data: {
+          fecha,
           title,
           start,
           end,
@@ -265,9 +280,13 @@ function crearCita() {
             return;
           } else {
             mostrarMensajeFade("Cita creada", "success", "divLetreroCrearCita");
+            //refresca las citas que tenemos
+            desplegarCitas();
+            $("#citas").fullCalendar("refetchEvents");
             setTimeout(() => {
-              location.reload();
-            }, 2000);
+              //cierra el modal
+              $("#ModalEventos").modal("hide");
+            }, 1000);
           }
         },
       });
@@ -275,6 +294,7 @@ function crearCita() {
   });
 }
 function mostrarInfoCita() {
+  document.getElementById("ModalMostrarInfoEvento").style.borderColor="#D10000";
   let id = document.getElementById("idCitaActual").textContent;
   console.log(id);
   $.ajax({
@@ -484,12 +504,9 @@ function crearEditarUsuario(accion, idLetrero) {
   }
 }
 //por medio de datatables obtenemos los resultados y los mostramos
-function mostrarUsuarios(getParameter) {
+function mostrarUsuarios() {
   //deshabilita el evento del click para que no se sumen
   $("#tablaUsuarios tbody").off("click");
-  if (getParameter === "destroy") {
-    table.destroy();
-  }
   //obtiene el id del usuario para editar al mismo
   $("#tablaUsuarios tbody").on("click", "button", function () {
     var data = table.row($(this).parents("tr")).data();
@@ -563,11 +580,14 @@ function mostrarUsuarios(getParameter) {
     language: {
       search: "Buscar",
     },
+    fixedHeader: true,
+    destroy: true, //linea para no causar conflicto con otras tablas
     ordering: false,
     info: false,
     scrollY: "50vh",
     scrollCollapse: true,
     paging: false,
+    responsive: true,
   });
   //se emplea la funcion para retrasar un poco el cabio de colores
   setTimeout(() => {
@@ -721,6 +741,76 @@ function eliminarCarga() {
       console.log(respuesta);
     });
 }
+////////////////////Datos////////////////////////////
+function mostrarFolios() {
+  buquedaEnVivo();
+  let data = new FormData();
+  data.append("accion", "MostrarFolios");
+  table = new DataTable("#tablaFolios", {
+    ajax: function (d, cb) {
+      fetch("../controllers/AccionesFolios.php", {
+        method: "POST",
+        body: data,
+      })
+        .then((response) => response.json())
+        .then((data) => cb(data));
+    },
+    columnDefs: [
+      { targets: 1, data: "folio" },
+      { targets: 2, data: "fechacarga" },
+      { targets: 3, data: "fechaSeguimiento" },
+      { targets: 4, data: "situacion" },
+      { targets: 5, data: "comentSeguimiento" },
+      { targets: 6, data: "dias" },
+      { targets: 7, data: "poliza" },
+      { targets: 8, data: "asegurado" },
+      { targets: 9, data: "celular" },
+      { targets: 10, data: "telCasa" },
+      { targets: 11, data: "marcaTipo" },
+      { targets: 12, data: "numSerie" },
+      { targets: 13, data: "estacion" },
+      { targets: 14, data: "clasificacion" },
+      {
+        targets: 0,
+        data: null,
+        defaultContent: `<button type="button" class="btn editarFolios" data-bs-toggle="modal" data-bs-target="#modalEditarFolio">
+          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 
+          0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 
+          0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
+          1.5 0 0 0 1 2.5v11z"/></svg></button>`,
+      },
+    ],
+    language: {
+      search: "Buscar",
+    },
+    destroy: true,
+    ordering: false,
+    info: false,
+    scrollY: "50vh",
+    scrollCollapse: false,
+    paging: false,
+    responsive: true,
+  });
+  //se emplea la funcion para retrasar un poco el cabio de colores
+  setTimeout(() => {
+    cambiarColorCeldas();
+  }, 300);
+  //deshabilita el evento del click para que no se sumen
+  $("#tablaFolios tbody").off("click");
+  //obtiene el id del usuario para editar al mismo
+  $("#tablaFolios tbody").on("click", "button", function () {
+    var data = table.row($(this).parents("tr")).data();
+    document.getElementById("idFolio").textContent = data.id;
+    console.log(document.getElementById("idFolio").textContent);
+    //obtenerEquipos("txtEditarEquipo");
+    console.log(data);
+    //document.getElementById("txtEditarUsuario").value = data.usuario;
+    //document.getElementById("txtEditarNombre").value = data.nombre;
+    //document.getElementById("txtEditarTurno").value = data.turno;
+    //document.getElementById("txtEditarEquipo").value = data.equipo;
+  });
+}
 ////////////////////////////funciones generales///////////////////////////
 //genera un mensaje , remplaza a las alertas
 function mostrarMensajeFade(message, type, idLetrero) {
@@ -815,74 +905,30 @@ function obtenerEquipos(idselect) {
       }
     });
 }
-////////////////////Datos////////////////////////////
-function mostrarFolios() {
-  //deshabilita el evento del click para que no se sumen
-  $("#tablaFolios tbody").off("click");
-  if (getParameter === "destroy") {
-    table.destroy();
-  }
-  //obtiene el id del usuario para editar al mismo
-  $("#tablaFolios tbody").on("click", "button", function () {
-    var data = table.row($(this).parents("tr")).data();
-    //document.getElementById("idEditar").textContent = data.id;
-    //obtenerEquipos("txtEditarEquipo");
-    console.log(data);
-    //document.getElementById("txtEditarUsuario").value = data.usuario;
-    //document.getElementById("txtEditarNombre").value = data.nombre;
-    //document.getElementById("txtEditarTurno").value = data.turno;
-    //document.getElementById("txtEditarEquipo").value = data.equipo;
-  });
+//funcion para la busquedqa en vivo
+//Creamos una fila en el head de la tabla y lo clonamos para cada columna
+function buquedaEnVivo() {
+  $("#tablaFolios thead tr").clone(true).appendTo("#tablaFolios thead");
 
-  let data = new FormData();
-  data.append("accion", "MostrarFolios");
-  table = new DataTable("#tablaFolios", {
-    ajax: function (d, cb) {
-      fetch("../controllers/accionesFolios.php", {
-        method: "POST",
-        body: data,
-      })
-        .then((response) => response.json())
-        .then((data) => cb(data));
-    },
-    columnDefs: [
-      { targets: 0, data: "folio" },
-      { targets: 1, data: "fechacarga" },
-      { targets: 2, data: "ultimoSeguimiento" },
-      { targets: 3, data: "situacion" },
-      { targets: 4, data: "comentSeguimiento" },
-      { targets: 5, data: "diasTranscurridos" },
-      { targets: 6, data: "poliza" },
-      { targets: 7, data: "asegurado" },
-      { targets: 8, data: "celular" },
-      { targets: 9, data: "telCasa" },
-      { targets: 10, data: "marcaTipo" },
-      { targets: 11, data: "numSerie" },
-      { targets: 12, data: "estacion" },
-      { targets: 13, data: "clasificacion" },
-      {
-        targets: -1,
-        data: null,
-        defaultContent: `<div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn editarUsuario" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario">
-          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
-          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 
-          0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 
-          0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
-          1.5 0 0 0 1 2.5v11z"/></svg></button>`,
-      },
-    ],
-    language: {
-      search: "Buscar",
-    },
-    ordering: false,
-    info: false,
-    scrollY: "50vh",
-    scrollCollapse: true,
-    paging: false,
+  $("#tablaFolios thead tr:eq(1) th").each(function (i) {
+    $(this).html('<input size="4" type="text" placeholder="Buscar" />');
+
+    $("input", this).on("keyup change", function () {
+      if (table.column(i).search() !== this.value) {
+        table.column(i).search(this.value).draw();
+      }
+    });
   });
-  //se emplea la funcion para retrasar un poco el cabio de colores
-  setTimeout(() => {
-    cambiarColorCeldas();
-  }, 300);
+}
+//se crea la funcion para obtener la fecha actual en formato yyyy-mm-dd
+function obtenerFechaConvertida(n) {
+  const date = new Date();
+  date.setDate(date.getDate() - n);
+  const pad = (n) => n.toString().padStart(2, "0");
+
+  const yyyy = date.getFullYear(),
+    mm = pad(date.getMonth() + 1),
+    dd = pad(date.getDate());
+
+  return `${yyyy}-${mm}-${dd}`;
 }

@@ -20,15 +20,11 @@
 .form-control {
   border-radius: 0%;
 }
-.modal-content {
-  border-radius: 0%;
-}
 .form-select {
   border-radius: 0%;
 }
 /*cambios al modal*/
 .modal-content {
-  border-color: #138ce9;
   border-width: 4px 4px 4px 4px;
 }
 /*boton guardar cita*/
@@ -162,6 +158,10 @@
 .fc-day.fc-widget-content.fc-sun.fc-today {
   background-color: rgba(0, 255, 55, 0.418);
 }
+.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
 /*inicio de la seccion herramientas*/
 #listHerramientas {
   padding: 1em 1em 0em 1em;
@@ -209,5 +209,21 @@
 }
 .btnEliminar{
   padding-top: 1em;
+}
+.btn.editarFolios{
+  background-color: #0091ff;
+}
+
+/*hago que el contenido de las tablas este centradp*/
+#tablaFolios tbody td {
+  text-align: center;
+  font-size: 12px;
+}
+#tablaFolios tbody th {
+  text-align: center;
+  font-size: 7px;
+}
+#tablaUsuarios tbody td {
+  text-align: center;
 
 }

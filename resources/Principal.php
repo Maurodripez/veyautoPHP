@@ -16,7 +16,9 @@ if (!isset($_SESSION['usuario'])) {
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Principal.css">
     <link rel="stylesheet" href="../DataTables/datatables.min.css">
+    <link rel="" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css">
     <script src="../DataTables/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
     <script src="../bootstrap/js/jquery-3.6.3.min.js"></script>
     <script src="../fullcalendar/lib/moment.min.js"></script>
     <script src="../fullcalendar/fullcalendar.min.js"></script>
@@ -89,50 +91,228 @@ if (!isset($_SESSION['usuario'])) {
         </div>
         <div class="col-10" id="citas" style="display:''">
         </div>
+        <!--Modal creacion eventos-->
+        <div class="modal fade" id="ModalEventos">
+            <div class="modal-dialog">
+                <div class="modal-content " tyle="text-align:center">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Crear cita</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtFecha" class="form-label">Fecha</label>
+                                    <input type="text" class="form-control" id="txtFecha" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtHoraInicio" class="form-label">Hora de inicio</label>
+                                    <select id="txtHoraInicio" class="form-select selectpicker" data-live-search="true">
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtHoraFinal" class="form-label">Hora final</label>
+                                    <select id="txtHoraFinal" class="form-select selectpicker" data-live-search="true">
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtTitulo" class="form-label">Titulo</label>
+                                    <input type="text" class="form-control" id="txtTitulo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-2">
+                                <label for="txtCitaEquipo" class="form-label">Equipo</label>
+                                <select id="txtCitaEquipo" class="form-select" aria-label=".form-select-lg">
+                                    <option selected disabled>Equipo</option>
+                                </select>
+                            </div>
+                            <div class="col mb-2">
+                                <label for="txtFolio" class="form-label">Folio</label>
+                                <input type="text" class="form-control" id="txtFolio" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="mb-2 row  p-2">
+                            <label for="txtInfoAdicional" class="form-label">Informacion adicional</label>
+                            <textarea class="form-control" id="txtInfoAdicional" rows="2" value="Ninguna"></textarea>
+                        </div>
+                        <div id="divLetreroCrearCita"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                        <button id="btnGuardarCita" type="button" class="btn">Guardar Cita</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--modal para la informacion de la cita-->
+        <div class="modal fade" id="ModalMostrarInfoEvento" tabindex="-1" aria-labelledby="ModalMostrarInfoEventoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="ModalMostrarInfoEventoLabel">Informacion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtInfoFecha" class="form-label">Fecha</label>
+                                    <input type="text" class="form-control" id="txtInfoFecha" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtInfoTitulo" class="form-label">Titulo</label>
+                                    <input type="text" class="form-control" id="txtInfoTitulo" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtInfoHoraInicio" class="form-label">Hora de inicio</label>
+                                    <input type="text" class="form-control" id="txtInfoHoraInicio" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-2">
+                                    <label for="txtInfoHoraFinal" class="form-label">Hora final</label>
+                                    <input type="text" class="form-control" id="txtInfoHoraFinal" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label for="txtInfoInfoAdicional" class="form-label">Informacion adicional</label>
+                            <textarea class="form-control" id="txtInfoInfoAdicional" rows="3" value="Ninguna"
+                                readonly></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-2">
+                                <label for="txtInfEquipo" class="form-label">Equipo</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" id="txtInfEquipo" readonly>
+                            </div>
+                            <div class="col">
+                                <button class="btn" type="button" id="btnOffCanvas" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offCanvasInfo" aria-controls="offCanvasInfo">Informacion
+                                    adicional</button>
+                            </div>
+                        </div>
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offCanvasInfo"
+                            aria-labelledby="offCanvasInfoLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offCanvasInfoLabel">Informacion adicional</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <div class="card card-body">
+                                    <ul id="ulListaInfo" class="list-group list-group-flush">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="divDatos" style="display:none">
-        <table id="tablaFolios" class="table table-hover mdl-data-table " style="width:100%">
-            <thead>
-                <tr role="row">
-                    <th class="text-center">Acciones</th>
-                    <th class="text-center">Fecha carga</th>
-                    <th class="text-center">Fecha seguimiento</th>
-                    <th class="text-center" >Situacion</th>
-                    <th class="text-center">Seguimiento</th>
-                    <th class="text-center">Dias Transcurridos</th>
-                    <th class="text-center">Folio</th>
-                    <th class="text-center">Poliza</th>
-                    <th class="text-center">Asegurado</th>
-                    <th class="text-center" >Telefono</th>
-                    <th class="text-center">Telefono oficina</th>
-                    <th class="text-center">MarcaTipo</th>
-                    <th class="text-center">Serie</th>
-                    <th class="text-center">Tipo</th>
-                    <th class="text-center" >Estacion</th>
-                    <th class="text-center">Clasifica</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr role="row">
-                    <th class="text-center">Acciones</th>
-                    <th class="text-center">Fecha carga</th>
-                    <th class="text-center">Fecha seguimiento</th>
-                    <th class="text-center" >Situacion</th>
-                    <th class="text-center">Seguimiento</th>
-                    <th class="text-center">Dias Transcurridos</th>
-                    <th class="text-center">Folio</th>
-                    <th class="text-center">Poliza</th>
-                    <th class="text-center">Asegurado</th>
-                    <th class="text-center" >Telefono</th>
-                    <th class="text-center">Telefono oficina</th>
-                    <th class="text-center">MarcaTipo</th>
-                    <th class="text-center">Serie</th>
-                    <th class="text-center">Tipo</th>
-                    <th class="text-center" >Estacion</th>
-                    <th class="text-center">Clasifica</th>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="table-responsive">
+            <table id="tablaFolios" class="align-middle table table-hover mdl-data-table">
+                <thead>
+                    <tr>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Accion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Folio</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">FechaCarga</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">FechaSeg</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Seguimiento</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Dias</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Poliza</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Asegurado</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Telefono</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Tel oficina</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">MarcaTipo</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Serie</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Estacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Clasifica</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Accion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Folio</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">FechaCarga</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">FechaSeg</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Seguimiento</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Dias</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Poliza</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Asegurado</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Telefono</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Tel oficina</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">MarcaTipo</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Serie</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Estacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Clasifica</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!-- Modal editar folio -->
+        <div class="modal fade" id="modalEditarFolio" tabindex="-1" aria-labelledby="modalEditarFolioLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalEditarFolioLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="display: none;" id="idFolio">Ninguno</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="divHerramientas" style="display:''">
         <div class="row">
@@ -261,36 +441,38 @@ if (!isset($_SESSION['usuario'])) {
                                 <div class="alert alert-danger" role="alert">
                                     Las contraseñas no se muestran por seguridad y al estar encriptadas
                                 </div>
-                                <table id="tablaUsuarios" class="table table-hover mdl-data-table " style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Usuario</th>
-                                            <th class="text-center">Nombre</th>
-                                            <th class="text-center">Turno</th>
-                                            <th class="text-center">Equipo</th>
-                                            <th class="text-center">Supervisor</th>
-                                            <th class="text-center">Mensajero</th>
-                                            <th class="text-center">Consulta</th>
-                                            <th class="text-center">teamleader</th>
-                                            <th class="text-center">Operador</th>
-                                            <th class="text-center">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th class="text-center">Usuario</th>
-                                            <th class="text-center">Nombre</th>
-                                            <th class="text-center">Turno</th>
-                                            <th class="text-center">Equipo</th>
-                                            <th class="text-center">Supervisor</th>
-                                            <th class="text-center">Mensajero</th>
-                                            <th class="text-center">Consulta</th>
-                                            <th class="text-center">teamleader</th>
-                                            <th class="text-center">Operador</th>
-                                            <th class="text-center">Acciones</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                <div class="table-responsive">
+                                    <table id="tablaUsuarios" class="table table-hover mdl-data-table ">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-center">Usuario</th>
+                                                <th scope="col" class="text-center">Nombre</th>
+                                                <th scope="col" class="text-center">Turno</th>
+                                                <th scope="col" class="text-center">Equipo</th>
+                                                <th scope="col" class="text-center">Supervisor</th>
+                                                <th scope="col" class="text-center">Mensajero</th>
+                                                <th scope="col" class="text-center">Consulta</th>
+                                                <th scope="col" class="text-center">teamleader</th>
+                                                <th scope="col" class="text-center">Operador</th>
+                                                <th scope="col" class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th scope="col" class="text-center">Usuario</th>
+                                                <th scope="col" class="text-center">Nombre</th>
+                                                <th scope="col" class="text-center">Turno</th>
+                                                <th scope="col" class="text-center">Equipo</th>
+                                                <th scope="col" class="text-center">Supervisor</th>
+                                                <th scope="col" class="text-center">Mensajero</th>
+                                                <th scope="col" class="text-center">Consulta</th>
+                                                <th scope="col" class="text-center">teamleader</th>
+                                                <th scope="col" class="text-center">Operador</th>
+                                                <th scope="col" class="text-center">Acciones</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                                 <div class="modal fade" id="modalEditarUsuario" tabindex="-1"
                                     aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
@@ -505,165 +687,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <!--Modal creacion eventos-->
-    <div class="modal fade" id="ModalEventos">
-        <div class="modal-dialog">
-            <div class="modal-content " tyle="text-align:center">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5">Crear cita</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtFecha" class="form-label">Fecha</label>
-                                <input type="text" class="form-control" id="txtFecha" readonly>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtHoraInicio" class="form-label">Hora de inicio</label>
-                                <select id="txtHoraInicio" class="form-select selectpicker" data-live-search="true">
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtHoraFinal" class="form-label">Hora final</label>
-                                <select id="txtHoraFinal" class="form-select selectpicker" data-live-search="true">
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtTitulo" class="form-label">Titulo</label>
-                                <input type="text" class="form-control" id="txtTitulo">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-2">
-                            <label for="txtCitaEquipo" class="form-label">Equipo</label>
-                            <select id="txtCitaEquipo" class="form-select" aria-label=".form-select-lg">
-                                <option selected disabled>Equipo</option>
-                            </select>
-                        </div>
-                        <div class="col mb-2">
-                            <label for="txtFolio" class="form-label">Folio</label>
-                            <input type="text" class="form-control" id="txtFolio" autocomplete="off">
-                        </div>
-                    </div>
-                    <div class="mb-2 row  p-2">
-                        <label for="txtInfoAdicional" class="form-label">Informacion adicional</label>
-                        <textarea class="form-control" id="txtInfoAdicional" rows="2" value="Ninguna"></textarea>
-                    </div>
-                    <div id="divLetreroCrearCita"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
-                    <button id="btnGuardarCita" type="button" class="btn">Guardar Cita</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--modal para la informacion de la cita-->
-    <div class="modal fade" id="ModalMostrarInfoEvento" tabindex="-1" aria-labelledby="ModalMostrarInfoEventoLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-4" id="ModalMostrarInfoEventoLabel">Informacion</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtInfoFecha" class="form-label">Fecha</label>
-                                <input type="text" class="form-control" id="txtInfoFecha" readonly>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtInfoTitulo" class="form-label">Titulo</label>
-                                <input type="text" class="form-control" id="txtInfoTitulo" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtInfoHoraInicio" class="form-label">Hora de inicio</label>
-                                <input type="text" class="form-control" id="txtInfoHoraInicio" readonly>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-2">
-                                <label for="txtInfoHoraFinal" class="form-label">Hora final</label>
-                                <input type="text" class="form-control" id="txtInfoHoraFinal" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <label for="txtInfoInfoAdicional" class="form-label">Informacion adicional</label>
-                        <textarea class="form-control" id="txtInfoInfoAdicional" rows="3" value="Ninguna"
-                            readonly></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-2">
-                            <label for="txtInfEquipo" class="form-label">Equipo</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" class="form-control" id="txtInfEquipo" readonly>
-                        </div>
-                        <div class="col">
-                            <button class="btn" type="button" id="btnOffCanvas" data-bs-toggle="offcanvas"
-                                data-bs-target="#offCanvasInfo" aria-controls="offCanvasInfo">Informacion
-                                adicional</button>
-                        </div>
-                    </div>
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offCanvasInfo"
-                        aria-labelledby="offCanvasInfoLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offCanvasInfoLabel">Informacion adicional</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <div class="card card-body">
-                                <ul id="ulListaInfo" class="list-group list-group-flush">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btnCerrarModal" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./js/Principal.js"></script>
     <script src="../bootstrap/js/read-excel-file.min.js"></script>

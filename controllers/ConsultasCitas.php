@@ -44,6 +44,8 @@ switch ($accion) {
         $usuario = $_SESSION['usuario'];
         $title = isset($_POST['title']) ? $_POST['title'] : "";
         $start = isset($_POST['start']) ? $_POST['start'] : "";
+        $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : "";
+        $start = isset($_POST['start']) ? $_POST['start'] : "";
         $infoAdicional = isset($_POST['infoAdicional']) ? $_POST['infoAdicional'] : "";
         $equipo = isset($_POST['equipo']) ? $_POST['equipo'] : "";
         $end = isset($_POST['end']) ? $_POST['end'] : "";
@@ -55,8 +57,8 @@ switch ($accion) {
             $id = ObtenerValorCualquiera($sql, "../models/Conexion.php");
             $sql = "select nombre from usuarios where usuario='$usuario'";
             $operador = obtenerValorCualquiera($sql, "../models/Conexion.php");
-            $sql = "INSERT INTO citas (title,start,end,infoAdicional,equipo,fkCitas,folio,operador)"
-                . " VALUES ('$title','$start','$end','$infoAdicional','$equipo','$id','$folio','$operador')";
+            $sql = "INSERT INTO citas (title,start,end,infoAdicional,equipo,fkCitas,folio,operador,fecha)"
+                . " VALUES ('$title','$start','$end','$infoAdicional','$equipo','$id','$folio','$operador','$fecha')";
             ActualizarCualquierSiniestro($sql, $modelos . "Conexion.php");
             echo "Cita generada";
         } else {
