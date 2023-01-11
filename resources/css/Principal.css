@@ -1,9 +1,9 @@
-.html {
+html {
   padding: none;
   border: none;
 }
-.body {
-  padding: 3em;
+body {
+  padding: 10px 20px 20px 20px;
   border: none;
 }
 .navbar.navbar-expand-lg {
@@ -25,6 +25,7 @@
 }
 /*cambios al modal*/
 .modal-content {
+  border-radius: 0%;
   border-width: 4px 4px 4px 4px;
 }
 /*boton guardar cita*/
@@ -58,6 +59,34 @@
 }
 #infoPorDias {
   padding: 2em 0em 0em 1em;
+}
+/*color e pilas redondas*/
+.rounded-pill {
+  color: #000000;
+}
+/*cambio de color a los letreros de citas*/
+#btnCitasVerdes {
+  border-radius: 0%;
+  background-color: #70ffb3;
+  border-width: 2px 2px 2px 2px;
+  border-color: #298353;
+  color: #000000;
+}
+#btnCitasNaranjas {
+  background-color: #fdff9c;
+  border-radius: 0%;
+  border-width: 2px 2px 2px 2px;
+  border-color: #c6c911;
+  margin-top: 1px;
+  color: #000000;
+}
+#btnCitasRojas {
+  background-color: #fc9494;
+  margin-top: 1px;
+  border-radius: 0%;
+  border-width: 2px 2px 2px 2px;
+  border-color: #ff2f2f;
+  color: #000000;
 }
 /*botonoes del full calendar*/
 .fc-month-button.fc-button.fc-state-default.fc-corner-left.fc-state-active {
@@ -126,7 +155,7 @@
   color: aliceblue;
 }
 .fc-day-header.fc-widget-header.fc-sat {
-  background-color: #138ce9;
+  background-color: #d1d1d1;
   color: aliceblue;
 }
 .fc-day-header.fc-widget-header.fc-sun {
@@ -138,27 +167,27 @@
 }
 /*dependiendo el dia activo, se cambia el color del fondo*/
 .fc-day.fc-widget-content.fc-wed.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-mon.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-tue.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-thu.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-fri.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-sat.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
 .fc-day.fc-widget-content.fc-sun.fc-today {
-  background-color: rgba(0, 255, 55, 0.418);
+  background-color: #c1d7e7;
 }
-.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
+.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end {
   border-color: #ffffff;
   background-color: #ffffff;
 }
@@ -195,22 +224,22 @@
 #tablaUsuarios td {
   text-align: center;
 }
-#btnCargarExcel{
+#btnCargarExcel {
   background-color: #0091ff;
   color: aliceblue;
 }
-#btnPlantillaCarga{
+#btnPlantillaCarga {
   background-color: #5c636a;
   color: aliceblue;
 }
-#btnEliminarCarga{
+#btnEliminarCarga {
   background-color: #ff0000;
   color: aliceblue;
 }
-.btnEliminar{
+.btnEliminar {
   padding-top: 1em;
 }
-.btn.editarFolios{
+.btn.editarFolios {
   background-color: #0091ff;
 }
 
@@ -225,5 +254,4 @@
 }
 #tablaUsuarios tbody td {
   text-align: center;
-
 }

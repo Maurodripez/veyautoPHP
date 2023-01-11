@@ -67,11 +67,15 @@ window.addEventListener("load", function (event) {
     //document.getElementById("txtEditarEquipo").value = data.equipo;
   });
   ////////////////////////inicializaciones de citas//////////////////////////////
-  actualizarCitas();
+  obtenerCitasPorColor();
+  desplegarCitas(0, 14);
+  conteoFolios(0, 5, "conteoVerde");
+  conteoFolios(5, 10, "conteoNaranja");
+  conteoFolios(10, 13, "conteoRojo");
+
   //se escucha el click y muestra crea la tabla de usuarios
   //operadores();
   $('[data-toggle="tooltip"]').tooltip();
-  desplegarCitas();
   document.getElementById("btnGuardarCita").addEventListener("click", () => {
     crearCita();
   });
@@ -92,14 +96,10 @@ window.addEventListener("load", function (event) {
     });
 });
 //se ejecuta la funcion cada minuto para refrescar las citas
-function actualizarCitas() {
-  setInterval(desplegarCitas, 60000);
-}
 
 //funciones para Citas
 //muestra las citas del operador
-function desplegarCitas() {
-  let colorCita;
+function desplegarCitas(mayor, menor) {
   $("#citas").fullCalendar({
     header: {
       left: "prev,next today",
@@ -107,23 +107,22 @@ function desplegarCitas() {
       right: "month,basicWeek,basicDay",
     },
     defaultView: "basicDay",
-    events: "../controllers/MostrarEventos.php",
+    events: `../controllers/MostrarEventos.php?mayor=${mayor}&menor=${menor}`,
     displayEventTime: true,
     eventRender: function (event, element, view) {
       console.log(event);
       //cambia de manera dinamica los colores de las citas, dependiendo la cantidad
       //de dias que esten activas desde su carga
       if (event.dias < 5) {
-        element.find(".fc-content").css("background-color", "#00AA12");
-        element.find(".fc-content").css("background-color", "#00AA12");
+        element.find(".fc-content").css("color", "#3f3f3f");
+        element.find(".fc-content").css("background-color", "#70ffb3");
       } else if (event.dias > 5 && event.dias < 10) {
-        element.find(".fc-content").css("background-color", "#EA7500");
-        element.find(".fc-content").css("background-color", "#EA7500");
+        element.find(".fc-content").css("color", "#3f3f3f");
+        element.find(".fc-content").css("background-color", "#fdff9c");
       } else if (event.dias > 9) {
-        element.find(".fc-content").css("background-color", "#D10000");
-        element.find(".fc-content").css("background-color", "#D10000");
+        element.find(".fc-content").css("background-color", "#fc9494");
+        element.find(".fc-content").css("color", "#3f3f3f");
       }
-      console.log(colorCita);
       //muestra mas informacion
       element.find(".fc-content").append("<br/>" + event.infoAdicional);
       if (event.allDay === "true") {
@@ -281,7 +280,6 @@ function crearCita() {
           } else {
             mostrarMensajeFade("Cita creada", "success", "divLetreroCrearCita");
             //refresca las citas que tenemos
-            desplegarCitas();
             $("#citas").fullCalendar("refetchEvents");
             setTimeout(() => {
               //cierra el modal
@@ -294,7 +292,7 @@ function crearCita() {
   });
 }
 function mostrarInfoCita() {
-  document.getElementById("ModalMostrarInfoEvento").style.borderColor="#D10000";
+  $(".modal-content").css("border", "black solid 1px");
   let id = document.getElementById("idCitaActual").textContent;
   console.log(id);
   $.ajax({
@@ -371,7 +369,61 @@ function infoAdicional() {
       fechaVigencia;
   });
 }
-
+//oculta los cintillos que son de otros dias
+//solo se ocultan encontrando los componentes con su color
+function obtenerCitasPorColor() {
+  let listado = document.querySelectorAll(".listadoColores");
+  let verde = "rgb(112, 255, 179)";
+  let rojo = "rgb(252, 148, 148)";
+  let naranja = "rgb(253, 255, 156)";
+  for (let i = 0; i < listado.length; i++) {
+    listado[i].addEventListener("click", (e) => {
+      console.log(listado[i].id);
+      let listadoFC = document.querySelectorAll(".fc-content");
+      let listadoFCC = document.querySelectorAll(".fc-day-grid-event");
+      for (let n = 0; n < listadoFC.length; n++) {
+        let colorCintillo = listadoFC[n].style.backgroundColor;
+        if (
+          listado[i].id === "btnCitasVerdes" &&
+          (colorCintillo === rojo || colorCintillo === naranja)
+        ) {
+          listadoFC[n].style.display = "none";
+          listadoFCC[n].style.borderColor = "#c1d7e7";
+        } else if (
+          listado[i].id === "btnCitasNaranjas" &&
+          (colorCintillo === rojo || colorCintillo === verde)
+        ) {
+          listadoFCC[n].style.borderColor = "#c1d7e7";
+          listadoFC[n].style.display = "none";
+        } else if (
+          listado[i].id === "btnCitasRojas" &&
+          (colorCintillo === verde || colorCintillo === naranja)
+        ) {
+          listadoFCC[n].style.borderColor = "#c1d7e7";
+          listadoFC[n].style.display = "none";
+        } else {
+          listadoFCC[n].style.borderColor = "white";
+          listadoFC[n].style.display = "";
+        }
+      }
+    });
+  }
+}
+function conteoFolios(mayor, menor, id) {
+  let data = new FormData();
+  data.append("accion", "ConteoFolios");
+  data.append("mayor", mayor);
+  data.append("menor", menor);
+  fetch(controlador + "ConsultasCitas.php", {
+    method: "POST",
+    body: data,
+  })
+    .then((response) => response.json())
+    .then((respuesta) => {
+      document.getElementById(id).textContent = respuesta.Folios[0].conteo;
+      console.log(respuesta.Folios[0].conteo);
+    });
+}
 //////////////////////funciones para creacion de usuarios////////////////
 //se manda por medio de fetch los datos necesarios para la creacion de usuarios
 function crearEditarUsuario(accion, idLetrero) {
@@ -932,3 +984,45 @@ function obtenerFechaConvertida(n) {
 
   return `${yyyy}-${mm}-${dd}`;
 }
+
+//////////////////FUNCIONES NO UTILIZADAS///////////////////////////
+/*function obtenerCitasPorColor() {
+  let listado = document.querySelectorAll(".listadoColores");
+  let listadoConteo = document.querySelectorAll(".rounded-pill");
+  for (let i = 0; i < listado.length; i++) {
+    listado[i].addEventListener("click", (e) => {
+      switch (i) {
+        case 0:
+          listado[i + 1].style.background = "white";
+          listado[i + 2].style.background = "white";
+          listadoConteo[i + 1].style.color = "black";
+          listadoConteo[i + 2].style.color = "black";
+          listado[i + 1].style.color = "black";
+          listado[i + 2].style.color = "black";
+          break;
+        case 1:
+          listado[i - 1].style.background = "white";
+          listado[i + 1].style.background = "white";
+          listadoConteo[i - 1].style.color = "black";
+          listadoConteo[i + 1].style.color = "black";
+          listado[i - 1].style.color = "black";
+          listado[i + 1].style.color = "black";
+          break;
+        case 2:
+          listado[i - 1].style.background = "white";
+          listado[i - 2].style.background = "white";
+          listadoConteo[i - 1].style.color = "black";
+          listadoConteo[i - 2].style.color = "black";
+          listado[i - 1].style.color = "black";
+          listado[i - 2].style.color = "black";
+          break;
+      }
+      console.log(i);
+      console.log(listado[i].id);
+      console.log(listadoConteo[i]);
+      document.getElementById(listado[i].id).style.background = "#138ce9";
+      document.getElementById(listadoConteo[i]).style.color = "white";
+      document.getElementById(listado[i].id).style.color = "white";
+    });
+  }
+}*/

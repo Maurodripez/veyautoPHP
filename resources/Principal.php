@@ -66,27 +66,52 @@ if (!isset($_SESSION['usuario'])) {
         Custom tooltip
     </button>
     <div id="divCitas" class="row" style="display:none;">
-        <div class="col">
-            <div id="infoPorDias" class="list-group">
-                <h4 class="mb-1">Folios</h4>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">0 a 2 días</h5>
-                        <small id="0a2Dias"></small>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">3 a 5 días</h5>
-                        <small id="3a5Dias"></small>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Más de 6 días</h5>
-                        <small id="mas6Dias"></small>
-                    </div>
-                </a>
+        <div class="col ps-4">
+            <div class="row">
+                <h4 class="mb-1 pt-4">Citas</h4>
+                <ul class="list-group">
+                    <li id="btnCitasVerdes" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Menos de 5 días</div>
+                            
+                        <span id="conteoVerde" class="badge rounded-pill"></span>
+                        </div>
+                    </li>
+                    <li id="btnCitasNaranjas" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        De 5 a 10 días
+                        <span id="conteoNaranja" class="badge rounded-pill">2</span>
+                    </li>
+                    <li id="btnCitasRojas" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        Más de 10 días
+                        <span id="conteoRojo" class="badge rounded-pill">1</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div id="infoPorDias" class="list-group">
+                    <h4 class="mb-1">Folios</h4>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">0 a 2 días</h5>
+                            <small id="0a2Dias"></small>
+                        </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">3 a 5 días</h5>
+                            <small id="3a5Dias"></small>
+                        </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Más de 6 días</h5>
+                            <small id="mas6Dias"></small>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-10" id="citas" style="display:''">

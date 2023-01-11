@@ -65,6 +65,13 @@ switch ($accion) {
             echo "Error, el folio no existe";
         }
         break;
+    case "ConteoFolios":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(folios.id) as conteo from folios,citas where datediff(curdate(), fechacarga)>=$mayor"
+            . " and datediff(curdate(), fechacarga)<$menor and folios.id = fkCitas";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
 }
 function ObtenerId($id)
 {
