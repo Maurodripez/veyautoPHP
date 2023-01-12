@@ -68,50 +68,79 @@ if (!isset($_SESSION['usuario'])) {
     <div id="divCitas" class="row" style="display:none;">
         <div class="col ps-4">
             <div class="row">
-                <h4 class="mb-1 pt-4">Citas</h4>
+                <h4 class="mb-1 pt-4 titulosConteo">Folios con citas</h4>
                 <ul class="list-group">
                     <li id="btnCitasVerdes" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold">Menos de 5 días</div>
-                            
-                        <span id="conteoVerde" class="badge rounded-pill"></span>
-                        </div>
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoVerde">
+                        Menos de 5 días
+                        <span id="conteoVerde" class="badge rounded-pill">0</span>
                     </li>
                     <li id="btnCitasNaranjas" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoNaranja">
                         De 5 a 10 días
-                        <span id="conteoNaranja" class="badge rounded-pill">2</span>
+                        <span id="conteoNaranja" class="badge rounded-pill">0</span>
                     </li>
                     <li id="btnCitasRojas" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoRojo">
                         Más de 10 días
-                        <span id="conteoRojo" class="badge rounded-pill">1</span>
+                        <span id="conteoRojo" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        Total
+                        <span id="totalCitas" class="badge rounded-pill">0</span>
                     </li>
                 </ul>
             </div>
             <div class="row">
-                <div id="infoPorDias" class="list-group">
-                    <h4 class="mb-1">Folios</h4>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">0 a 2 días</h5>
-                            <small id="0a2Dias"></small>
-                        </div>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">3 a 5 días</h5>
-                            <small id="3a5Dias"></small>
-                        </div>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">Más de 6 días</h5>
-                            <small id="mas6Dias"></small>
-                        </div>
-                    </a>
-                </div>
+                <h4 class="mb-1 pt-4 titulosConteo">Folios activos sin cita</h4>
+                <ul class="list-group">
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoVerde">
+                        Menos de 5 días
+                        <span id="verdeNoCita" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoNaranja">
+                        De 5 a 10 días
+                        <span id="naranjaNoCita" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoRojo">
+                        Más de 10 días
+                        <span id="rojoNoCita" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        Total
+                        <span id="totalNoCitas" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <h4 class="mb-1 pt-4 titulosConteo">Total de folios activos</h4>
+                <ul class="list-group">
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoVerde">
+                        Menos de 5 días
+                        <span id="verdeTotal" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoNaranja">
+                        De 5 a 10 días
+                        <span id="naranjaTotal" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores conteoRojo">
+                        Más de 10 días
+                        <span id="rojoTotal" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
+                        Total
+                        <span id="totalActivos" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="col-10" id="citas" style="display:''">
@@ -199,7 +228,7 @@ if (!isset($_SESSION['usuario'])) {
         <!--modal para la informacion de la cita-->
         <div class="modal fade" id="ModalMostrarInfoEvento" tabindex="-1" aria-labelledby="ModalMostrarInfoEventoLabel"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-4" id="ModalMostrarInfoEventoLabel">Informacion</h1>
@@ -213,25 +242,21 @@ if (!isset($_SESSION['usuario'])) {
                                     <input type="text" class="form-control" id="txtInfoFecha" readonly>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="mb-2">
-                                    <label for="txtInfoTitulo" class="form-label">Titulo</label>
-                                    <input type="text" class="form-control" id="txtInfoTitulo" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
+                            <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="txtInfoHoraInicio" class="form-label">Hora de inicio</label>
                                     <input type="text" class="form-control" id="txtInfoHoraInicio" readonly>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-sm-2">
                                 <div class="mb-2">
                                     <label for="txtInfoHoraFinal" class="form-label">Hora final</label>
                                     <input type="text" class="form-control" id="txtInfoHoraFinal" readonly>
                                 </div>
+                            </div>
+                            <div class="col mb-2">
+                                <label for="txtInfEquipo" class="form-label">Equipo</label>
+                                <input type="text" class="form-control" id="txtInfEquipo" readonly>
                             </div>
                         </div>
                         <div class="mb-2 row">
@@ -240,28 +265,23 @@ if (!isset($_SESSION['usuario'])) {
                                 readonly></textarea>
                         </div>
                         <div class="row">
-                            <div class="col mb-2">
-                                <label for="txtInfEquipo" class="form-label">Equipo</label>
-                            </div>
+                            <label for="txtInfoTitulo" class="form-label">Titulo</label>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <input type="text" class="form-control" id="txtInfEquipo" readonly>
+                                <div class="mb-2">
+                                    <input type="text" class="form-control" id="txtInfoTitulo" readonly>
+                                </div>
                             </div>
                             <div class="col">
-                                <button class="btn" type="button" id="btnOffCanvas" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offCanvasInfo" aria-controls="offCanvasInfo">Informacion
+                                <button class="btn" type="button" id="btnOffCanvas" data-bs-toggle="collapse"
+                                    data-bs-target="#infoAdicional" aria-expanded="false"
+                                    aria-controls="infoAdicional">Informacion
                                     adicional</button>
                             </div>
                         </div>
-                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offCanvasInfo"
-                            aria-labelledby="offCanvasInfoLabel">
-                            <div class="offcanvas-header">
-                                <h5 class="offcanvas-title" id="offCanvasInfoLabel">Informacion adicional</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="offcanvas-body">
+                        <div class="row">
+                            <div class="collapse" id="infoAdicional">
                                 <div class="card card-body">
                                     <ul id="ulListaInfo" class="list-group list-group-flush">
                                     </ul>
@@ -322,18 +342,66 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Modal editar folio -->
         <div class="modal fade" id="modalEditarFolio" tabindex="-1" aria-labelledby="modalEditarFolioLabel"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalEditarFolioLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="modalEditarFolioLabel">Informacion</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p style="display: none;" id="idFolio">Ninguno</p>
+                        <ul id="ulListaInfoFolio" class="list-group list-group-flush">
+                        </ul>
+                        <div class="row g-3 pt-2">
+                            <div class="col-md-3">
+                                <label for="txtEditarCelular" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="txtEditarCelular">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtEditarTelCasa" class="form-label">Telefono casa</label>
+                                <input type="text" class="form-control" id="txtEditarTelCasa">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtEditarTelOficina" class="form-label">Telefono oficina</label>
+                                <input type="text" class="form-control" id="txtEditarTelOficina">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtEditarMarcaTipo" class="form-label">Marca o tipo</label>
+                                <input type="text" class="form-control" id="txtEditarMarcaTipo">
+                            </div>
+                            <div class="col-md-5">
+                                <label for="txtEditarCorreo" class="form-label">Correo</label>
+                                <input type="text" class="form-control" id="txtEditarCorreo">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtEditarModelo" class="form-label">Modelo</label>
+                                <input type="text" class="form-control" id="txtEditarModelo">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtEditarPlacas" class="form-label">Placas</label>
+                                <input type="text" class="form-control" id="txtEditarPlacas">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtEditarSerie" class="form-label">Serie</label>
+                                <input type="text" class="form-control" id="txtEditarSerie">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtFechaAsignacion" class="form-label">Fecha asignacíon</label>
+                                <input type="text" class="form-control" id="txtFechaAsignacion" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="txtEditarEquipoFolio" class="form-label">Equipo</label>
+                                <select class="form-select" id="txtEditarEquipoFolio">
+                                </select>
+                            </div>
+                        </div>
+                        <div id="divActualizarDatos">
+
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" id="btnActualizarFolio" class="btn btn-primary">Guardar cambios</button>
                     </div>
                 </div>
             </div>

@@ -11,9 +11,15 @@ switch ($accion) {
         break;
     case "InfoAdicional":
         $id = $_POST['id'];
-        $fk = ObtenerId($id);
-        $sql = "select * from folios where id=$fk";
-        ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "InfoAdicional");
+        $consulta = $_POST['consulta'];
+        if($consulta=="Citas"){
+            $fk = ObtenerId($id);
+            $sql = "select * from folios where id=$fk";
+            ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "InfoAdicional");
+        }else if($consulta=="Folios"){
+            $sql = "select * from folios where id=$id";
+            ConsultasSelectCualquiera($sql, $modelos . "Conexion.php", "InfoAdicional");
+        }
         break;
     case "ValidarCita":
         $folio = $_POST["folio"];
@@ -65,11 +71,42 @@ switch ($accion) {
             echo "Error, el folio no existe";
         }
         break;
-    case "ConteoFolios":
+    case "FoliosCitas":
         $mayor = $_POST["mayor"];
         $menor = $_POST["menor"];
         $sql = "select count(folios.id) as conteo from folios,citas where datediff(curdate(), fechacarga)>=$mayor"
             . " and datediff(curdate(), fechacarga)<$menor and folios.id = fkCitas";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
+    case "FoliosActivosNoCitas":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(id) as conteo from folios where datediff(curdate(), fechacarga)>=$mayor"
+            . " and datediff(curdate(), fechacarga)<$menor and id not in (select fkCitas from citas)";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
+    case "FoliosTotalesActivos":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(id) as conteo from folios where datediff(curdate(), fechacarga)>=$mayor and datediff(curdate(), fechacarga)<=$menor";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
+    case "TotalActivos":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(id) as conteo from folios where datediff(curdate(), fechacarga)<=$menor";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
+    case "TotalCitas":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(folios.id) as conteo from folios,citas where folios.id=citas.fkCitas and datediff(curdate(), fechacarga)<=$menor";
+        ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
+        break;
+    case "TotalNoCitas":
+        $mayor = $_POST["mayor"];
+        $menor = $_POST["menor"];
+        $sql = "select count(id) as conteo from folios where datediff(curdate(), fechacarga)<$menor and id not in (select fkCitas from citas)";
         ConsultasSelectCualquiera($sql, "../models/Conexion.php", "Folios");
         break;
 }

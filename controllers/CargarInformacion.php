@@ -21,14 +21,16 @@ switch ($accion) {
         $placas = $_POST['placas'];
         $serie = $_POST['serie'];
         $colonia = $_POST['colonia'];
-        $estado = $_POST['ciudad'];
         $domicilio = $_POST['calle'];
+        $cp = $_POST['cp'];
+        $del = $_POST['del'];
+        $estado = $_POST['estado'];
         $verificador = $_POST['verificador'];
         $equipo = $_POST['equipo'];
         try {
-            $sql = $DBcon->prepare("INSERT INTO folios(folio, fechacarga,fechaAsignacion, fechaVigencia,poliza,fechaEntrega,asegurado,celular,correo,"
-                . " placas,numSerie,colonia,estado,domicilio,verificador,equipo,fkHistorialCargas)"
-                . " VALUES (:folio,now(),:fechaAsignacion,now(),:poliza,now(),:asegurado,:celular,:correo,:placas,:serie,:colonia,:estado,:domicilio,:verificador,:equipo,$fk)");
+            $sql = $DBcon->prepare("INSERT INTO folios(folio, fechacarga,fechaAsignacion,poliza,fechaEntrega,asegurado,celular,correo,"
+                . " placas,numSerie,colonia,estado,domicilio,verificador,equipo,fkHistorialCargas,del,cp)"
+                . " VALUES (:folio,:fechaAsignacion,:poliza,:asegurado,:celular,:correo,:placas,:serie,:colonia,:estado,:domicilio,:verificador,:equipo,$fk,:del,:cp)");
             $sql->bindParam(":folio", $folio);
             $sql->bindParam(":fechaAsignacion", $fechaAsignacion);
             $sql->bindParam(":poliza", $poliza);
@@ -40,6 +42,8 @@ switch ($accion) {
             $sql->bindParam(":colonia", $colonia);
             $sql->bindParam(":estado", $estado);
             $sql->bindParam(":domicilio", $domicilio);
+            $sql->bindParam(":del", $del);
+            $sql->bindParam(":cp", $cp);
             $sql->bindParam(":verificador", $verificador);
             $sql->bindParam(":equipo", $equipo);
             $sql->execute();

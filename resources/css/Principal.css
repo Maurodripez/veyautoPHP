@@ -65,14 +65,17 @@ body {
   color: #000000;
 }
 /*cambio de color a los letreros de citas*/
-#btnCitasVerdes {
+.conteoVerde {
   border-radius: 0%;
   background-color: #70ffb3;
   border-width: 2px 2px 2px 2px;
   border-color: #298353;
   color: #000000;
 }
-#btnCitasNaranjas {
+.conteoVerde:hover {
+  background-color: #45e28f;
+}
+.conteoNaranja {
   background-color: #fdff9c;
   border-radius: 0%;
   border-width: 2px 2px 2px 2px;
@@ -80,13 +83,22 @@ body {
   margin-top: 1px;
   color: #000000;
 }
-#btnCitasRojas {
+.conteoNaranja:hover {
+  background-color: #e2e47b;
+}
+.conteoRojo {
   background-color: #fc9494;
   margin-top: 1px;
   border-radius: 0%;
   border-width: 2px 2px 2px 2px;
   border-color: #ff2f2f;
   color: #000000;
+}
+.conteoRojo:hover {
+  background-color: #e77e7e;
+}
+.titulosConteo {
+  font-size: large;
 }
 /*botonoes del full calendar*/
 .fc-month-button.fc-button.fc-state-default.fc-corner-left.fc-state-active {

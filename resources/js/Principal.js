@@ -59,7 +59,6 @@ window.addEventListener("load", function (event) {
     console.log("data");
     var data = tableFolio.row($(this).parents("tr")).data();
     //document.getElementById("idEditar").textContent = data.id;
-    //obtenerEquipos("txtEditarEquipo");
     console.log(data);
     //document.getElementById("txtEditarUsuario").value = data.usuario;
     //document.getElementById("txtEditarNombre").value = data.nombre;
@@ -67,12 +66,20 @@ window.addEventListener("load", function (event) {
     //document.getElementById("txtEditarEquipo").value = data.equipo;
   });
   ////////////////////////inicializaciones de citas//////////////////////////////
-  obtenerCitasPorColor();
+  ponerColorCitas();
   desplegarCitas(0, 14);
-  conteoFolios(0, 5, "conteoVerde");
-  conteoFolios(5, 10, "conteoNaranja");
-  conteoFolios(10, 13, "conteoRojo");
-
+  conteoFoliosCitas(0, 5, "conteoVerde", "FoliosCitas");
+  conteoFoliosCitas(5, 10, "conteoNaranja", "FoliosCitas");
+  conteoFoliosCitas(10, 14, "conteoRojo", "FoliosCitas");
+  conteoFoliosCitas(0, 5, "verdeNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(5, 10, "naranjaNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(10, 14, "rojoNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(0, 5, "verdeTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(5, 10, "naranjaTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(10, 14, "rojoTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(0, 14, "totalCitas", "TotalCitas");
+  conteoFoliosCitas(0, 14, "totalNoCitas", "TotalNoCitas");
+  conteoFoliosCitas(0, 14, "totalActivos", "TotalActivos");
   //se escucha el click y muestra crea la tabla de usuarios
   //operadores();
   $('[data-toggle="tooltip"]').tooltip();
@@ -80,7 +87,7 @@ window.addEventListener("load", function (event) {
     crearCita();
   });
   document.getElementById("btnOffCanvas").addEventListener("click", () => {
-    infoAdicional();
+    infoAdicional("idCitaActual", "ulListaInfo", "Citas");
   });
   ///////////////////////////////////inicializaciones de carga//////////////////////////////
   document.getElementById("btnCargarExcel").addEventListener("click", () => {
@@ -89,6 +96,11 @@ window.addEventListener("load", function (event) {
   document.getElementById("btnEliminarCarga").addEventListener("click", () => {
     eliminarCarga();
   });
+  document
+    .getElementById("btnActualizarFolio")
+    .addEventListener("click", () => {
+      actualizarDatos();
+    });
   document
     .getElementById("btnAcordeonEliminarCargas")
     .addEventListener("click", () => {
@@ -110,7 +122,6 @@ function desplegarCitas(mayor, menor) {
     events: `../controllers/MostrarEventos.php?mayor=${mayor}&menor=${menor}`,
     displayEventTime: true,
     eventRender: function (event, element, view) {
-      console.log(event);
       //cambia de manera dinamica los colores de las citas, dependiendo la cantidad
       //de dias que esten activas desde su carga
       if (event.dias < 5) {
@@ -317,61 +328,168 @@ function mostrarInfoCita() {
     //se oculta el collapse para que no muestre informacion erronea
   });
 }
-function infoAdicional() {
-  let id = document.getElementById("idCitaActual").textContent;
-  $.ajax({
-    url: controlador + "ConsultasCitas.php",
-    type: "POST",
-    dataType: "JSON",
-    data: {
-      accion: "InfoAdicional",
-      id,
+function infoAdicional(idCita, idUl, consulta) {
+  let id = document.getElementById(idCita).textContent;
+  let data = new FormData();
+  data.append("id", id);
+  data.append("accion", "InfoAdicional");
+  data.append("consulta", consulta);
+  fetch(controlador + "ConsultasCitas.php", {
+    method: "POST",
+    body: data,
+    headers: {
+      Accept: "application/json",
     },
-  }).done(function (response) {
-    console.log(response);
-    let asegurado = `<li style='font-size: 13px' class="list-group-item"><strong>Asegurado:</strong> ${response.InfoAdicional[0].asegurado}</li>`;
-    let folio = `<li style='font-size: 13px' class="list-group-item">Folio: ${response.InfoAdicional[0].folio}</li>`;
-    let poliza = `<li style='font-size: 13px' class="list-group-item">Poliza: ${response.InfoAdicional[0].poliza}</li>`;
-    let celular = `<li style='font-size: 13px' class="list-group-item">Celular: ${response.InfoAdicional[0].celular}</li>`;
-    let correo = `<li style='font-size: 13px' class="list-group-item">Correo: ${response.InfoAdicional[0].correo}</li>`;
-    let telCasa = `<li style='font-size: 13px' class="list-group-item">Telefono casa: ${response.InfoAdicional[0].telCasa}</li>`;
-    let domicilio = `<li style='font-size: 13px' class="list-group-item">Domicilio: ${response.InfoAdicional[0].domicilio}</li>`;
-    let alcaldia = `<li style='font-size: 13px' class="list-group-item">Alcaldia: ${response.InfoAdicional[0].alcaldia}</li>`;
-    let colonia = `<li style='font-size: 13px' class="list-group-item">Colonia: ${response.InfoAdicional[0].colonia}</li>`;
-    let estado = `<li style='font-size: 13px' class="list-group-item">Estado: ${response.InfoAdicional[0].estado}</li>`;
-    let cp = `<li style='font-size: 13px' class="list-group-item">C.P: ${response.InfoAdicional[0].cp}</li>`;
-    let marcaTipo = `<li style='font-size: 13px' class="list-group-item">Marca: ${response.InfoAdicional[0].marcaTipo}</li>`;
-    let numSerie = `<li style='font-size: 13px' class="list-group-item">Serie: ${response.InfoAdicional[0].numSerie}</li>`;
-    let placas = `<li style='font-size: 13px' class="list-group-item">Placas: ${response.InfoAdicional[0].placas}</li>`;
-    let fechacarga = `<li style='font-size: 13px' class="list-group-item">Fecha carga: ${response.InfoAdicional[0].fechacarga}</li>`;
-    let fechaAsignacion = `<li style='font-size: 13px' class="list-group-item">Fecha asignacion: ${response.InfoAdicional[0].fechaAsignacion}</li>`;
-    let fechaEntrega = `<li style='font-size: 13px' class="list-group-item">Fecha entrega: ${response.InfoAdicional[0].fechaEntrega}</li>`;
-    let fechaVigencia = `<li style='font-size: 13px' class="list-group-item">Fecha vigencia: ${response.InfoAdicional[0].fechaVigencia}</li>`;
-    let ul = document.getElementById("ulListaInfo");
-    ul.innerHTML =
-      asegurado +
-      folio +
-      poliza +
-      celular +
-      correo +
-      telCasa +
-      domicilio +
-      alcaldia +
-      colonia +
-      estado +
-      cp +
-      marcaTipo +
-      numSerie +
-      placas +
-      fechacarga +
-      fechaAsignacion +
-      fechaEntrega +
-      fechaVigencia;
-  });
+  })
+    .then((response) => response.json())
+    .then((respuesta) => {
+      console.log(respuesta);
+
+      let aseguradoFolio = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item"><strong>Asegurado:</strong> ${respuesta.InfoAdicional[0].asegurado}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Folio: ${respuesta.InfoAdicional[0].folio}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Poliza: ${respuesta.InfoAdicional[0].poliza}</li>
+        </div>
+      </div>`;
+      let polizaCelular = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Celular: ${respuesta.InfoAdicional[0].celular}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Correo: ${respuesta.InfoAdicional[0].correo}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Telefono casa: ${respuesta.InfoAdicional[0].telCasa}</li>
+        </div>
+      </div>`;
+      let domicilioAlcaldia = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Domicilio: ${respuesta.InfoAdicional[0].domicilio}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Alcaldia: ${respuesta.InfoAdicional[0].alcaldia}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Colonia: ${respuesta.InfoAdicional[0].colonia}</li>
+        </div>
+      </div>`;
+      let coloniaEstado = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Estado: ${respuesta.InfoAdicional[0].estado}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">C.P: ${respuesta.InfoAdicional[0].cp}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Marca: ${respuesta.InfoAdicional[0].marcaTipo}</li>
+        </div>
+      </div>`;
+      let seriePlacas = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Serie: ${respuesta.InfoAdicional[0].numSerie}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Placas: ${respuesta.InfoAdicional[0].placas}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Fecha carga: ${respuesta.InfoAdicional[0].fechacarga}</li>
+        </div>
+      </div>`;
+      let cargaAsignacion = `<div class="row">
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Fecha asignacion: ${respuesta.InfoAdicional[0].fechaAsignacion}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Fecha entrega: ${respuesta.InfoAdicional[0].fechaEntrega}</li>
+        </div>
+        <div class="col">
+          <li style='font-size: 13px' class="list-group-item">Fecha vigencia: ${respuesta.InfoAdicional[0].fechaVigencia}</li>
+        </div>
+      </div>`;
+      let ul = document.getElementById(idUl);
+      ul.innerHTML =
+        aseguradoFolio +
+        polizaCelular +
+        domicilioAlcaldia +
+        coloniaEstado +
+        seriePlacas +
+        cargaAsignacion;
+      document.getElementById("txtEditarCelular").value =
+        respuesta.InfoAdicional[0].celular;
+      document.getElementById("txtEditarTelCasa").value =
+        respuesta.InfoAdicional[0].telCasa;
+      document.getElementById("txtEditarTelOficina").value =
+        respuesta.InfoAdicional[0].telOficina;
+      document.getElementById("txtEditarMarcaTipo").value =
+        respuesta.InfoAdicional[0].marcaTipo;
+      document.getElementById("txtEditarCorreo").value =
+        respuesta.InfoAdicional[0].correo;
+      document.getElementById("txtEditarModelo").value =
+        respuesta.InfoAdicional[0].modelo;
+      document.getElementById("txtEditarPlacas").value =
+        respuesta.InfoAdicional[0].placas;
+      document.getElementById("txtEditarSerie").value =
+        respuesta.InfoAdicional[0].numSerie;
+      document.getElementById("txtFechaAsignacion").value =
+        respuesta.InfoAdicional[0].fechacarga;
+    });
+}
+function actualizarDatos() {
+  let id = document.getElementById("idFolio").textContent;
+  let data = new FormData();
+  data.append("accion", "ActualizarInfo");
+  data.append("id", id);
+  data.append("celular", document.getElementById("txtEditarCelular").value);
+  data.append("telCasa", document.getElementById("txtEditarTelCasa").value);
+  data.append(
+    "telOficina",
+    document.getElementById("txtEditarTelOficina").value
+  );
+  data.append("marcaTipo", document.getElementById("txtEditarMarcaTipo").value);
+  data.append("correo", document.getElementById("txtEditarCorreo").value);
+  data.append("modelo", document.getElementById("txtEditarModelo").value);
+  data.append("placas", document.getElementById("txtEditarPlacas").value);
+  data.append("numSerie", document.getElementById("txtEditarSerie").value);
+  data.append("equipo", document.getElementById("txtEditarEquipoFolio").value);
+  try {
+    fetch(controlador + "AccionesFolios.php", {
+      method: "POST",
+      body: data,
+    })
+      .then((response) => response.text())
+      .then((respuesta) => {
+        console.log(respuesta);
+        if (respuesta === "Exito al actualizar") {
+          mostrarMensajeFade(
+            "Exito al actualizar folio",
+            "success",
+            "divActualizarDatos"
+          );
+        } else {
+          mostrarMensajeNoFade(
+            "Error al actualizar Folio",
+            "danger",
+            "divActualizarDatos"
+          );
+        }
+      });
+  } catch (error) {
+    mostrarMensajeNoFade(
+      "Error al actualizar Folio",
+      "danger",
+      "divActualizarDatos"
+    );
+    return;
+  }
 }
 //oculta los cintillos que son de otros dias
 //solo se ocultan encontrando los componentes con su color
-function obtenerCitasPorColor() {
+function ponerColorCitas() {
   let listado = document.querySelectorAll(".listadoColores");
   let verde = "rgb(112, 255, 179)";
   let rojo = "rgb(252, 148, 148)";
@@ -409,9 +527,9 @@ function obtenerCitasPorColor() {
     });
   }
 }
-function conteoFolios(mayor, menor, id) {
+function conteoFoliosCitas(mayor, menor, id, accion) {
   let data = new FormData();
-  data.append("accion", "ConteoFolios");
+  data.append("accion", accion);
   data.append("mayor", mayor);
   data.append("menor", menor);
   fetch(controlador + "ConsultasCitas.php", {
@@ -421,7 +539,6 @@ function conteoFolios(mayor, menor, id) {
     .then((response) => response.json())
     .then((respuesta) => {
       document.getElementById(id).textContent = respuesta.Folios[0].conteo;
-      console.log(respuesta.Folios[0].conteo);
     });
 }
 //////////////////////funciones para creacion de usuarios////////////////
@@ -508,7 +625,6 @@ function crearEditarUsuario(accion, idLetrero) {
     })
       .then((response) => response.json())
       .then((respuesta) => {
-        console.log(respuesta);
         if (respuesta >= 1 && accion != "EditarUsuario") {
           mostrarMensajeFade(
             "Usuario existente, ingresa uno distinto",
@@ -537,7 +653,6 @@ function crearEditarUsuario(accion, idLetrero) {
         })
           .then((response) => response.text())
           .then((respuesta) => {
-            console.log(respuesta);
             if (respuesta === "exito") {
               mostrarMensajeFade("Usuario creado", "success", idLetrero);
               mostrarUsuarios("destroy");
@@ -564,7 +679,6 @@ function mostrarUsuarios() {
     var data = table.row($(this).parents("tr")).data();
     document.getElementById("idEditar").textContent = data.id;
     obtenerEquipos("txtEditarEquipo");
-    console.log(data.id);
     document.getElementById("txtEditarUsuario").value = data.usuario;
     document.getElementById("txtEditarNombre").value = data.nombre;
     document.getElementById("txtEditarTurno").value = data.turno;
@@ -703,6 +817,7 @@ async function cargarExcel() {
       for (let x = 1; x < contenido.length; x++) {
         try {
           let fechaAsignacion = contenido[x][3].toISOString().split("T")[0];
+          console.log(fechaAsignacion);
           let data = new FormData();
           data.append("accion", "CargarExcel");
           data.append("cantidadFolios", cantidadFolios);
@@ -710,13 +825,15 @@ async function cargarExcel() {
           data.append("poliza", contenido[x][1]);
           data.append("verificador", contenido[x][2]);
           data.append("asegurado", contenido[x][4]);
-          data.append("ciudad", contenido[x][5]);
-          data.append("colonia", contenido[x][6]);
-          data.append("calle", contenido[x][7]);
-          data.append("celular", contenido[x][8]);
-          data.append("correo", contenido[x][9]);
-          data.append("placas", contenido[x][10]);
-          data.append("serie", contenido[x][11]);
+          data.append("colonia", contenido[x][5]);
+          data.append("calle", contenido[x][6]);
+          data.append("celular", contenido[x][7]);
+          data.append("correo", contenido[x][8]);
+          data.append("placas", contenido[x][9]);
+          data.append("serie", contenido[x][10]);
+          data.append("cp", contenido[x][11]);
+          data.append("del", contenido[x][12]);
+          data.append("estado", contenido[x][13]);
           data.append("equipo", equipo);
           data.append("fk", fk);
           data.append("fechaAsignacion", fechaAsignacion);
@@ -795,7 +912,7 @@ function eliminarCarga() {
 }
 ////////////////////Datos////////////////////////////
 function mostrarFolios() {
-  buquedaEnVivo();
+  busquedaEnVivo();
   let data = new FormData();
   data.append("accion", "MostrarFolios");
   table = new DataTable("#tablaFolios", {
@@ -825,7 +942,7 @@ function mostrarFolios() {
       {
         targets: 0,
         data: null,
-        defaultContent: `<button type="button" class="btn editarFolios" data-bs-toggle="modal" data-bs-target="#modalEditarFolio">
+        defaultContent: `<button type="button" class="btn editarFolios btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarFolio">
           <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 
           0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 
@@ -839,28 +956,22 @@ function mostrarFolios() {
     destroy: true,
     ordering: false,
     info: false,
-    scrollY: "50vh",
+    scrollY: "60vh",
     scrollCollapse: false,
     paging: false,
     responsive: true,
   });
-  //se emplea la funcion para retrasar un poco el cabio de colores
-  setTimeout(() => {
-    cambiarColorCeldas();
-  }, 300);
   //deshabilita el evento del click para que no se sumen
   $("#tablaFolios tbody").off("click");
   //obtiene el id del usuario para editar al mismo
   $("#tablaFolios tbody").on("click", "button", function () {
     var data = table.row($(this).parents("tr")).data();
     document.getElementById("idFolio").textContent = data.id;
-    console.log(document.getElementById("idFolio").textContent);
-    //obtenerEquipos("txtEditarEquipo");
-    console.log(data);
-    //document.getElementById("txtEditarUsuario").value = data.usuario;
-    //document.getElementById("txtEditarNombre").value = data.nombre;
-    //document.getElementById("txtEditarTurno").value = data.turno;
-    //document.getElementById("txtEditarEquipo").value = data.equipo;
+    infoAdicional("idFolio", "ulListaInfoFolio", "Folios");
+    obtenerEquipos("txtEditarEquipoFolio");
+    setTimeout(() => {
+      document.getElementById("txtEditarEquipoFolio").value = data.equipo;
+    }, 50);
   });
 }
 ////////////////////////////funciones generales///////////////////////////
@@ -953,13 +1064,14 @@ function obtenerEquipos(idselect) {
         let option = document.createElement("option");
         option.setAttribute("class", "equipos");
         option.text = data.Equipos[i].nombre;
+        option.value = data.Equipos[i].nombre;
         selectEquipos.add(option);
       }
     });
 }
 //funcion para la busquedqa en vivo
 //Creamos una fila en el head de la tabla y lo clonamos para cada columna
-function buquedaEnVivo() {
+function busquedaEnVivo() {
   $("#tablaFolios thead tr").clone(true).appendTo("#tablaFolios thead");
 
   $("#tablaFolios thead tr:eq(1) th").each(function (i) {
