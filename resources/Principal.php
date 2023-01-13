@@ -17,12 +17,14 @@ if (!isset($_SESSION['usuario'])) {
     <link rel="stylesheet" href="./css/Principal.css">
     <link rel="stylesheet" href="../DataTables/datatables.min.css">
     <link rel="" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="../JqueryUI/jquery-ui.css">
     <script src="../DataTables/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
     <script src="../bootstrap/js/jquery-3.6.3.min.js"></script>
     <script src="../fullcalendar/lib/moment.min.js"></script>
     <script src="../fullcalendar/fullcalendar.min.js"></script>
     <script src="../fullcalendar/locale/es.js"></script>
+    <script src="../JqueryUI/jquery-ui.js"></script>
     <title>Document</title>
 </head>
 
@@ -396,12 +398,89 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </div>
                         <div id="divActualizarDatos">
-
+                        </div>
+                        <div class="row g-3 pt-3 ps-2 pe-2">
+                            <button class="btn" id="btnGenerarCitaFolio" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#generarCitaPorFolio" aria-expanded="false"
+                                aria-controls="generarCitaPorFolio">
+                                Generar cita
+                            </button>
+                        </div>
+                        <div class="collapse" id="generarCitaPorFolio">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtFechaFolio" class="form-label">Fecha</label>
+                                            <input type="text" class="form-control datepicker" id="txtFechaFolio">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtHoraInicioFolio" class="form-label">Hora de inicio</label>
+                                            <select id="txtHoraInicioFolio" class="form-select" data-live-search="true">
+                                                <option value="09:00">09:00</option>
+                                                <option value="10:00">10:00</option>
+                                                <option value="11:00">11:00</option>
+                                                <option value="12:00">12:00</option>
+                                                <option value="13:00">13:00</option>
+                                                <option value="14:00">14:00</option>
+                                                <option value="15:00">15:00</option>
+                                                <option value="16:00">16:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <label for="txtHoraFinalFolio" class="form-label">Hora final</label>
+                                        <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
+                                            <option value="10:00">10:00</option>
+                                            <option value="11:00">11:00</option>
+                                            <option value="12:00">12:00</option>
+                                            <option value="13:00">13:00</option>
+                                            <option value="14:00">14:00</option>
+                                            <option value="15:00">15:00</option>
+                                            <option value="16:00">16:00</option>
+                                            <option value="17:00">17:00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtTituloFolio" class="form-label">Titulo</label>
+                                            <input type="text" class="form-control" id="txtTituloFolio">
+                                        </div>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <label for="txtFolioFolio" class="form-label">Folio</label>
+                                        <input type="text" class="form-control" id="txtFolioFolio" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row  p-2">
+                                    <div class="row">
+                                        <label for="txtInfoAdicionalFolio" class="form-label">Informacion
+                                            adicional</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <textarea class="form-control" id="txtInfoAdicionalFolio" rows="2"
+                                                value="Ninguna"></textarea>
+                                        </div>
+                                        <div class="col pt-3">
+                                            <button class="btn" id="btnGenerarCitaFolios">
+                                                Guardar cita
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="divLetreroCrearCitaFolio"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="button" id="btnActualizarFolio" class="btn btn-primary">Guardar cambios</button>
+                        <button type="button" id="btnEliminarFolio" class="btn btn-danger">Eliminar folio</button>
                     </div>
                 </div>
             </div>
@@ -433,7 +512,7 @@ if (!isset($_SESSION['usuario'])) {
                                 Crear usuario
                             </button>
                         </h2>
-                        <div id="acordionCrearUsuarios" class="accordion-collapse collapse"
+                        <div id="acordionCrearUsuarios" class="accordion-collapse collapse show"
                             aria-labelledby="panelCreacion-headingOne">
                             <div class="accordion-body">
                                 <form action="#" class="was-validated row g-3">
@@ -780,7 +859,6 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-
     <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./js/Principal.js"></script>
     <script src="../bootstrap/js/read-excel-file.min.js"></script>

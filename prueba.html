@@ -4,40 +4,51 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <script src="./bootstrap/js/jquery-3.6.3.min.js"></script>
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="./JqueryUI/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="./JqueryUI/jquery-ui.js"></script>
+    <script>
+        $.datepicker.regional['es'] = {
+            dateFormat: 'yy-mm-dd',
+            closeText: 'Cerrar',
+            prevText: '< Ant',
+            nextText: 'Sig >',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
+                'Octubre', 'Noviembre', 'Diciembre'
+            ],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        $(function () {
+            $("#datepicker").datepicker();
+            $('#datepicker').datepicker('option', 'dateFormat', 'yy-mm-dd');
+        });
+    </script>
 </head>
+<button id="idd">
+    aprietame
+</button>
 
 <body>
-    <style>
-        .list-group-item.d-flex.justify-content-between.align-items-center.list-group-item-action {
-            background-color: aqua;
-        }
-    </style>
-    <ul class="list-group">
-        <li id="btnCitasVerdes" type="button"
-            class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
-            Menos de 5 dias
-            <span class="badge bg-primary rounded-pill">14</span>
-        </li>
-        <li id="btnCitasNaranjas" type="button"
-            class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
-            De 5 a 10 dias
-            <span class="badge bg-primary rounded-pill">2</span>
-        </li>
-        <li id="btnCitasRojas" type="button"
-            class="list-group-item d-flex justify-content-between align-items-center list-group-item-action listadoColores">
-            mas de 10 dias
-            <span class="badge bg-primary rounded-pill">1</span>
-        </li>
-    </ul>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
-        </script>
+
+    <p>Date: <input type="text" id="datepicker"></p>
     <script>
+        document.getElementById("idd").addEventListener("click", () => {
+            console.log(document.getElementById("datepicker").value);
+        });
     </script>
+
 </body>
 
 </html>

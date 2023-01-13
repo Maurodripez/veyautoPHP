@@ -56,7 +56,7 @@ switch ($accion) {
         $equipo = isset($_POST['equipo']) ? $_POST['equipo'] : "";
         $end = isset($_POST['end']) ? $_POST['end'] : "";
         $folio = isset($_POST['folio']) ? $_POST['folio'] : "";
-        $sql = "select count(id) from folios where folio='$folio'";
+        $sql = "select count(id) from folios where folio='$folio' and folio not in (select folio from citas)";
         $existe = ObtenerValorCualquiera($sql, $modelos . "Conexion.php");
         if ($existe == 1) {
             $sql = "select id from folios where folio='$folio'";
@@ -68,7 +68,7 @@ switch ($accion) {
             ActualizarCualquierSiniestro($sql, $modelos . "Conexion.php");
             echo "Cita generada";
         } else {
-            echo "Error, el folio no existe";
+            echo "Error, el folio no existe o ya hay existe una cita";
         }
         break;
     case "FoliosCitas":

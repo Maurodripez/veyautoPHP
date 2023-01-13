@@ -3,7 +3,7 @@ html {
   border: none;
 }
 body {
-  padding: 10px 20px 20px 20px;
+  padding: 0px 10px 10px 10px;
   border: none;
 }
 .navbar.navbar-expand-lg {
@@ -220,24 +220,24 @@ body {
   padding-top: 0em;
 }
 .table.table-hover.mdl-data-table.table-bordered {
-  border-color: #0091ff;
+  border-color: #138ce9;
 }
 /*todos los botonoes de guardar, tienen estas clases para que sean iguales*/
 .btn.btnGuardar {
-  background-color: #0091ff;
+  background-color: #138ce9;
   color: aliceblue;
 }
 .btn.eliminarUsuario {
   background-color: #ff0000;
 }
 .btn.editarUsuario {
-  background-color: #0091ff;
+  background-color: #138ce9;
 }
 #tablaUsuarios td {
   text-align: center;
 }
 #btnCargarExcel {
-  background-color: #0091ff;
+  background-color: #138ce9;
   color: aliceblue;
 }
 #btnPlantillaCarga {
@@ -252,7 +252,7 @@ body {
   padding-top: 1em;
 }
 .btn.editarFolios {
-  background-color: #0091ff;
+  background-color: #138ce9;
 }
 
 /*hago que el contenido de las tablas este centradp*/
@@ -266,4 +266,27 @@ body {
 }
 #tablaUsuarios tbody td {
   text-align: center;
+}
+/*Estilos de tablas*/
+thead {
+  background-color: #138ce9;
+  color: aliceblue;
+}
+tfoot{
+  background-color: #138ce9;
+  color: aliceblue;
+}
+#btnGenerarCitaFolio{
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.ui-datepicker-calendar{
+  border-radius: 0%;
+}
+.ui-datepicker-div{
+  border-radius: 0%;
+}
+#btnGenerarCitaFolios{
+  background-color: #138ce9;
+  color: aliceblue;
 }

@@ -3,6 +3,7 @@ var deshabilitarClickEditar = 0;
 
 window.addEventListener("load", function (event) {
   ///////////////////////inicializaciones generales///////////////////////////////
+  datePicker();
   //se muestran los div dependiendo la seccion que se elija
   document.getElementById("btnCitas").addEventListener("click", () => {
     document.getElementById("divCitas").style.display = "";
@@ -20,10 +21,13 @@ window.addEventListener("load", function (event) {
     document.getElementById("divDatos").style.display = "none";
     document.getElementById("divHerramientas").style.display = "";
   });
+  document.getElementById("txtEquipo").addEventListener("click", () => {
+    obtenerEquipos("txtEquipo");
+  });
   document
-    .getElementById("btnAcordeonCrearUsuario")
+    .getElementById("btnGenerarCitaFolio")
     .addEventListener("click", () => {
-      obtenerEquipos("txtEquipo");
+      obtenerEquipos("txtCitaEquipoFolio");
     });
   document
     .getElementById("btnAcordionAsignarFolios")
@@ -96,6 +100,11 @@ window.addEventListener("load", function (event) {
   document.getElementById("btnEliminarCarga").addEventListener("click", () => {
     eliminarCarga();
   });
+  document
+    .getElementById("btnGenerarCitaFolios")
+    .addEventListener("click", () => {
+      generarCitasFolios();
+    });
   document
     .getElementById("btnActualizarFolio")
     .addEventListener("click", () => {
@@ -237,7 +246,6 @@ function crearCita() {
       "danger",
       "divLetreroCrearCita"
     );
-    //alert("Por favor, selecciona un horario valido");
     return;
   }
   let folio = document.getElementById("txtFolio").value;
@@ -743,6 +751,34 @@ function mostrarUsuarios() {
         1.5 0 0 0 1 2.5v11z"/></svg></button>`,
       },
     ],
+    //se pintan las celdas de la tabla dependiendo cuantos dias han pasado
+    rowCallback: function (row, data) {
+      if (data.Consulta === "Si") {
+        $($(row).find("td")[4]).css("background-color", "#c1d7e7");
+      } else {
+        $($(row).find("td")[4]).css("background-color", "#C8C8C8");
+      }
+      if (data.Mensajero === "Si") {
+        $($(row).find("td")[5]).css("background-color", "#c1d7e7");
+      } else {
+        $($(row).find("td")[5]).css("background-color", "#C8C8C8");
+      }
+      if (data.Operador === "Si") {
+        $($(row).find("td")[6]).css("background-color", "#c1d7e7");
+      } else {
+        $($(row).find("td")[6]).css("background-color", "#C8C8C8");
+      }
+      if (data.Supervisor === "Si") {
+        $($(row).find("td")[7]).css("background-color", "#c1d7e7");
+      } else {
+        $($(row).find("td")[7]).css("background-color", "#C8C8C8");
+      }
+      if (data.Teamleader === "Si") {
+        $($(row).find("td")[8]).css("background-color", "#c1d7e7");
+      } else {
+        $($(row).find("td")[8]).css("background-color", "#C8C8C8");
+      }
+    },
     language: {
       search: "Buscar",
     },
@@ -757,32 +793,27 @@ function mostrarUsuarios() {
   });
   //se emplea la funcion para retrasar un poco el cabio de colores
   setTimeout(() => {
-    cambiarColorCeldas();
+    //cambiarColorCeldas();
   }, 300);
 }
-function eliminarUsuario() {
+async function eliminarUsuario() {
   if (window.confirm("Eliminar usuario?")) {
     let id = document.getElementById("idEditar").textContent;
-    console.log(id);
     let data = new FormData();
     data.append("id", id);
+    let url = "AccionesUsuario.php";
     data.append("accion", "EliminarUsuario");
-    fetch(controlador + "AccionesUsuario.php", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      body: data, // body data type must match "Content-Type" header
-    })
-      .then((response) => response.text())
-      .then((respuesta) => {
-        if (respuesta === "Eliminado con exito") {
-          mostrarMensajeNoFade(respuesta, "success", "divLetreroEditar");
-          setTimeout(function () {
-            mostrarUsuarios("destroy");
-            $("#modalEditarUsuario").modal("hide");
-          }, 2000);
-        } else {
-          mostrarMensajeNoFade(respuesta, "danger", "divLetreroEditar");
-        }
-      });
+    let eliminarUsuario = new claseFetch(data, url).fetchTexto();
+    let respuesta = await eliminarUsuario;
+    if (respuesta === "Eliminado con exito") {
+      mostrarMensajeNoFade(respuesta, "success", "divLetreroEditar");
+      setTimeout(function () {
+        mostrarUsuarios("destroy");
+        $("#modalEditarUsuario").modal("hide");
+      }, 1500);
+    } else {
+      mostrarMensajeNoFade(respuesta, "danger", "divLetreroEditar");
+    }
   }
 }
 //////////////////////////funciones carga de folios////////////////
@@ -950,6 +981,18 @@ function mostrarFolios() {
           1.5 0 0 0 1 2.5v11z"/></svg></button>`,
       },
     ],
+    //se pintan las celdas de la tabla dependiendo cuantos dias han pasado
+    rowCallback: function (row, data) {
+      if (data.dias < 5) {
+        $($(row).find("td")).css("background-color", "#99fac6");
+      } else if (data.dias < 10) {
+        $($(row).find("td")).css("background-color", "#fdff9c");
+      } else if (data.dias <= 13) {
+        $($(row).find("td")).css("background-color", "#fc9494");
+      } else {
+        $($(row).find("td")).css("background-color", "#C8C8C8");
+      }
+    },
     language: {
       search: "Buscar",
     },
@@ -965,14 +1008,85 @@ function mostrarFolios() {
   $("#tablaFolios tbody").off("click");
   //obtiene el id del usuario para editar al mismo
   $("#tablaFolios tbody").on("click", "button", function () {
-    var data = table.row($(this).parents("tr")).data();
+    let data = table.row($(this).parents("tr")).data();
     document.getElementById("idFolio").textContent = data.id;
     infoAdicional("idFolio", "ulListaInfoFolio", "Folios");
     obtenerEquipos("txtEditarEquipoFolio");
+    document.getElementById("txtFolioFolio").value = data.folio;
+    //se retrasa la funcion para evitar que no se asigne el valor normal
     setTimeout(() => {
       document.getElementById("txtEditarEquipoFolio").value = data.equipo;
     }, 50);
   });
+}
+async function generarCitasFolios() {
+  let fechaValidar = obtenerFechaConvertida(0) + "";
+  if (document.getElementById("txtFechaFolio").value <= fechaValidar) {
+    mostrarMensajeFade(
+      "Por favor, selecciona una fecha valida",
+      "danger",
+      "divLetreroCrearCitaFolio"
+    );
+    //alert("Por favor, selecciona una fecha valida");
+    return;
+  }
+  if (document.getElementById("txtCitaEquipoFolio").value == "Equipo") {
+    mostrarMensajeFade(
+      "Por favor, selecciona un equipo",
+      "danger",
+      "divLetreroCrearCitaFolio"
+    );
+    //alert("Por favor, selecciona un equipo");
+    return;
+  }
+
+  if (document.getElementById("txtTituloFolio").value == "") {
+    mostrarMensajeFade(
+      "Por favor, proporciona un titulo",
+      "danger",
+      "divLetreroCrearCitaFolio"
+    );
+    //alert("Por favor, proporciona un titulo");
+    return;
+  }
+  if (
+    document.getElementById("txtHoraInicioFolio").value >=
+    document.getElementById("txtHoraFinalFolio").value
+  ) {
+    mostrarMensajeFade(
+      "Por favor, selecciona un horario valido",
+      "danger",
+      "divLetreroCrearCitaFolio"
+    );
+    return;
+  }
+  let data = new FormData();
+  let fecha = document.getElementById("txtFechaFolio").value;
+  let horaInicio = document.getElementById("txtHoraInicioFolio").value;
+  let horaFin = document.getElementById("txtHoraFinalFolio").value;
+  data.append("fecha", fecha);
+  data.append(
+    "infoAdicional",
+    document.getElementById("txtInfoAdicionalFolio").value
+  );
+  data.append("equipo", document.getElementById("txtEditarEquipoFolio").value);
+  data.append("start", `${fecha} ${horaInicio}:00`);
+  data.append("end", `${fecha} ${horaFin}:00`);
+  data.append("title", document.getElementById("txtTituloFolio").value);
+  data.append("folio", document.getElementById("txtFolioFolio").value);
+  data.append("accion", "CrearCita");
+  let url = controlador + "ConsultasCitas.php";
+  let consulta = new claseFetch(data, url);
+  let respuesta = await consulta.fetchTexto();
+  if (respuesta === "Error, el folio no existe o ya hay existe una cita") {
+    mostrarMensajeFade(respuesta, "danger", "divLetreroCrearCitaFolio");
+    return;
+  } else {
+    mostrarMensajeFade(respuesta, "success", "divLetreroCrearCitaFolio");
+    //refresca las citas que tenemos
+    $("#citas").fullCalendar("refetchEvents");
+  }
+  console.log(respuesta);
 }
 ////////////////////////////funciones generales///////////////////////////
 //genera un mensaje , remplaza a las alertas
@@ -1014,27 +1128,27 @@ function cambiarColorCeldas() {
   let idTabla = document.getElementById("tablaUsuarios");
   for (let i = 1; i < nFilas - 1; i++) {
     if (idTabla.rows[i].cells[4].textContent === "Si") {
-      cambiosColor(idTabla, i, 4, "0091ff", "ffffff");
+      cambiosColor(idTabla, i, 4, "c1d7e7", "aliceblue");
     } else {
       cambiosColor(idTabla, i, 4, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[5].textContent === "Si") {
-      cambiosColor(idTabla, i, 5, "0091ff", "ffffff");
+      cambiosColor(idTabla, i, 5, "c1d7e7", "aliceblue");
     } else {
       cambiosColor(idTabla, i, 5, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[6].textContent === "Si") {
-      cambiosColor(idTabla, i, 6, "0091ff", "ffffff");
+      cambiosColor(idTabla, i, 6, "c1d7e7", "aliceblue");
     } else {
       cambiosColor(idTabla, i, 6, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[7].textContent === "Si") {
-      cambiosColor(idTabla, i, 7, "0091ff", "ffffff");
+      cambiosColor(idTabla, i, 7, "c1d7e7", "aliceblue");
     } else {
       cambiosColor(idTabla, i, 7, "AFAFAF", "000000");
     }
     if (idTabla.rows[i].cells[8].textContent === "Si") {
-      cambiosColor(idTabla, i, 8, "0091ff", "ffffff");
+      cambiosColor(idTabla, i, 8, "c1d7e7", "aliceblue");
     } else {
       cambiosColor(idTabla, i, 8, "AFAFAF", "000000");
     }
@@ -1075,13 +1189,18 @@ function busquedaEnVivo() {
   $("#tablaFolios thead tr").clone(true).appendTo("#tablaFolios thead");
 
   $("#tablaFolios thead tr:eq(1) th").each(function (i) {
-    $(this).html('<input size="4" type="text" placeholder="Buscar" />');
+    console.log(i);
+    if(i!=0){
+      $(this).html('<input size="4" type="text" placeholder="Buscar" />');
 
-    $("input", this).on("keyup change", function () {
-      if (table.column(i).search() !== this.value) {
-        table.column(i).search(this.value).draw();
-      }
-    });
+      $("input", this).on("keyup change", function () {
+        if (table.column(i).search() !== this.value) {
+          table.column(i).search(this.value).draw();
+        }
+      });
+    }else{
+      $(this).html('<p></p>');
+    }
   });
 }
 //se crea la funcion para obtener la fecha actual en formato yyyy-mm-dd
@@ -1096,7 +1215,63 @@ function obtenerFechaConvertida(n) {
 
   return `${yyyy}-${mm}-${dd}`;
 }
-
+function datePicker() {
+  $(".datepicker").datepicker();
+  $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+  $.datepicker.regional["es"] = {
+    dateFormat: "yy-mm-dd",
+    closeText: "Cerrar",
+    prevText: "< Ant",
+    nextText: "Sig >",
+    currentText: "Hoy",
+    monthNames: [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ],
+    monthNamesShort: [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ],
+    dayNames: [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ],
+    dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Juv", "Vie", "Sáb"],
+    dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
+    weekHeader: "Sm",
+    dateFormat: "dd/mm/yy",
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: "",
+  };
+  $.datepicker.setDefaults($.datepicker.regional["es"]);
+}
 //////////////////FUNCIONES NO UTILIZADAS///////////////////////////
 /*function obtenerCitasPorColor() {
   let listado = document.querySelectorAll(".listadoColores");
@@ -1136,5 +1311,74 @@ function obtenerFechaConvertida(n) {
       document.getElementById(listadoConteo[i]).style.color = "white";
       document.getElementById(listado[i].id).style.color = "white";
     });
+  }
+}*/
+/*********************************************************************************** */
+//////////////////////////////CLASES //////////////////////////////////////////////////
+/*********************************************************************************** */
+class claseFetch {
+  constructor(data, url) {
+    this.data = data;
+    this.url = controlador + url;
+  }
+  get fetchJson() {
+    return this.fetchJson();
+  }
+  get fetchTexto() {
+    return this.fetchTexto();
+  }
+  fetchTexto() {
+    let retorno = fetch(this.url, {
+      method: "POST",
+      body: this.data,
+    }).then((response) => {
+      return response.text();
+    });
+    return retorno;
+  }
+  fetchJson() {
+    let retorno = fetch(this.url, {
+      method: "POST",
+      body: this.data,
+    }).then((response) => {
+      return response.json();
+    });
+    return retorno;
+  }
+}
+/////////////////FUNCIONES DE PRUEBA Y CLASES///////////////////////
+async function mandarDatos() {
+  let data = new FormData();
+  let url = "prueba.php";
+  let url2 = "pruebatexto.php";
+  data.append("accion", "Hola");
+  //let clase = new claseFetch();
+  //let resultadoClase = await clase.fetchTexto(data);
+  //let resultadoClaseJson = await clase.fetchJson(data, url);
+  //console.log(resultadoClaseJson);
+  let pruebaNueva = new claseFetch(data, url);
+  let pruebaNueva2 = new claseFetch(data, url2);
+  console.log(await pruebaNueva.fetchJson());
+  console.log(await pruebaNueva2.fetchTexto());
+  //console.log(resultadoClase);
+}
+/*class claseFetch {
+  fetchTexto(data) {
+    let retorno = fetch(controlador + "prueba.php", {
+      method: "POST",
+      body: data,
+    }).then((response) => {
+      return response.text();
+    });
+    return retorno;
+  }
+  fetchJson(data, url) {
+    let retorno = fetch(controlador + url, {
+      method: "POST",
+      body: data,
+    }).then((response) => {
+      return response.json();
+    });
+    return retorno;
   }
 }*/
