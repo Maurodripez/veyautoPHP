@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS `citas` (
   `fecha` date DEFAULT NULL,
   `mostrar` tinyint(4) DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- Volcando datos para la tabla veryauto.citas: ~9 rows (aproximadamente)
+-- Volcando datos para la tabla veryauto.citas: ~6 rows (aproximadamente)
 DELETE FROM `citas`;
 INSERT INTO `citas` (`id`, `fkCitas`, `title`, `start`, `end`, `infoAdicional`, `operador`, `folio`, `equipo`, `fecha`, `mostrar`) VALUES
 	(41, 27, 'cita creada', '2023-01-11 09:00:00', '2023-01-11 10:00:00', 'qwerty', 'Mauricio Rodriguez', 'K000001', 'Mauricio Rodriguez', '2023-01-11', 1),
@@ -43,11 +43,7 @@ INSERT INTO `citas` (`id`, `fkCitas`, `title`, `start`, `end`, `infoAdicional`, 
 	(43, 29, 'prueba', '2023-01-11 11:00:00', '2023-01-11 12:00:00', 'la informacion necesaria', 'Mauricio Rodriguez', 'K000003', 'Mauricio Rodriguez', '2023-01-11', 1),
 	(44, 30, 'ninguno hoy2222', '2023-01-11 09:00:00', '2023-01-11 10:00:00', 'veremos si haty titulo', 'Mauricio Rodriguez', 'K000004', 'Mauricio Rodriguez', '2023-01-11', 1),
 	(45, 31, 'primera cita', '2023-01-12 13:00:00', '2023-01-12 15:00:00', 'por ahora nada', 'Mauricio Rodriguez', 'K000005', 'Mauricio Rodriguez', '2023-01-12', 1),
-	(46, 27, 'qweqwe', '2023-01-26 09:00:00', '2023-01-26 10:00:00', 'qweqe', 'Mauricio Rodriguez', 'K000006', 'Mauricio Rodriguez', '2023-01-26', 1),
-	(47, 28, 'wqeqw', '2023-01-19 09:00:00', '2023-01-19 10:00:00', 'wqeewqe', 'Mauricio Rodriguez', 'K000007', 'mario', '2023-01-19', 1),
-	(48, 28, 'wqeqw', '2023-01-19 09:00:00', '2023-01-19 10:00:00', 'wqeewqe', 'Mauricio Rodriguez', 'K000008', 'mario', '2023-01-19', 1),
-	(49, 27, 'asds', '2023-01-19 09:00:00', '2023-01-19 10:00:00', 'asdasd', 'Mauricio Rodriguez', ' K000001', 'Mauricio Rodriguez', '2023-01-19', 1),
-	(50, 38, 'asdad', '2023-01-19 09:00:00', '2023-01-19 10:00:00', 'asdad', 'Mauricio Rodriguez', 'K000012', '', '2023-01-19', 1);
+	(51, 35, 'asdd', '2023-01-24 09:00:00', '2023-01-24 10:00:00', 'adasd', 'Mauricio Rodriguez', 'K000009', 'Mauricio Rodriguez', '2023-01-24', 1);
 
 -- Volcando estructura para tabla veryauto.folios
 CREATE TABLE IF NOT EXISTS `folios` (

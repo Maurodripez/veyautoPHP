@@ -2,123 +2,18 @@ let controlador = "../controllers/";
 var deshabilitarClickEditar = 0;
 
 window.addEventListener("load", function (event) {
-  ///////////////////////inicializaciones generales///////////////////////////////
-  datePicker();
-  //se muestran los div dependiendo la seccion que se elija
-  document.getElementById("btnCitas").addEventListener("click", () => {
-    document.getElementById("divCitas").style.display = "";
-    document.getElementById("divDatos").style.display = "none";
-    document.getElementById("divHerramientas").style.display = "none";
-  });
-  document.getElementById("btnDatos").addEventListener("click", () => {
-    document.getElementById("divCitas").style.display = "none";
-    document.getElementById("divDatos").style.display = "";
-    document.getElementById("divHerramientas").style.display = "none";
-    mostrarFolios("inicial");
-  });
-  document.getElementById("btnHerramientas").addEventListener("click", () => {
-    document.getElementById("divCitas").style.display = "none";
-    document.getElementById("divDatos").style.display = "none";
-    document.getElementById("divHerramientas").style.display = "";
-  });
-  document.getElementById("txtEquipo").addEventListener("click", () => {
-    obtenerEquipos("txtEquipo");
-  });
-  document
-    .getElementById("btnGenerarCitaFolio")
-    .addEventListener("click", () => {
-      obtenerEquipos("txtCitaEquipoFolio");
-    });
-  document
-    .getElementById("btnAcordionAsignarFolios")
-    .addEventListener("click", () => {
-      obtenerEquipos("txtEquipoFolios");
-    });
-  ///////////////////////inicializaciones de usuario//////////////////////////////
   //se inicializa la funcion table para no tener conflictos cada vez que se llama
   let table;
-  mostrarUsuarios("inicial");
-  //se evita asi generar varias veces la misma peticion si no es necesaria
-  $("#btnMostrarUsuarios").on("click", function () {
-    //se pregunta si el boton no tiene la clase collapsed para no desplegar varias veces la misma funcion
-    if (!$("#btnMostrarUsuariosHijo").hasClass("collapsed")) {
-      mostrarUsuarios("destroy");
-    }
-  });
-  $("#btnEditarUsuario").on("click", function () {
-    //se pregunta si el boton no tiene la clase collapsed para no desplegar varias veces la misma funcion
-    crearEditarUsuario("EditarUsuario", "divLetreroEditar");
-  });
-  document.getElementById("btnCrearUsuario").addEventListener("click", (e) => {
-    crearEditarUsuario("CrearUsuario", "liveAlertPlaceholder");
-    e.preventDefault();
-  });
-  document
-    .getElementById("btnEliminarUsuario")
-    .addEventListener("click", () => {
-      eliminarUsuario();
-    });
-  ////////////////////////inicializaciones Datos//////////////////////////////
-  $(".editarFolios").on("click", function () {
-    console.log("data");
-    var data = tableFolio.row($(this).parents("tr")).data();
-    //document.getElementById("idEditar").textContent = data.id;
-    console.log(data);
-    //document.getElementById("txtEditarUsuario").value = data.usuario;
-    //document.getElementById("txtEditarNombre").value = data.nombre;
-    //document.getElementById("txtEditarTurno").value = data.turno;
-    //document.getElementById("txtEditarEquipo").value = data.equipo;
-  });
-  ////////////////////////inicializaciones de citas//////////////////////////////
-  ponerColorCitas();
-  desplegarCitas(0, 14);
-  conteoFoliosCitas(0, 5, "conteoVerde", "FoliosCitas");
-  conteoFoliosCitas(5, 10, "conteoNaranja", "FoliosCitas");
-  conteoFoliosCitas(10, 14, "conteoRojo", "FoliosCitas");
-  conteoFoliosCitas(0, 5, "verdeNoCita", "FoliosActivosNoCitas");
-  conteoFoliosCitas(5, 10, "naranjaNoCita", "FoliosActivosNoCitas");
-  conteoFoliosCitas(10, 14, "rojoNoCita", "FoliosActivosNoCitas");
-  conteoFoliosCitas(0, 5, "verdeTotal", "FoliosTotalesActivos");
-  conteoFoliosCitas(5, 10, "naranjaTotal", "FoliosTotalesActivos");
-  conteoFoliosCitas(10, 14, "rojoTotal", "FoliosTotalesActivos");
-  conteoFoliosCitas(0, 14, "totalCitas", "TotalCitas");
-  conteoFoliosCitas(0, 14, "totalNoCitas", "TotalNoCitas");
-  conteoFoliosCitas(0, 14, "totalActivos", "TotalActivos");
-  //se escucha el click y muestra crea la tabla de usuarios
-  //operadores();
+  ////////////////////////inicializaciones//////////////////////////////
+  inicializacionesDivs();
+  inicializacionesCitas();
+  inicializacionestDatos();
+  inicializacionesHerramientas();
+  inicializacionestGenerales();
   $('[data-toggle="tooltip"]').tooltip();
-  document.getElementById("btnGuardarCita").addEventListener("click", () => {
-    crearCita();
-  });
-  document.getElementById("btnOffCanvas").addEventListener("click", () => {
-    infoAdicional("idCitaActual", "ulListaInfo", "Citas");
-  });
-  ///////////////////////////////////inicializaciones de carga//////////////////////////////
-  document.getElementById("btnCargarExcel").addEventListener("click", () => {
-    cargarExcel();
-  });
-  document.getElementById("btnEliminarCarga").addEventListener("click", () => {
-    eliminarCarga();
-  });
-  document
-    .getElementById("btnGenerarCitaFolios")
-    .addEventListener("click", () => {
-      generarCitasFolios();
-    });
-  document
-    .getElementById("btnActualizarFolio")
-    .addEventListener("click", () => {
-      actualizarDatos();
-    });
-  document
-    .getElementById("btnAcordeonEliminarCargas")
-    .addEventListener("click", () => {
-      obtenerCargas();
-    });
 });
-//se ejecuta la funcion cada minuto para refrescar las citas
 
-//funciones para Citas
+///////////////////////////funciones para Citas/////////////////////////////////////////////
 //muestra las citas del operador
 function desplegarCitas(mayor, menor) {
   $("#citas").fullCalendar({
@@ -131,15 +26,16 @@ function desplegarCitas(mayor, menor) {
     events: `../controllers/MostrarEventos.php?mayor=${mayor}&menor=${menor}`,
     displayEventTime: true,
     eventRender: function (event, element, view) {
+      console.log(event);
       //cambia de manera dinamica los colores de las citas, dependiendo la cantidad
       //de dias que esten activas desde su carga
       if (event.dias < 5) {
         element.find(".fc-content").css("color", "#3f3f3f");
         element.find(".fc-content").css("background-color", "#70ffb3");
-      } else if (event.dias > 5 && event.dias < 10) {
+      } else if (event.dias >= 5 && event.dias < 10) {
         element.find(".fc-content").css("color", "#3f3f3f");
         element.find(".fc-content").css("background-color", "#fdff9c");
-      } else if (event.dias > 9) {
+      } else if (event.dias >= 10) {
         element.find(".fc-content").css("background-color", "#fc9494");
         element.find(".fc-content").css("color", "#3f3f3f");
       }
@@ -206,6 +102,28 @@ function desplegarCitas(mayor, menor) {
       mostrarInfoCita();
     },
   });
+}
+function inicializacionesCitas() {
+  document.getElementById("btnOffCanvas").addEventListener("click", () => {
+    infoAdicional("idCitaActual", "ulListaInfo", "Citas");
+  });
+  document.getElementById("btnGuardarCita").addEventListener("click", () => {
+    crearCita();
+  });
+  ponerColorCitas();
+  desplegarCitas(0, 14);
+  conteoFoliosCitas(0, 5, "conteoVerde", "FoliosCitas");
+  conteoFoliosCitas(5, 10, "conteoNaranja", "FoliosCitas");
+  conteoFoliosCitas(10, 14, "conteoRojo", "FoliosCitas");
+  conteoFoliosCitas(0, 5, "verdeNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(5, 10, "naranjaNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(10, 14, "rojoNoCita", "FoliosActivosNoCitas");
+  conteoFoliosCitas(0, 5, "verdeTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(5, 10, "naranjaTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(10, 14, "rojoTotal", "FoliosTotalesActivos");
+  conteoFoliosCitas(0, 14, "totalCitas", "TotalCitas");
+  conteoFoliosCitas(0, 14, "totalNoCitas", "TotalNoCitas");
+  conteoFoliosCitas(0, 14, "totalActivos", "TotalActivos");
 }
 //se genera la cita, primero validando si existe ya una cita y despues generandolaF
 function crearCita() {
@@ -504,7 +422,6 @@ function ponerColorCitas() {
   let naranja = "rgb(253, 255, 156)";
   for (let i = 0; i < listado.length; i++) {
     listado[i].addEventListener("click", (e) => {
-      console.log(listado[i].id);
       let listadoFC = document.querySelectorAll(".fc-content");
       let listadoFCC = document.querySelectorAll(".fc-day-grid-event");
       for (let n = 0; n < listadoFC.length; n++) {
@@ -514,18 +431,18 @@ function ponerColorCitas() {
           (colorCintillo === rojo || colorCintillo === naranja)
         ) {
           listadoFC[n].style.display = "none";
-          listadoFCC[n].style.borderColor = "#c1d7e7";
+          listadoFCC[n].style.borderColor = "#ffffff00";
         } else if (
           listado[i].id === "btnCitasNaranjas" &&
           (colorCintillo === rojo || colorCintillo === verde)
         ) {
-          listadoFCC[n].style.borderColor = "#c1d7e7";
+          listadoFCC[n].style.borderColor = "#ffffff00";
           listadoFC[n].style.display = "none";
         } else if (
           listado[i].id === "btnCitasRojas" &&
           (colorCintillo === verde || colorCintillo === naranja)
         ) {
-          listadoFCC[n].style.borderColor = "#c1d7e7";
+          listadoFCC[n].style.borderColor = "#ffffff00";
           listadoFC[n].style.display = "none";
         } else {
           listadoFCC[n].style.borderColor = "white";
@@ -549,7 +466,41 @@ function conteoFoliosCitas(mayor, menor, id, accion) {
       document.getElementById(id).textContent = respuesta.Folios[0].conteo;
     });
 }
-//////////////////////funciones para creacion de usuarios////////////////
+//////////////////////funciones para herramientas////////////////
+function inicializacionesHerramientas() {
+  document.getElementById("btnCargarExcel").addEventListener("click", () => {
+    cargarExcel();
+  });
+  document.getElementById("btnEliminarCarga").addEventListener("click", () => {
+    eliminarCarga();
+  });
+  document
+    .getElementById("btnAcordeonEliminarCargas")
+    .addEventListener("click", () => {
+      obtenerCargas();
+    });
+  mostrarUsuarios("inicial");
+  //se evita asi generar varias veces la misma peticion si no es necesaria
+  $("#btnMostrarUsuarios").on("click", function () {
+    //se pregunta si el boton no tiene la clase collapsed para no desplegar varias veces la misma funcion
+    if (!$("#btnMostrarUsuariosHijo").hasClass("collapsed")) {
+      mostrarUsuarios("destroy");
+    }
+  });
+  $("#btnEditarUsuario").on("click", function () {
+    //se pregunta si el boton no tiene la clase collapsed para no desplegar varias veces la misma funcion
+    crearEditarUsuario("EditarUsuario", "divLetreroEditar");
+  });
+  document.getElementById("btnCrearUsuario").addEventListener("click", (e) => {
+    crearEditarUsuario("CrearUsuario", "liveAlertPlaceholder");
+    e.preventDefault();
+  });
+  document
+    .getElementById("btnEliminarUsuario")
+    .addEventListener("click", () => {
+      eliminarUsuario();
+    });
+}
 //se manda por medio de fetch los datos necesarios para la creacion de usuarios
 function crearEditarUsuario(accion, idLetrero) {
   let checkSupevisor;
@@ -942,6 +893,33 @@ function eliminarCarga() {
     });
 }
 ////////////////////Datos////////////////////////////
+function inicializacionestDatos() {
+  document.getElementById("btnEliminarFolio").addEventListener("click", () => {
+    eliminarFolio();
+  });
+  document
+    .getElementById("btnGenerarCitaFolios")
+    .addEventListener("click", () => {
+      generarCitasFolios();
+    });
+  document
+    .getElementById("btnActualizarFolio")
+    .addEventListener("click", () => {
+      actualizarDatos();
+    });
+  conteoFoliosCitas(0, 5, "conteoVerdeDatos", "FoliosCitas");
+  conteoFoliosCitas(5, 10, "conteoNaranjaDatos", "FoliosCitas");
+  conteoFoliosCitas(10, 14, "conteoRojoDatos", "FoliosCitas");
+  conteoFoliosCitas(0, 5, "verdeNoCitaDatos", "FoliosActivosNoCitas");
+  conteoFoliosCitas(5, 10, "naranjaNoCitaDatos", "FoliosActivosNoCitas");
+  conteoFoliosCitas(10, 14, "rojoNoCitaDatos", "FoliosActivosNoCitas");
+  conteoFoliosCitas(0, 5, "verdeTotalDatos", "FoliosTotalesActivos");
+  conteoFoliosCitas(5, 10, "naranjaTotalDatos", "FoliosTotalesActivos");
+  conteoFoliosCitas(10, 14, "rojoTotalDatos", "FoliosTotalesActivos");
+  conteoFoliosCitas(0, 14, "totalCitasDatos", "TotalCitas");
+  conteoFoliosCitas(0, 14, "totalNoCitasDatos", "TotalNoCitas");
+  conteoFoliosCitas(0, 14, "totalActivosDatos", "TotalActivos");
+}
 function mostrarFolios() {
   busquedaEnVivo();
   let data = new FormData();
@@ -994,13 +972,25 @@ function mostrarFolios() {
       }
     },
     language: {
-      search: "Buscar",
+      search: "Búsqueda general",
+      searchPlaceholder: "Buscar",
+      zeroRecords: "Ningún folio cumple con los parámetros",
+      paginate: {
+        first: "Primero",
+        last: "Último",
+        next: "Siguiente",
+        previous: "Anterior",
+      },
+      processing: "Procesando...",
+      loadingRecords: "Cargando...",
+      infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
     },
-    destroy: true,
+    fixedHeader: true,
+    destroy: true, //linea para no causar conflicto con otras tablas
     ordering: false,
     info: false,
-    scrollY: "60vh",
-    scrollCollapse: false,
+    bLengthChange: false,
+    scrollCollapse: true,
     paging: false,
     responsive: true,
   });
@@ -1019,6 +1009,20 @@ function mostrarFolios() {
     }, 50);
   });
 }
+async function conteoEstatus() {
+  let data = new FormData();
+  let url = controlador + "AccionesFolios.php";
+  data.append("accion", "ConteoEstatus");
+  data.append("mayorSeg", "ConteoEstatus");
+  data.append("menorSeg", "ConteoEstatus");
+  data.append("mayorCarga", "ConteoEstatus");
+  data.append("menorCarga", "ConteoEstatus");
+  data.append("estatus", "ConteoEstatus");
+  data.append("equipo", "ConteoEstatus");
+  let consulta = claseFetch(data, url);
+  let respuesta = await consulta();
+  console.log(respuesta);
+}
 async function generarCitasFolios() {
   let fechaValidar = obtenerFechaConvertida(0) + "";
   if (document.getElementById("txtFechaFolio").value <= fechaValidar) {
@@ -1027,26 +1031,14 @@ async function generarCitasFolios() {
       "danger",
       "divLetreroCrearCitaFolio"
     );
-    //alert("Por favor, selecciona una fecha valida");
     return;
   }
-  if (document.getElementById("txtCitaEquipoFolio").value == "Equipo") {
-    mostrarMensajeFade(
-      "Por favor, selecciona un equipo",
-      "danger",
-      "divLetreroCrearCitaFolio"
-    );
-    //alert("Por favor, selecciona un equipo");
-    return;
-  }
-
   if (document.getElementById("txtTituloFolio").value == "") {
     mostrarMensajeFade(
       "Por favor, proporciona un titulo",
       "danger",
       "divLetreroCrearCitaFolio"
     );
-    //alert("Por favor, proporciona un titulo");
     return;
   }
   if (
@@ -1088,7 +1080,59 @@ async function generarCitasFolios() {
   }
   console.log(respuesta);
 }
+//elimina el folio, se manda a la base de datos y solo se oculta para estar todavia
+//disponible en caso de necesitarlo
+async function eliminarFolio() {
+  if (window.confirm("Eliminar folio?")) {
+    console.log(document.getElementById("idFolio").textContent);
+    let url = controlador + "AccionesFolios.php";
+    let data = new FormData();
+    data.append("id", document.getElementById("idFolio").textContent);
+    data.append("accion", "EliminarFolio");
+    let consulta = new claseFetch(data, url);
+    let respuesta = await consulta.fetchTexto();
+    if (respuesta === "Eliminado con exito") {
+      mostrarMensajeFade(respuesta, "success", "divLetreroEliminarCitaFolio");
+      setTimeout(() => {
+        $("#modalEditarFolio").modal("hide");
+        mostrarFolios();
+      }, 2000);
+    } else {
+      mostrarMensajeFade(respuesta, "danger", "divLetreroEliminarCitaFolio");
+    }
+  }
+}
 ////////////////////////////funciones generales///////////////////////////
+function inicializacionesDivs() {
+  //se muestran los div dependiendo la seccion que se elija
+  document.getElementById("btnCitas").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "";
+    document.getElementById("divDatos").style.display = "none";
+    document.getElementById("divHerramientas").style.display = "none";
+  });
+  document.getElementById("btnDatos").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "none";
+    document.getElementById("divDatos").style.display = "";
+    document.getElementById("divHerramientas").style.display = "none";
+    mostrarFolios("inicial");
+  });
+  document.getElementById("btnHerramientas").addEventListener("click", () => {
+    document.getElementById("divCitas").style.display = "none";
+    document.getElementById("divDatos").style.display = "none";
+    document.getElementById("divHerramientas").style.display = "";
+  });
+  document.getElementById("txtEquipo").addEventListener("click", () => {
+    obtenerEquipos("txtEquipo");
+  });
+  document
+    .getElementById("btnAcordionAsignarFolios")
+    .addEventListener("click", () => {
+      obtenerEquipos("txtEquipoFolios");
+    });
+}
+function inicializacionestGenerales() {
+  datePicker();
+}
 //genera un mensaje , remplaza a las alertas
 function mostrarMensajeFade(message, type, idLetrero) {
   const alertPlaceholder = document.getElementById(idLetrero);
@@ -1172,6 +1216,7 @@ function obtenerEquipos(idselect) {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       $(".equipos").remove();
       let selectEquipos = document.getElementById(idselect);
       for (let i in data.Equipos) {
@@ -1190,16 +1235,18 @@ function busquedaEnVivo() {
 
   $("#tablaFolios thead tr:eq(1) th").each(function (i) {
     console.log(i);
-    if(i!=0){
-      $(this).html('<input size="4" type="text" placeholder="Buscar" />');
+    if (i != 0) {
+      $(this).html(
+        '<input class="form-control form-control-sm" type="text" placeholder="Buscar" aria-label=".form-control-sm">'
+      );
 
       $("input", this).on("keyup change", function () {
         if (table.column(i).search() !== this.value) {
           table.column(i).search(this.value).draw();
         }
       });
-    }else{
-      $(this).html('<p></p>');
+    } else {
+      $(this).html("<p></p>");
     }
   });
 }
@@ -1217,60 +1264,91 @@ function obtenerFechaConvertida(n) {
 }
 function datePicker() {
   $(".datepicker").datepicker();
-  $(".datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-  $.datepicker.regional["es"] = {
-    dateFormat: "yy-mm-dd",
-    closeText: "Cerrar",
-    prevText: "< Ant",
-    nextText: "Sig >",
-    currentText: "Hoy",
-    monthNames: [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ],
-    monthNamesShort: [
-      "Ene",
-      "Feb",
-      "Mar",
-      "Abr",
-      "May",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dic",
-    ],
-    dayNames: [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-    ],
-    dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Juv", "Vie", "Sáb"],
-    dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
-    weekHeader: "Sm",
-    dateFormat: "dd/mm/yy",
-    firstDay: 1,
-    isRTL: false,
-    showMonthAfterYear: false,
-    yearSuffix: "",
-  };
-  $.datepicker.setDefaults($.datepicker.regional["es"]);
+  $.datepicker.setDefaults(
+    ($.datepicker.regional["es"] = {
+      closeText: "Cerrar",
+      prevText: "< Ant",
+      nextText: "Sig >",
+      currentText: "Hoy",
+      monthNames: [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ],
+      monthNamesShort: [
+        "Ene",
+        "Feb",
+        "Mar",
+        "Abr",
+        "May",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dic",
+      ],
+      dayNames: [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+      ],
+      dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Juv", "Vie", "Sáb"],
+      dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
+      weekHeader: "Sm",
+      dateFormat: "yy-mm-dd",
+      firstDay: 1,
+      isRTL: false,
+      showMonthAfterYear: false,
+      yearSuffix: "",
+    })
+  );
+}
+//////////////////////////////CLASES //////////////////////////////////////////////////
+/*********************************************************************************** */
+class claseFetch {
+  constructor(data, url) {
+    this.data = data;
+    this.url = controlador + url;
+  }
+  get fetchJson() {
+    return this.fetchJson();
+  }
+  get fetchTexto() {
+    return this.fetchTexto();
+  }
+  fetchTexto() {
+    let retorno = fetch(this.url, {
+      method: "POST",
+      body: this.data,
+    }).then((response) => {
+      return response.text();
+    });
+    return retorno;
+  }
+  fetchJson() {
+    let retorno = fetch(this.url, {
+      method: "POST",
+      body: this.data,
+    }).then((response) => {
+      return response.json();
+    });
+    return retorno;
+  }
 }
 //////////////////FUNCIONES NO UTILIZADAS///////////////////////////
 /*function obtenerCitasPorColor() {
@@ -1314,38 +1392,6 @@ function datePicker() {
   }
 }*/
 /*********************************************************************************** */
-//////////////////////////////CLASES //////////////////////////////////////////////////
-/*********************************************************************************** */
-class claseFetch {
-  constructor(data, url) {
-    this.data = data;
-    this.url = controlador + url;
-  }
-  get fetchJson() {
-    return this.fetchJson();
-  }
-  get fetchTexto() {
-    return this.fetchTexto();
-  }
-  fetchTexto() {
-    let retorno = fetch(this.url, {
-      method: "POST",
-      body: this.data,
-    }).then((response) => {
-      return response.text();
-    });
-    return retorno;
-  }
-  fetchJson() {
-    let retorno = fetch(this.url, {
-      method: "POST",
-      body: this.data,
-    }).then((response) => {
-      return response.json();
-    });
-    return retorno;
-  }
-}
 /////////////////FUNCIONES DE PRUEBA Y CLASES///////////////////////
 async function mandarDatos() {
   let data = new FormData();

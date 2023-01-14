@@ -10,11 +10,11 @@ $equipo = ObtenerValorCualquiera($sql, $modelos . "Conexion.php");
 if ($equipo == "General") {
     $sql = "SELECT c.id, fkCitas, title, start, end, infoAdicional, operador, c.folio, c.equipo, "
         . " fecha,datediff(curdate(),fechacarga) as dias FROM citas as c,folios where "
-        . " folios.id=fkCitas and datediff(curdate(),fechacarga)>=$mayor and datediff(curdate(),fechacarga)<$menor";
+        . " folios.id=fkCitas and datediff(curdate(),fechacarga)>=$mayor and datediff(curdate(),fechacarga)<$menor AND c.mostrar=1";
     SelectSinNombreJson($sql, $modelos . "Conexion.php");
 } else {
     $sql = "SELECT c.id, fkCitas, title, start, end, infoAdicional, operador, c.folio, c.equipo, "
         . " fecha,datediff(curdate(),fechacarga) as dias FROM citas as c,folios where "
-        . " folios.id=fkCitas and datediff(curdate(),fechacarga)>=$mayor and datediff(curdate(),fechacarga)<$menor and c.equipo='$equipo'";
+        . " folios.id=fkCitas and datediff(curdate(),fechacarga)>=$mayor and datediff(curdate(),fechacarga)<$menor and c.equipo='$equipo' AND c.mostrar=1";
     SelectSinNombreJson($sql, $modelos . "Conexion.php");
 }

@@ -38,6 +38,17 @@ switch ($accion) {
         } catch (\Throwable $th) {
             echo "Error al actualizar";
         }
-
+        break;
+    case "EliminarFolio":
+        $id = $_POST["id"];
+        try {
+            $sql = "UPDATE folios SET mostrar= 0 WHERE id = $id";
+            ActualizarCualquierSiniestro($sql, "../models/Conexion.php");
+            $sql = "UPDATE citas SET mostrar = 0 WHERE fkCitas = $id";
+            ActualizarCualquierSiniestro($sql, "../models/Conexion.php");
+            echo "Eliminado con exito";
+        } catch (\Throwable $th) {
+            echo "Error: " . $th->getMessage();
+        }
         break;
 }

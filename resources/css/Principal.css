@@ -69,7 +69,7 @@ body {
   border-radius: 0%;
   background-color: #70ffb3;
   border-width: 2px 2px 2px 2px;
-  border-color: #298353;
+  border-color: #298353d7;
   color: #000000;
 }
 .conteoVerde:hover {
@@ -79,7 +79,7 @@ body {
   background-color: #fdff9c;
   border-radius: 0%;
   border-width: 2px 2px 2px 2px;
-  border-color: #c6c911;
+  border-color: #c6c911d7;
   margin-top: 1px;
   color: #000000;
 }
@@ -88,10 +88,10 @@ body {
 }
 .conteoRojo {
   background-color: #fc9494;
-  margin-top: 1px;
+  margin-top: 2px;
   border-radius: 0%;
   border-width: 2px 2px 2px 2px;
-  border-color: #ff2f2f;
+  border-color: #ff2f2fcb;
   color: #000000;
 }
 .conteoRojo:hover {
@@ -167,12 +167,15 @@ body {
   color: aliceblue;
 }
 .fc-day-header.fc-widget-header.fc-sat {
-  background-color: #d1d1d1;
+  background-color: #138ce9;
   color: aliceblue;
 }
 .fc-day-header.fc-widget-header.fc-sun {
   background-color: #ff2f2f;
   color: aliceblue;
+}
+.list-group{
+  border-radius: 0%;
 }
 .fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end {
   border-radius: 0%;
@@ -202,6 +205,14 @@ body {
 .fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end {
   border-color: #ffffff;
   background-color: #ffffff;
+}
+tr .fc-day-top.fc-sun.fc-future{
+  background-color: #ff2f2f;
+  color: aliceblue;
+}
+tr .fc-day-top.fc-sun.fc-past{
+  background-color: #ff2f2f;
+  color: aliceblue;
 }
 /*inicio de la seccion herramientas*/
 #listHerramientas {
@@ -289,4 +300,11 @@ tfoot{
 #btnGenerarCitaFolios{
   background-color: #138ce9;
   color: aliceblue;
+}
+/*la lista de la informacion la pongo en gris para distinguir qeu solo es informacion*/
+#ulListaInfoFolio div li{
+  background-color: #e6e6e6;
+}
+.dividirInfo{
+  border: 2px solid rgb(0, 0, 0);
 }

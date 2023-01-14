@@ -299,6 +299,104 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <div id="divDatos" style="display:none">
+        <div class="row pb-2">
+
+            <div class="col">
+                <h4 class="mb-1 pt-4 titulosConteo">Folios con citas</h4>
+                <ul class="list-group">
+                    <li id="btnCitasVerdesDatos" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
+                        Menos de 5 días
+                        <span id="conteoVerdeDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li id="btnCitasNaranjasDatos" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
+                        De 5 a 10 días
+                        <span id="conteoNaranjaDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li id="btnCitasRojasDatos" type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
+                        Más de 10 días
+                        <span id="conteoRojoDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
+                        Total
+                        <span id="totalCitasDatos" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4 class="mb-1 pt-4 titulosConteo">Folios activos sin cita</h4>
+                <ul class="list-group">
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
+                        Menos de 5 días
+                        <span id="verdeNoCitaDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
+                        De 5 a 10 días
+                        <span id="naranjaNoCitaDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
+                        Más de 10 días
+                        <span id="rojoNoCitaDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
+                        Total
+                        <span id="totalNoCitasDatos" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4 class="mb-1 pt-4 titulosConteo">Total de folios activos</h4>
+                <ul class="list-group">
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoVerde">
+                        Menos de 5 días
+                        <span id="verdeTotalDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoNaranja">
+                        De 5 a 10 días
+                        <span id="naranjaTotalDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoRojo">
+                        Más de 10 días
+                        <span id="rojoTotalDatos" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                        Total
+                        <span id="totalActivosDatos" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4 class="mb-1 pt-4 titulosConteo">Estatus</h4>
+                <ul class="list-group">
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                        Nuevo
+                        <span id="conteoEstatusNuevo" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                        En seguimiento
+                        <span id="conteoEstatusSeguimiento" class="badge rounded-pill">0</span>
+                    </li>
+                    <li type="button"
+                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                        Concluido
+                        <span id="conteoEstatusConcluido" class="badge rounded-pill">0</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="table-responsive">
             <table id="tablaFolios" class="align-middle table table-hover mdl-data-table">
                 <thead>
@@ -354,6 +452,7 @@ if (!isset($_SESSION['usuario'])) {
                         <p style="display: none;" id="idFolio">Ninguno</p>
                         <ul id="ulListaInfoFolio" class="list-group list-group-flush">
                         </ul>
+                        <hr class="dividirInfo">
                         <div class="row g-3 pt-2">
                             <div class="col-md-3">
                                 <label for="txtEditarCelular" class="form-label">Celular</label>
@@ -407,19 +506,36 @@ if (!isset($_SESSION['usuario'])) {
                             </button>
                         </div>
                         <div class="collapse" id="generarCitaPorFolio">
-                            <div class="card card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <label for="txtFechaFolio" class="form-label">Fecha</label>
-                                            <input type="text" class="form-control datepicker" id="txtFechaFolio">
+                            <form class="was-validated row g-3">
+                                <div class="card card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-2">
+                                                <label for="txtFechaFolio" class="form-label">Fecha</label>
+                                                <input type="text" class="form-control datepicker" id="txtFechaFolio"
+                                                    required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <label for="txtHoraInicioFolio" class="form-label">Hora de inicio</label>
-                                            <select id="txtHoraInicioFolio" class="form-select" data-live-search="true">
-                                                <option value="09:00">09:00</option>
+                                        <div class="col">
+                                            <div class="mb-2">
+                                                <label for="txtHoraInicioFolio" class="form-label">Hora de
+                                                    inicio</label>
+                                                <select id="txtHoraInicioFolio" class="form-select"
+                                                    data-live-search="true">
+                                                    <option value="09:00">09:00</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="11:00">11:00</option>
+                                                    <option value="12:00">12:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="14:00">14:00</option>
+                                                    <option value="15:00">15:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col mb-2">
+                                            <label for="txtHoraFinalFolio" class="form-label">Hora final</label>
+                                            <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
                                                 <option value="10:00">10:00</option>
                                                 <option value="11:00">11:00</option>
                                                 <option value="12:00">12:00</option>
@@ -427,55 +543,82 @@ if (!isset($_SESSION['usuario'])) {
                                                 <option value="14:00">14:00</option>
                                                 <option value="15:00">15:00</option>
                                                 <option value="16:00">16:00</option>
+                                                <option value="17:00">17:00</option>
+                                            </select>
+                                        </div>
+                                        <div class="col mb-2">
+                                            <label for="txtHoraFinalFolio" class="form-label">Estatus</label>
+                                            <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
+                                                <option selected disabled>Selecciona...</option>
+                                                <option>A0</option>
+                                                <option>A1</option>
+                                                <option>A3</option>
+                                                <option>A4</option>
+                                                <option>B0</option>
+                                                <option>BUZON</option>
+                                                <option>C0</option>
+                                                <option>C1</option>
+                                                <option>C2</option>
+                                                <option>C3</option>
+                                                <option>C4</option>
+                                                <option>C5</option>
+                                                <option>C6</option>
+                                                <option>C7</option>
+                                                <option>C8</option>
+                                                <option>CITA DIGITAL</option>
+                                                <option>CITA DIGITAL AL MOMENTO</option>
+                                                <option>CITA FORMULARIO</option>
+                                                <option>CITA REPROGRAMADA</option>
+                                                <option>CITA WHATSAPP</option>
+                                                <option>FISICO</option>
+                                                <option>FUERA DE SERVICIO</option>
+                                                <option>LLAMAR DESPUES </option>
+                                                <option>NO CONTESTA</option>
+                                                <option>NO ENLAZA</option>
+                                                <option>PENDIENTE</option>
+                                                <option>POLIZA CANCELADA</option>
+                                                <option>REASIGNACION A OTRO VERIFICADOR</option>
+                                                <option>SIN FOLIO RELACIONADO</option>
+                                                <option>TELEFONO EQUIVOCADO</option>
+                                                <option>TELEFONO NO EXISTE</option>
+                                                <option>VERIFICADA</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col mb-2">
-                                        <label for="txtHoraFinalFolio" class="form-label">Hora final</label>
-                                        <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
-                                            <option value="10:00">10:00</option>
-                                            <option value="11:00">11:00</option>
-                                            <option value="12:00">12:00</option>
-                                            <option value="13:00">13:00</option>
-                                            <option value="14:00">14:00</option>
-                                            <option value="15:00">15:00</option>
-                                            <option value="16:00">16:00</option>
-                                            <option value="17:00">17:00</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <label for="txtTituloFolio" class="form-label">Titulo</label>
-                                            <input type="text" class="form-control" id="txtTituloFolio">
-                                        </div>
-                                    </div>
-                                    <div class="col mb-2">
-                                        <label for="txtFolioFolio" class="form-label">Folio</label>
-                                        <input type="text" class="form-control" id="txtFolioFolio" readonly>
-                                    </div>
-                                </div>
-                                <div class="mb-2 row  p-2">
-                                    <div class="row">
-                                        <label for="txtInfoAdicionalFolio" class="form-label">Informacion
-                                            adicional</label>
-                                    </div>
                                     <div class="row">
                                         <div class="col">
-                                            <textarea class="form-control" id="txtInfoAdicionalFolio" rows="2"
-                                                value="Ninguna"></textarea>
+                                            <div class="mb-2">
+                                                <label for="txtTituloFolio" class="form-label">Titulo</label>
+                                                <input type="text" class="form-control" id="txtTituloFolio" required>
+                                            </div>
                                         </div>
-                                        <div class="col pt-3">
-                                            <button class="btn" id="btnGenerarCitaFolios">
-                                                Guardar cita
-                                            </button>
+                                        <div class="col mb-2">
+                                            <label for="txtFolioFolio" class="form-label">Folio</label>
+                                            <input type="text" class="form-control" id="txtFolioFolio" readonly>
                                         </div>
                                     </div>
+                                    <div class="mb-2 row  p-2">
+                                        <div class="row">
+                                            <label for="txtInfoAdicionalFolio" class="form-label">Informacion
+                                                adicional</label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <textarea class="form-control" id="txtInfoAdicionalFolio" rows="2"
+                                                    value="Ninguna"></textarea>
+                                            </div>
+                                            <div class="col pt-3">
+                                                <button class="btn" id="btnGenerarCitaFolios">
+                                                    Guardar cita
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divLetreroCrearCitaFolio"></div>
                                 </div>
-                                <div id="divLetreroCrearCitaFolio"></div>
-                            </div>
+                            </form>
                         </div>
+                        <div id="divLetreroEliminarCitaFolio"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
