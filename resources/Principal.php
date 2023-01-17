@@ -17,6 +17,7 @@ if (!isset($_SESSION['usuario'])) {
     <link rel="stylesheet" href="./css/Principal.css">
     <link rel="stylesheet" href="../DataTables/datatables.min.css">
     <link rel="" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="../DateRange/dist/daterangepicker.min.css">
     <link rel="stylesheet" href="../JqueryUI/jquery-ui.css">
     <script src="../DataTables/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
@@ -300,112 +301,215 @@ if (!isset($_SESSION['usuario'])) {
     </div>
     <div id="divDatos" style="display:none">
         <div class="row pb-2">
-
-            <div class="col">
-                <h4 class="mb-1 pt-4 titulosConteo">Folios con citas</h4>
-                <ul class="list-group">
-                    <li id="btnCitasVerdesDatos" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
-                        Menos de 5 días
-                        <span id="conteoVerdeDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li id="btnCitasNaranjasDatos" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
-                        De 5 a 10 días
-                        <span id="conteoNaranjaDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li id="btnCitasRojasDatos" type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
-                        Más de 10 días
-                        <span id="conteoRojoDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
-                        Total
-                        <span id="totalCitasDatos" class="badge rounded-pill">0</span>
-                    </li>
-                </ul>
+            <div class="card col-3">
+                <div class="card-body">
+                    <h4 class="card-title">Filtros</h4>
+                    <div class="row">
+                        <div class="col">
+                            <label for="fechaCargaRange" class="form-label">Fecha de carga</label>
+                            <input type="text" class="dateRange form-control" id="fechaCargaRange">
+                        </div>
+                        <div class="col">
+                            <label for="fechaSegRange" class="form-label">Fecha de seg</label>
+                            <input type="text" class="dateRange form-control" id="fechaSegRange">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="validationDefault01" class="form-label">Equipo</label>
+                            <select class="form-select" id="filtroEquipo">
+                                <option value="">Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="validationDefault01" class="form-label">Estatus</label>
+                            <select class="form-select" id="filtroEstacion">
+                                <option value="">Selecciona...</option>
+                                <option>Nuevo</option>
+                                <option>En seguimiento</option>
+                                <option>Concluido</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="validationDefault01" class="form-label">Seguimiento</label>
+                            <select class="form-select" id="filtroSeguimiento">
+                                <option>Selecciona</option>
+                                <option>A0</option>
+                                <option>A1</option>
+                                <option>A3</option>
+                                <option>A4</option>
+                                <option>BUZON</option>
+                                <option>C4</option>
+                                <option>C7</option>
+                                <option>CITA DIGITAL</option>
+                                <option>CITA REPROGRAMADA</option>
+                                <option>CITA WHATSAPP</option>
+                                <option>FISICO</option>
+                                <option>FUERA DE SERVICIO</option>
+                                <option>LLAMAR DESPUES</option>
+                                <option>NO CONTESTA</option>
+                                <option>NO ENLAZA</option>
+                                <option>PENDIENTE</option>
+                                <option>POLIZA CANCELADA</option>
+                                <option>TELEFONO EQUIVOCADO</option>
+                                <option>TELEFONO NO EXISTE</option>
+                                <option>VERIFICADA</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <label for="validationDefault01" class="form-label">Acciones</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <button id="btnBuscarFiltro" type="button" class="btn grupoBtn"><svg width="22"
+                                            height="22" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                            <path
+                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 
+                                    1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                        </svg></button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" id="btnExportar" class="btn grupoBtn"><svg width="22"
+                                            height="22" fill="currentColor" class="bi bi-file-earmark-spreadsheet"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1
+                                     1 0 0 1 1-1h5.5v2zM3 12v-2h2v2H3zm0 1h2v2H4a1 1 0 0 1-1-1v-1zm3 2v-2h3v2H6zm4 0v-2h3v1a1 1 0 0 1-1 1h-2zm3-3h-3v-2h3v2zm-7 0v-2h3v2H6z" />
+                                        </svg></button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" id="btnLimpiar" class="btn grupoBtn"><svg width="22"
+                                            height="22" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+                                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 
+                                    2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293
+                                     4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 
+                                     1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z" />
+                                        </svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <h4 class="mb-1 pt-4 titulosConteo">Folios activos sin cita</h4>
-                <ul class="list-group">
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
-                        Menos de 5 días
-                        <span id="verdeNoCitaDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
-                        De 5 a 10 días
-                        <span id="naranjaNoCitaDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
-                        Más de 10 días
-                        <span id="rojoNoCitaDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
-                        Total
-                        <span id="totalNoCitasDatos" class="badge rounded-pill">0</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="col">
-                <h4 class="mb-1 pt-4 titulosConteo">Total de folios activos</h4>
-                <ul class="list-group">
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoVerde">
-                        Menos de 5 días
-                        <span id="verdeTotalDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoNaranja">
-                        De 5 a 10 días
-                        <span id="naranjaTotalDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoRojo">
-                        Más de 10 días
-                        <span id="rojoTotalDatos" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
-                        Total
-                        <span id="totalActivosDatos" class="badge rounded-pill">0</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="col">
-                <h4 class="mb-1 pt-4 titulosConteo">Estatus</h4>
-                <ul class="list-group">
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
-                        Nuevo
-                        <span id="conteoEstatusNuevo" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
-                        En seguimiento
-                        <span id="conteoEstatusSeguimiento" class="badge rounded-pill">0</span>
-                    </li>
-                    <li type="button"
-                        class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
-                        Concluido
-                        <span id="conteoEstatusConcluido" class="badge rounded-pill">0</span>
-                    </li>
-                </ul>
+            <div class="card col">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <h4 class="mb-1 titulosConteo">Situacion</h4>
+                            <ul class="list-group">
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                    Nuevos
+                                    <span id="conteoNuevos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                    En seguimiento
+                                    <span id="conteoSeguimiento" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                    Concluido
+                                    <span id="conteoConcluidos" class="badge rounded-pill">0</span>
+                                    </liid=>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
+                                    Total
+                                    <span id="totalSituacion" class="badge rounded-pill">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="mb-1 titulosConteo">Folios con citas</h4>
+                            <ul class="list-group">
+                                <li id="btnCitasVerdesDatos" type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
+                                    Menos de 5 días
+                                    <span id="conteoVerdeDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li id="btnCitasNaranjasDatos" type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
+                                    De 5 a 10 días
+                                    <span id="conteoNaranjaDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li id="btnCitasRojasDatos" type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
+                                    Más de 10 días
+                                    <span id="conteoRojoDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
+                                    Total
+                                    <span id="totalCitasDatos" class="badge rounded-pill">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="mb-1 titulosConteo">Folios activos sin cita</h4>
+                            <ul class="list-group">
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoVerde">
+                                    Menos de 5 días
+                                    <span id="verdeNoCitaDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoNaranja">
+                                    De 5 a 10 días
+                                    <span id="naranjaNoCitaDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action  conteoRojo">
+                                    Más de 10 días
+                                    <span id="rojoNoCitaDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action ">
+                                    Total
+                                    <span id="totalNoCitasDatos" class="badge rounded-pill">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="mb-1 titulosConteo">Total de folios activos</h4>
+                            <ul class="list-group">
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoVerde">
+                                    Menos de 5 días
+                                    <span id="verdeTotalDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoNaranja">
+                                    De 5 a 10 días
+                                    <span id="naranjaTotalDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action conteoRojo">
+                                    Más de 10 días
+                                    <span id="rojoTotalDatos" class="badge rounded-pill">0</span>
+                                </li>
+                                <li type="button"
+                                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                    Total
+                                    <span id="totalActivosDatos" class="badge rounded-pill">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="table-responsive">
-            <table id="tablaFolios" class="align-middle table table-hover mdl-data-table">
+            <table id="tablaFolios" class="table align-middle table table-hover mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th style="font-size: 13px;" scope="col" class="text-center">Accion</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Folio</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">FechaCarga</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">FechaSeg</th>
-                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Estatus</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Seguimiento</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Dias</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Poliza</th>
@@ -415,7 +519,7 @@ if (!isset($_SESSION['usuario'])) {
                         <th style="font-size: 13px;" scope="col" class="text-center">MarcaTipo</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Serie</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Estacion</th>
-                        <th style="font-size: 13px;" scope="col" class="text-center">Clasifica</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -424,7 +528,7 @@ if (!isset($_SESSION['usuario'])) {
                         <th style="font-size: 13px;" scope="col" class="text-center">Folio</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">FechaCarga</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">FechaSeg</th>
-                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Estatus</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Seguimiento</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Dias</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Poliza</th>
@@ -434,7 +538,7 @@ if (!isset($_SESSION['usuario'])) {
                         <th style="font-size: 13px;" scope="col" class="text-center">MarcaTipo</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Serie</th>
                         <th style="font-size: 13px;" scope="col" class="text-center">Estacion</th>
-                        <th style="font-size: 13px;" scope="col" class="text-center">Clasifica</th>
+                        <th style="font-size: 13px;" scope="col" class="text-center">Situacion</th>
                     </tr>
                 </tfoot>
             </table>
@@ -502,40 +606,25 @@ if (!isset($_SESSION['usuario'])) {
                             <button class="btn" id="btnGenerarCitaFolio" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#generarCitaPorFolio" aria-expanded="false"
                                 aria-controls="generarCitaPorFolio">
-                                Generar cita
+                                Generar cita y seguimientos
                             </button>
                         </div>
                         <div class="collapse" id="generarCitaPorFolio">
-                            <form class="was-validated row g-3">
-                                <div class="card card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="mb-2">
-                                                <label for="txtFechaFolio" class="form-label">Fecha</label>
-                                                <input type="text" class="form-control datepicker" id="txtFechaFolio"
-                                                    required>
-                                            </div>
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtFechaFolio" class="form-label">Fecha</label>
+                                            <input type="text" class="form-control datepicker" id="txtFechaFolio"
+                                                required>
                                         </div>
-                                        <div class="col">
-                                            <div class="mb-2">
-                                                <label for="txtHoraInicioFolio" class="form-label">Hora de
-                                                    inicio</label>
-                                                <select id="txtHoraInicioFolio" class="form-select"
-                                                    data-live-search="true">
-                                                    <option value="09:00">09:00</option>
-                                                    <option value="10:00">10:00</option>
-                                                    <option value="11:00">11:00</option>
-                                                    <option value="12:00">12:00</option>
-                                                    <option value="13:00">13:00</option>
-                                                    <option value="14:00">14:00</option>
-                                                    <option value="15:00">15:00</option>
-                                                    <option value="16:00">16:00</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col mb-2">
-                                            <label for="txtHoraFinalFolio" class="form-label">Hora final</label>
-                                            <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtHoraInicioFolio" class="form-label">Hora de
+                                                inicio</label>
+                                            <select id="txtHoraInicioFolio" class="form-select" data-live-search="true">
+                                                <option value="09:00">09:00</option>
                                                 <option value="10:00">10:00</option>
                                                 <option value="11:00">11:00</option>
                                                 <option value="12:00">12:00</option>
@@ -543,80 +632,97 @@ if (!isset($_SESSION['usuario'])) {
                                                 <option value="14:00">14:00</option>
                                                 <option value="15:00">15:00</option>
                                                 <option value="16:00">16:00</option>
-                                                <option value="17:00">17:00</option>
                                             </select>
                                         </div>
-                                        <div class="col mb-2">
-                                            <label for="txtHoraFinalFolio" class="form-label">Estatus</label>
-                                            <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
-                                                <option selected disabled>Selecciona...</option>
-                                                <option>A0</option>
-                                                <option>A1</option>
-                                                <option>A3</option>
-                                                <option>A4</option>
-                                                <option>B0</option>
-                                                <option>BUZON</option>
-                                                <option>C0</option>
-                                                <option>C1</option>
-                                                <option>C2</option>
-                                                <option>C3</option>
-                                                <option>C4</option>
-                                                <option>C5</option>
-                                                <option>C6</option>
-                                                <option>C7</option>
-                                                <option>C8</option>
-                                                <option>CITA DIGITAL</option>
-                                                <option>CITA DIGITAL AL MOMENTO</option>
-                                                <option>CITA FORMULARIO</option>
-                                                <option>CITA REPROGRAMADA</option>
-                                                <option>CITA WHATSAPP</option>
-                                                <option>FISICO</option>
-                                                <option>FUERA DE SERVICIO</option>
-                                                <option>LLAMAR DESPUES </option>
-                                                <option>NO CONTESTA</option>
-                                                <option>NO ENLAZA</option>
-                                                <option>PENDIENTE</option>
-                                                <option>POLIZA CANCELADA</option>
-                                                <option>REASIGNACION A OTRO VERIFICADOR</option>
-                                                <option>SIN FOLIO RELACIONADO</option>
-                                                <option>TELEFONO EQUIVOCADO</option>
-                                                <option>TELEFONO NO EXISTE</option>
-                                                <option>VERIFICADA</option>
-                                            </select>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <label for="txtHoraFinalFolio" class="form-label">Hora final</label>
+                                        <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
+                                            <option value="10:00">10:00</option>
+                                            <option value="11:00">11:00</option>
+                                            <option value="12:00">12:00</option>
+                                            <option value="13:00">13:00</option>
+                                            <option value="14:00">14:00</option>
+                                            <option value="15:00">15:00</option>
+                                            <option value="16:00">16:00</option>
+                                            <option value="17:00">17:00</option>
+                                        </select>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <label for="txtHoraFinalFolio" class="form-label">Estatus</label>
+                                        <select id="txtHoraFinalFolio" class="form-select" data-live-search="true">
+                                            <option selected disabled>Selecciona...</option>
+                                            <option>A0</option>
+                                            <option>A1</option>
+                                            <option>A3</option>
+                                            <option>A4</option>
+                                            <option>B0</option>
+                                            <option>BUZON</option>
+                                            <option>C0</option>
+                                            <option>C1</option>
+                                            <option>C2</option>
+                                            <option>C3</option>
+                                            <option>C4</option>
+                                            <option>C5</option>
+                                            <option>C6</option>
+                                            <option>C7</option>
+                                            <option>C8</option>
+                                            <option>CITA DIGITAL</option>
+                                            <option>CITA DIGITAL AL MOMENTO</option>
+                                            <option>CITA FORMULARIO</option>
+                                            <option>CITA REPROGRAMADA</option>
+                                            <option>CITA WHATSAPP</option>
+                                            <option>FISICO</option>
+                                            <option>FUERA DE SERVICIO</option>
+                                            <option>LLAMAR DESPUES </option>
+                                            <option>NO CONTESTA</option>
+                                            <option>NO ENLAZA</option>
+                                            <option>PENDIENTE</option>
+                                            <option>POLIZA CANCELADA</option>
+                                            <option>REASIGNACION A OTRO VERIFICADOR</option>
+                                            <option>SIN FOLIO RELACIONADO</option>
+                                            <option>TELEFONO EQUIVOCADO</option>
+                                            <option>TELEFONO NO EXISTE</option>
+                                            <option>VERIFICADA</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <label for="txtTituloFolio" class="form-label">Titulo</label>
+                                            <input type="text" class="form-control" id="txtTituloFolio" required>
                                         </div>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <label for="txtFolioFolio" class="form-label">Folio</label>
+                                        <input type="text" class="form-control" id="txtFolioFolio" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row  p-2">
+                                    <div class="row">
+                                        <label for="txtInfoAdicionalFolio" class="form-label">Informacion
+                                            adicional</label>
                                     </div>
                                     <div class="row">
-                                        <div class="col">
-                                            <div class="mb-2">
-                                                <label for="txtTituloFolio" class="form-label">Titulo</label>
-                                                <input type="text" class="form-control" id="txtTituloFolio" required>
-                                            </div>
+                                        <div class="col-7">
+                                            <textarea class="form-control" id="txtInfoAdicionalFolio" rows="2"
+                                                value="Ninguna"></textarea>
                                         </div>
-                                        <div class="col mb-2">
-                                            <label for="txtFolioFolio" class="form-label">Folio</label>
-                                            <input type="text" class="form-control" id="txtFolioFolio" readonly>
+                                        <div class="col pt-2">
+                                            <button class="btn" id="btnGenerarCitaFolios">
+                                                Guardar cita
+                                            </button>
                                         </div>
-                                    </div>
-                                    <div class="mb-2 row  p-2">
-                                        <div class="row">
-                                            <label for="txtInfoAdicionalFolio" class="form-label">Informacion
-                                                adicional</label>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <textarea class="form-control" id="txtInfoAdicionalFolio" rows="2"
-                                                    value="Ninguna"></textarea>
-                                            </div>
-                                            <div class="col pt-3">
-                                                <button class="btn" id="btnGenerarCitaFolios">
-                                                    Guardar cita
-                                                </button>
-                                            </div>
+                                        <div class="col pt-2">
+                                            <button class="btn" id="btnGenerarSeguimiento">
+                                                Seguimiento
+                                            </button>
                                         </div>
                                     </div>
-                                    <div id="divLetreroCrearCitaFolio"></div>
                                 </div>
-                            </form>
+                                <div id="divLetreroCrearCitaFolio"></div>
+                            </div>
                         </div>
                         <div id="divLetreroEliminarCitaFolio"></div>
                     </div>
@@ -1002,6 +1108,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
+    <script src="../DateRange/dist/jquery.daterangepicker.min.js"></script>
     <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./js/Principal.js"></script>
     <script src="../bootstrap/js/read-excel-file.min.js"></script>

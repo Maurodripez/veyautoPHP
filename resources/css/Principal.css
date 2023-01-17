@@ -308,3 +308,23 @@ tfoot{
 .dividirInfo{
   border: 2px solid rgb(0, 0, 0);
 }
+#fechaCargaRange{
+  font-size: small;
+}
+#fechaSegRange{
+  font-size: small;
+}
+.grupoBtn{
+  background-color: #138ce9;
+  color: aliceblue;
+}
+.grupoBtn:hover{
+  background-color: #1176c4;
+  color: aliceblue;
+}
+.card{
+border-radius: 0%;
+}
+.row.pb-2{
+  padding: 0px 10px 10px 10px;
+}

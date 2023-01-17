@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>jQuery Date Range Picker Demo</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="dist/daterangepicker.min.css"/>
+    <style type="text/css">
+        #wrapper {
+            width: 800px;
+            margin: 0 auto;
+            color: #333;
+            font-family: Tahoma, Verdana, sans-serif;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .demo {
+            margin: 30px 0;
+        }
+
+        .date-picker-wrapper .month-wrapper table .day.lalala {
+            background-color: orange;
+        }
+
+        .options {
+            display: none;
+            border-left: 6px solid #8ae;
+            padding: 10px;
+            font-size: 12px;
+            line-height: 1.4;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+
+        .date-picker-wrapper.date-range-picker19 .day.first-date-selected {
+            background-color: red !important;
+        }
+
+        .date-picker-wrapper.date-range-picker19 .day.last-date-selected {
+            background-color: orange !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <section>
+        <h2 id="demonstrations">Demonstrations</h2>
+        <ol>
+            <li class="demo">
+                Default settings: <input id="date-range0" size="40" value="">
+                <a href="#" class="show-option">Show Config</a>
+                <pre class="options">
+{}</pre>
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h2 id="configuration">Configuration</h2>
+        <pre><b>Usage:</b> $('#dom-id').dateRangePicker(configObject);</pre>
+        <p>The default configuration object is:</p>
+        <pre>{
+	autoClose: false,
+	format: 'YYYY-MM-DD',
+	separator: ' to ',
+	language: 'auto',
+	startOfWeek: 'sunday',// or monday
+	getValue: function()
+	{
+		return $(this).val();
+	},
+	setValue: function(s)
+	{
+		if(!$(this).attr('readonly') && !$(this).is(':disabled') && s != $(this).val())
+		{
+			$(this).val(s);
+		}
+	},
+	startDate: false,
+	endDate: false,
+	time: {
+		enabled: false
+	},
+	minDays: 0,
+	maxDays: 0,
+	showShortcuts: false,
+	shortcuts:
+	{
+		//'prev-days': [1,3,5,7],
+		//'next-days': [3,5,7],
+		//'prev' : ['week','month','year'],
+		//'next' : ['week','month','year']
+	},
+	customShortcuts : [],
+	inline:false,
+	container:'body',
+	alwaysOpen:false,
+	singleDate:false,
+	lookBehind: false,
+	batchMode: false,
+	duration: 200,
+	stickyMonths: false,
+	dayDivAttrs: [],
+	dayTdAttrs: [],
+	applyBtnClass: '',
+	singleMonth: 'auto',
+	hoveringTooltip: function(days, startTime, hoveringTime)
+	{
+		return days > 1 ? days + ' ' + lang('days') : '';
+	},
+	showTopbar: true,
+	swapTime: false,
+	selectForward: false,
+	selectBackward: false,
+	showWeekNumbers: false,
+	getWeekNumber: function(date) //date will be the first day of a week
+	{
+		return moment(date).format('w');
+	},
+	monthSelect: false,
+	yearSelect: false
+}</pre>
+        <h3>You can use the following keys in the configObject to overwrite the default configuration:</h3>
+
+        <pre>
+<b>format (String)</b>
+	<i>The date format string used for Moment.
+	click <a href="http://momentjs.com/docs/#/displaying/format/" target=_blank>here</a> to see Moment documentation</i>
+
+<b>separator (String)</b>
+	<i>The separator string used between date strings</i>
+
+<b>language (String)</b>
+	<i>pre-defined languages are "en" and "cn", you can define your own
+ 	language then set this to the name of new language.
+	You can also set this to "auto" to make it auto detect browser language.</i>
+
+<b>startOfWeek (String)</b>
+	<i>"sunday" or "monday"</i>
+
+<b>getValue (Function)</b>
+	<i>This function is called when get date range string from DOM
+	When it is called, the context of this function is set to the datepicker DOM</i>
+
+<b>setValue (Function)</b>
+	<i>This function is called when set date range string to DOM</i>
+
+<b>startDate (String or false)</b>
+	<i>This string defines the earliest date which is allowed for the user, same format as `format`</i>
+
+<b>endDate (String or false)</b>
+	<i>This string defines the latest date which is allowed for the user, same format as `format`</i>
+
+<b>minDays (Number)</b>
+	<i>This number defines the minimum days of the selected range
+	if this is 0, means do not limit minimum days</i>
+
+<b>maxDays (Number)</b>
+	<i>This number defines the maximum days of the selected range
+	if this is 0, means do not limit maximum days</i>
+
+<b>showShortcuts (Boolean)</b>
+	<i>hide or show shortcuts area</i>
+
+<b>shortcuts (Object)</b>
+	<i>define the shortcuts buttons. there are some built in shortcuts, see source code</i>
+
+<b>time (Object)</b>
+	<i>If enabled adds time selection controls.</i>
+
+<b>customShortcuts (Array)</b>
+	<i>define custom shortcut buttons. see demo.js</i>
+
+<b>inline (Boolean)</b>
+	<i>whether to render the date range picker dom in inline mode instead of overlay mode,
+	if set to true, please set `container` too</i>
+
+<b>container (String, CSS selector || DOM Object)</b>
+	<i>where should the date range picker dom should be renderred to</i>
+
+<b>alwaysOpen (Boolean)</b>
+	<i>if you use inline mode, you may want the date range picker widget to be renderred when the page loads
+	set this to true will also hide the "close" button
+	</i>
+
+<b>singleDate (Boolean)</b>
+	<i>choose a single date instead of a date range. If `singleMonth` option is set to true it will show
+	only one month instead of two months.
+	</i>
+
+<b>batchMode (false / 'week' / 'month')</b>
+	<i> auto batch select mode </i>
+	<i> false (default), week, month, week-range, month-range</i>
+
+<b>beforeShowDay (Function)</b>
+	<i>A function that takes a date as a parameter and must return an array with:
+	[0]: true/false indicating whether or not this date is selectable
+	[1]: a CSS class name to add to the date's cell or "" for the default presentation
+	[2]: an optional popup tooltip for this date
+	The function is called for each day in the datepicker before it is displayed.</i>
+
+<b>stickyMonths (Boolean)</b>
+	<i>If true, there will only be one previous and one next button. Clicking them will change
+	both the months. This setting will have no effect if singleDate option is set to true</i>
+
+<b>singleMonth (Boolean || 'auto') Default value: 'auto'</b>
+	<i>If true, it will show only one month instead of two months. You can select date range
+	in the one month view. If this is set to 'auto', it will be changed to true if the screen width
+	is lower than 480.</i>
+
+<b>showDateFilter ( Function(Int time, Int date) )</b>
+	<i>This is a callback function when creating each date element in the calendar. First paramter will
+	be the timestamp of that day. Second parameter will be the date of that month.</i>
+
+<b>customTopBar ( Function || String)</b>
+	<i>If you set this parameter, it will use this value in the top bar.</i>
+
+<b>extraClass (String)</b>
+	<i>Set extra class name to the date range picker dom.</i>
+
+<b>customArrowPrevSymbol (String / String HTML)</b>
+	<i>Set custom previous symbol, you can use html snippet too.</i>
+
+<b>customArrowNextSymbol (String / String HTML)</b>
+	<i>Set custom next symbol, you can use html snippet too.</i>
+
+<b>showTopbar (Boolean)</b>
+	<i>If show the top bar.</i>
+
+<b>swapTime (Boolean)</b>
+	<i>If true and if time is enabled, on choosing first enddate and than startdate, endtime and starttime will be swapped.
+        If this configkey is false, only date will be swapped, time will stay constant.
+        If time is disabled, this config key is not used.</i>
+
+<b>selectForward (Boolean) Default: false</b>
+	<i>If this is true, you can only select second date after the first selected date.</i>
+
+<b>selectBackward (Boolean) Default: false</b>
+	<i>If this is true, you can only select second date before the first selected date.</i>
+
+<b>showWeekNumbers (Boolean) Default: false</b>
+	<i>If this is true, it will show week number of the year in the calendar.</i>
+
+<b>getWeekNumber (Function( Date object ) )</b>
+	<i>the function called to generate the week number. the first parameter will be the first day of a week</i>
+
+<b>monthSelect (Boolean) Default: false</b>
+	<i>If this is true, you can quickly change month by clicking on month name</i>
+
+<b>yearSelect (Boolean || Array || Function) Default: false</b>
+	<i>If this is true, you can quickly change year by clicking on year number.
+        By default select will contain years from "current year - 5" to "current year + 5" but you can change this.
+        You can set year range by array like this [1900, 2017].
+        And if you want more control you can set function which get selected year and should return array. For example:
+            function(current) {
+                return [current - 10, current + 10];
+            }</i>
+</pre>
+    </section>
+    <section>
+        <h2>Events</h2>
+        <p>events will be triggerred on the date range picker DOM</p>
+        <pre>$('#dom-id')
+.dateRangePicker()
+.bind('datepicker-first-date-selected', function(event, obj)
+{
+	/* This event will be triggered when first date is selected */
+	console.log(obj);
+	// obj will be something like this:
+	// {
+	// 		date1: (Date object of the earlier date)
+	// }
+})
+.bind('datepicker-change',function(event,obj)
+{
+	/* This event will be triggered when second date is selected */
+	console.log(obj);
+	// obj will be something like this:
+	// {
+	// 		date1: (Date object of the earlier date),
+	// 		date2: (Date object of the later date),
+	//	 	value: "2013-06-05 to 2013-06-07"
+	// }
+})
+.bind('datepicker-apply',function(event,obj)
+{
+	/* This event will be triggered when user clicks on the apply button */
+	console.log(obj);
+})
+.bind('datepicker-close',function()
+{
+	/* This event will be triggered before date range picker close animation */
+	console.log('before close');
+})
+.bind('datepicker-closed',function()
+{
+	/* This event will be triggered after date range picker close animation */
+	console.log('after close');
+})
+.bind('datepicker-open',function()
+{
+	/* This event will be triggered before date range picker open animation */
+	console.log('before open');
+})
+.bind('datepicker-opened',function()
+{
+	/* This event will be triggered after date range picker open animation */
+	console.log('after open');
+})
+</pre>
+
+        <br>
+    </section>
+    <section>
+        <h2>APIs</h2>
+        <p></p>
+        <pre>//after you called  $(dom).dateRangePicker();
+
+$(dom).data('dateRangePicker')
+    //set date range, two date strings should follow the `format` in config object,
+    //set the third argument to be `true` if you don't want this method to trigger a `datepicker-change` event.
+	.setDateRange('2013-11-20','2013-11-25');
+	//set the start date to the specified date
+	.setStart('2013-11-20');
+	//set the end date to the specified date
+	//set the second argument to `true` if you don't want this method to trigger a `datepicker-change` event.
+	.setEnd('2013-11-25');
+	.clear();		// clear date range
+	.close();		// close date range picker overlay
+	.open();		// open date range picker overlay
+	.resetMonthsView();	// reset to default months
+	.destroy();		// destroy all date range picker related things
+</pre>
+    </section>
+    <section>
+        <h2>License</h2>
+        <p>
+            This date range picker plugin is under MIT LICENSE.
+        </p>
+    </section>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js" type="text/javascript"></script>
+    <script src="src/jquery.daterangepicker.js"></script>
+    <script src="demo.js"></script>
+
+    <script>
+        $(function () {
+            $('a.show-option').click(function (evt) {
+                evt.preventDefault();
+                $(this).siblings('.options').slideToggle();
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

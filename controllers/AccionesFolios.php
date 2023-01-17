@@ -4,8 +4,8 @@ include "../models/Conexion.php";
 $accion = $_POST['accion'];
 switch ($accion) {
     case "MostrarFolios":
-        $sql = "SELECT id,folio,fechacarga,fechaSeguimiento,situacion,comentSeguimiento,poliza,equipo,"
-            . " asegurado,celular,telCasa,marcaTipo,numSerie,estacion,clasificacion, datediff(now(),fechacarga) as dias FROM folios "
+        $sql = "SELECT id,folio,fechacarga,fechaSeguimiento,estatus,comentSeguimiento,poliza,equipo,"
+            . " asegurado,celular,telCasa,marcaTipo,numSerie,estacion,situacion, datediff(now(),fechacarga) as dias FROM folios "
             . "  where datediff(now(),fechacarga)<30 and mostrar=true";
         ConsultasSelectCualquiera($sql, "../models/Conexion.php", "data");
         break;
@@ -51,4 +51,25 @@ switch ($accion) {
             echo "Error: " . $th->getMessage();
         }
         break;
+    case "ConteoSituacion":
+        $mayorCarga = $_POST['mayorCarga'];
+        $menorCarga = $_POST['menorCarga'];
+        $mayorSeg = $_POST['mayorSeg'];
+        $menorSeg = $_POST['menorSeg'];
+        $situacion = $_POST['situacion'];
+        $sql = "SELECT COUNT(situacion) AS conteo FROM folios WHERE estatus='$estatus' AND fechacarga>='$mayorCarga' "
+            . " AND fechacarga<='$menorCarga' AND fechaSeguimiento>='$mayorSeg' AND fechaSeguimiento<='$menorSeg'";
+        $r= ObtenerValorCualquiera($sql, "../models/Conexion.php");
+        echo $r;
+        break;
+        case "ConteoTotal":
+            $mayorCarga = $_POST['mayorCarga'];
+            $menorCarga = $_POST['menorCarga'];
+            $mayorSeg = $_POST['mayorSeg'];
+            $menorSeg = $_POST['menorSeg'];
+            $sql = "SELECT COUNT(situacion) AS conteo FROM folios WHERE fechacarga>='$mayorCarga' "
+                . " AND fechacarga<='$menorCarga' AND fechaSeguimiento>='$mayorSeg' AND fechaSeguimiento<='$menorSeg'";
+            $r= ObtenerValorCualquiera($sql, "../models/Conexion.php");
+            echo $r;
+            break;
 }

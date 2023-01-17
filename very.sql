@@ -70,15 +70,16 @@ CREATE TABLE IF NOT EXISTS `folios` (
   `equipo` varchar(450) COLLATE utf8_spanish_ci NOT NULL,
   `fkHistorialCargas` int(11) DEFAULT NULL,
   `fechaSeguimiento` date DEFAULT current_timestamp(),
-  `situacion` varchar(100) COLLATE utf8_spanish_ci DEFAULT 'NUEVO',
-  `comentSeguimiento` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'PENDIENTE',
+  `estatus` varchar(100) COLLATE utf8_spanish_ci DEFAULT 'Pendiente',
+  `comentSeguimiento` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'Pendiente',
   `tipo` varchar(400) COLLATE utf8_spanish_ci DEFAULT 'BANCOMER',
-  `estacion` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'NUEVO',
-  `clasificacion` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'NUEVO',
+  `estacion` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'Nuevo',
+  `clasificacion` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'Nuevo',
   `del` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'N/D',
   `telOficina` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'N/D',
   `modelo` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'N/D',
   `mostrar` tinyint(4) DEFAULT 1,
+  `situacion` varchar(450) COLLATE utf8_spanish_ci DEFAULT 'Nuevo',
   PRIMARY KEY (`id`),
   KEY `fkHistorialCargas` (`fkHistorialCargas`),
   CONSTRAINT `fkHistorialCargas` FOREIGN KEY (`fkHistorialCargas`) REFERENCES `historialcargas` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
@@ -86,19 +87,19 @@ CREATE TABLE IF NOT EXISTS `folios` (
 
 -- Volcando datos para la tabla veryauto.folios: ~12 rows (aproximadamente)
 DELETE FROM `folios`;
-INSERT INTO `folios` (`id`, `folio`, `fechacarga`, `fechaAsignacion`, `fechaVigencia`, `poliza`, `fechaEntrega`, `asegurado`, `celular`, `telCasa`, `correo`, `marcaTipo`, `placas`, `numSerie`, `domicilio`, `colonia`, `cp`, `alcaldia`, `estado`, `verificador`, `equipo`, `fkHistorialCargas`, `fechaSeguimiento`, `situacion`, `comentSeguimiento`, `tipo`, `estacion`, `clasificacion`, `del`, `telOficina`, `modelo`, `mostrar`) VALUES
-	(27, ' K000001', '2023-01-01', '2021-01-24', '2023-01-09', 'P000001', '2023-01-09', 'Ejemplo asegurado', '5500000044', '11', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie2', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 8, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', '11wqeeq', 'N/Dq11', 1),
-	(28, 'K000002', '2023-01-09', '2022-01-24', '2023-01-09', 'P000001', '2023-01-09', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 8, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(29, 'K000003', '2022-12-30', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 9, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(30, 'K000004', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 9, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(31, 'K000005', '2023-01-05', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 10, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(32, 'K000006', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 10, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(33, 'K000007', '2023-01-10', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 11, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(34, 'K000008', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 11, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1),
-	(35, 'K000009', '2023-01-12', '2021-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 20, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1),
-	(36, 'K000010', '2023-01-12', '2022-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 20, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1),
-	(37, 'K000011', '2023-01-12', '2021-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 21, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1),
-	(38, 'K000012', '2023-01-12', '2022-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'mario', 21, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1);
+INSERT INTO `folios` (`id`, `folio`, `fechacarga`, `fechaAsignacion`, `fechaVigencia`, `poliza`, `fechaEntrega`, `asegurado`, `celular`, `telCasa`, `correo`, `marcaTipo`, `placas`, `numSerie`, `domicilio`, `colonia`, `cp`, `alcaldia`, `estado`, `verificador`, `equipo`, `fkHistorialCargas`, `fechaSeguimiento`, `estatus`, `comentSeguimiento`, `tipo`, `estacion`, `clasificacion`, `del`, `telOficina`, `modelo`, `mostrar`, `situacion`) VALUES
+	(27, ' K000001', '2023-01-06', '2021-01-24', '2023-01-09', 'P000001', '2023-01-09', 'Ejemplo asegurado', '5500000044', '11', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie2', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 8, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', '11wqeeq', 'N/Dq11', 1, 'En seguimiento'),
+	(28, 'K000002', '2023-01-09', '2022-01-24', '2023-01-09', 'P000001', '2023-01-09', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 8, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Concluido'),
+	(29, 'K000003', '2022-12-30', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 9, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(30, 'K000004', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 9, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(31, 'K000005', '2023-01-05', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 10, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(32, 'K000006', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 10, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(33, 'K000007', '2023-01-10', '2021-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 11, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(34, 'K000008', '2023-01-10', '2022-01-24', '2023-01-10', 'P000001', '2023-01-10', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'N/D', 'N/D', 'Eje Ciudad', 'Especialista', 'Mauricio Rodriguez', 11, '2023-01-10', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'N/D', 'N/D', 'N/D', 1, 'Nuevo'),
+	(35, 'K000009', '2023-01-12', '2021-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 20, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1, 'Nuevo'),
+	(36, 'K000010', '2023-01-12', '2022-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 20, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1, 'Nuevo'),
+	(37, 'K000011', '2023-01-12', '2021-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'Mauricio Rodriguez', 21, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1, 'Nuevo'),
+	(38, 'K000012', '2023-01-12', '2022-01-24', '2023-01-12', 'P000001', '2023-01-12', 'Ejemplo asegurado', '5500000044', 'N/D', 'noemail@dominio.com', 'N/D', 'eje placas', 'eje serie', 'Eje Calle', 'Eje Colonia', 'eje cp', 'N/D', 'eje estado', 'Especialista', 'mario', 21, '2023-01-12', 'NUEVO', 'PENDIENTE', 'BANCOMER', 'NUEVO', 'NUEVO', 'eje del', 'N/D', 'N/D', 1, 'Nuevo');
 
 -- Volcando estructura para tabla veryauto.historialcargas
 CREATE TABLE IF NOT EXISTS `historialcargas` (
@@ -134,16 +135,20 @@ CREATE TABLE IF NOT EXISTS `seguimiento` (
   `hora` time DEFAULT NULL,
   `estatus` varchar(450) DEFAULT NULL,
   `comentarios` varchar(450) DEFAULT 'Ninguno',
-  `situacion` varchar(450) DEFAULT NULL,
   `estacion` varchar(450) DEFAULT NULL,
   `clasificacion` varchar(450) DEFAULT NULL,
+  `folio` varchar(45) DEFAULT NULL,
+  `reAsignado` varchar(45) DEFAULT NULL,
+  `cita` varchar(405) DEFAULT 'Ninguna',
+  `fechaCita` date DEFAULT NULL,
+  `horaCita` time DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla veryauto.seguimiento: ~0 rows (aproximadamente)
 DELETE FROM `seguimiento`;
-INSERT INTO `seguimiento` (`id`, `usuario`, `fechaSeguimiento`, `hora`, `estatus`, `comentarios`, `situacion`, `estacion`, `clasificacion`) VALUES
-	(1, 'Mario', '2023-01-09', '13:25:19', 'we', 'www', NULL, NULL, NULL);
+INSERT INTO `seguimiento` (`id`, `usuario`, `fechaSeguimiento`, `hora`, `estatus`, `comentarios`, `estacion`, `clasificacion`, `folio`, `reAsignado`, `cita`, `fechaCita`, `horaCita`) VALUES
+	(1, 'Mario', '2023-01-09', '13:25:19', 'we', 'www', NULL, NULL, NULL, NULL, 'Ninguna', NULL, NULL);
 
 -- Volcando estructura para tabla veryauto.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (

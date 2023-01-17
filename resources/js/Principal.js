@@ -1,9 +1,8 @@
 let controlador = "../controllers/";
 var deshabilitarClickEditar = 0;
-
+var primeraTabla = true;
 window.addEventListener("load", function (event) {
   //se inicializa la funcion table para no tener conflictos cada vez que se llama
-  let table;
   ////////////////////////inicializaciones//////////////////////////////
   inicializacionesDivs();
   inicializacionesCitas();
@@ -897,6 +896,9 @@ function inicializacionestDatos() {
   document.getElementById("btnEliminarFolio").addEventListener("click", () => {
     eliminarFolio();
   });
+  document.getElementById("btnBuscarFiltro").addEventListener("click", () => {
+    conteoEstatusFiltros();
+  });
   document
     .getElementById("btnGenerarCitaFolios")
     .addEventListener("click", () => {
@@ -907,6 +909,45 @@ function inicializacionestDatos() {
     .addEventListener("click", () => {
       actualizarDatos();
     });
+  conteoSituacion(
+    "ConteoSituacion",
+    "conteoNuevos",
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    "Nuevo"
+  );
+  conteoSituacion(
+    "ConteoSituacion",
+    "conteoSeguimiento",
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    "En seguimiento"
+  );
+  conteoSituacion(
+    "ConteoSituacion",
+    "conteoConcluidos",
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    "Concluido"
+  );
+  conteoSituacion(
+    "ConteoTotal",
+    "totalSituacion",
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    obtenerFechaConvertida(30),
+    obtenerFechaConvertida(0),
+    "Nuevo"
+  );
+  dateRange("fechaSegRange");
+  dateRange("fechaCargaRange");
+  obtenerEquipos("filtroEquipo");
   conteoFoliosCitas(0, 5, "conteoVerdeDatos", "FoliosCitas");
   conteoFoliosCitas(5, 10, "conteoNaranjaDatos", "FoliosCitas");
   conteoFoliosCitas(10, 14, "conteoRojoDatos", "FoliosCitas");
@@ -937,7 +978,7 @@ function mostrarFolios() {
       { targets: 1, data: "folio" },
       { targets: 2, data: "fechacarga" },
       { targets: 3, data: "fechaSeguimiento" },
-      { targets: 4, data: "situacion" },
+      { targets: 4, data: "estatus" },
       { targets: 5, data: "comentSeguimiento" },
       { targets: 6, data: "dias" },
       { targets: 7, data: "poliza" },
@@ -947,7 +988,7 @@ function mostrarFolios() {
       { targets: 11, data: "marcaTipo" },
       { targets: 12, data: "numSerie" },
       { targets: 13, data: "estacion" },
-      { targets: 14, data: "clasificacion" },
+      { targets: 14, data: "situacion" },
       {
         targets: 0,
         data: null,
@@ -991,7 +1032,7 @@ function mostrarFolios() {
     info: false,
     bLengthChange: false,
     scrollCollapse: true,
-    paging: false,
+    paging: true,
     responsive: true,
   });
   //deshabilita el evento del click para que no se sumen
@@ -1009,18 +1050,48 @@ function mostrarFolios() {
     }, 50);
   });
 }
-async function conteoEstatus() {
+async function conteoSituacion(
+  accion,
+  id,
+  mayorCarga,
+  menorCarga,
+  mayorSeg,
+  menorSeg,
+  situacion
+) {
   let data = new FormData();
   let url = controlador + "AccionesFolios.php";
-  data.append("accion", "ConteoEstatus");
-  data.append("mayorSeg", "ConteoEstatus");
-  data.append("menorSeg", "ConteoEstatus");
-  data.append("mayorCarga", "ConteoEstatus");
-  data.append("menorCarga", "ConteoEstatus");
-  data.append("estatus", "ConteoEstatus");
-  data.append("equipo", "ConteoEstatus");
-  let consulta = claseFetch(data, url);
-  let respuesta = await consulta();
+  data.append("accion", accion);
+  data.append("mayorCarga", mayorCarga);
+  data.append("menorCarga", menorCarga);
+  data.append("mayorSeg", mayorSeg);
+  data.append("menorSeg", menorSeg);
+  data.append("situacion", situacion);
+  let consulta = new claseFetch(data, url);
+  let respuesta = await consulta.fetchTexto();
+  document.getElementById(id).textContent = respuesta;
+  console.log(respuesta);
+}
+async function conteoEstatusFiltros() {
+  let mayorCarga = document
+    .getElementById("fechaCargaRange")
+    .value.split(" a ")[0];
+  let menorCarga = document
+    .getElementById("fechaCargaRange")
+    .value.split(" a ")[1];
+  let mayorSeg = document.getElementById("fechaSegRange").value.split(" a ")[0];
+  let menorSeg = document.getElementById("fechaSegRange").value.split(" a ")[1];
+  let data = new FormData();
+  let url = controlador + "AccionesFolios.php";
+  data.append("accion", "ConteoEstatusFiltros");
+  data.append("mayorCarga", mayorCarga);
+  data.append("menorCarga", menorCarga);
+  data.append("mayorSeg", mayorSeg);
+  data.append("menorSeg", menorSeg);
+  data.append("estatus", estatus);
+  let consulta = new claseFetch(data, url);
+  let respuesta = await consulta.fetchTexto();
+  document.getElementById(id).textContent = respuesta;
   console.log(respuesta);
 }
 async function generarCitasFolios() {
@@ -1103,6 +1174,17 @@ async function eliminarFolio() {
   }
 }
 ////////////////////////////funciones generales///////////////////////////
+function dateRange(id) {
+  $("#" + id)
+    .dateRangePicker({
+      language: "es",
+    })
+    .on("datepicker-closed", function () {
+      let fecha = document.getElementById(id).value.split(" to ");
+      document.getElementById(id).value = fecha[0] + " a " + fecha[1];
+      /* This event will be triggered after date range picker close animation */
+    });
+}
 function inicializacionesDivs() {
   //se muestran los div dependiendo la seccion que se elija
   document.getElementById("btnCitas").addEventListener("click", () => {
@@ -1231,10 +1313,10 @@ function obtenerEquipos(idselect) {
 //funcion para la busquedqa en vivo
 //Creamos una fila en el head de la tabla y lo clonamos para cada columna
 function busquedaEnVivo() {
-  $("#tablaFolios thead tr").clone(true).appendTo("#tablaFolios thead");
-
+  if (primeraTabla == true) {
+    $("#tablaFolios thead tr").clone(true).appendTo("#tablaFolios thead");
+  }
   $("#tablaFolios thead tr:eq(1) th").each(function (i) {
-    console.log(i);
     if (i != 0) {
       $(this).html(
         '<input class="form-control form-control-sm" type="text" placeholder="Buscar" aria-label=".form-control-sm">'
@@ -1249,6 +1331,7 @@ function busquedaEnVivo() {
       $(this).html("<p></p>");
     }
   });
+  primeraTabla = false;
 }
 //se crea la funcion para obtener la fecha actual en formato yyyy-mm-dd
 function obtenerFechaConvertida(n) {
