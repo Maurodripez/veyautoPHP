@@ -37,15 +37,6 @@ switch ($accion) {
         $sql = "select * from citas where fkCitas=$id";
         //ConsultasSelectCualquiera($sql, "../Conexion.php", "Cita");
         break;
-    case "EliminarCita":
-        $id = $_POST["id"];
-        $nombreReal = obtenerNombreReal();
-        $sql = "DELETE FROM citas WHERE fkCitas = $id";
-        //ActualizarCualquierSiniestro($sql, "../Conexion.php");
-        $sql = "INSERT INTO seguimientoprincipal (fkIdRegistroSegPrincipal,usuario,fechaseguimiento,estatusSeguimiento,comentarios,msgInterno)"
-            . " VALUES ($id, '$nombreReal',now(), 'CITA CANCELADA', 'SE CANCELA LA CITA', 'Interno')";
-        //ActualizarCualquierSiniestro($sql, "../Conexion.php");
-        break;
     case "CrearCita":
         $usuario = $_SESSION['usuario'];
         $title = isset($_POST['title']) ? $_POST['title'] : "";

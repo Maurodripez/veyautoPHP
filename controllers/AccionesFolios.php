@@ -57,7 +57,7 @@ switch ($accion) {
         $mayorSeg = $_POST['mayorSeg'];
         $menorSeg = $_POST['menorSeg'];
         $situacion = $_POST['situacion'];
-        $sql = "SELECT COUNT(situacion) AS conteo FROM folios WHERE estatus='$estatus' AND fechacarga>='$mayorCarga' "
+        $sql = "SELECT COUNT(situacion) AS conteo FROM folios WHERE situacion='$situacion' AND fechacarga>='$mayorCarga' "
             . " AND fechacarga<='$menorCarga' AND fechaSeguimiento>='$mayorSeg' AND fechaSeguimiento<='$menorSeg'";
         $r= ObtenerValorCualquiera($sql, "../models/Conexion.php");
         echo $r;
